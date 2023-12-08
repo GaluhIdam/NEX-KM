@@ -1,0 +1,185 @@
+<!-- NEX Team -->
+
+<img
+  class="absolute left-0 top-1/2 -z-20"
+  src="../../../../assets/image/home-page/gradient/227.png"
+  alt=""
+/>
+
+<img
+  class="absolute right-0 top-3/4 -z-10"
+  src="../../../../assets/image/home-page/gradient/228.png"
+  alt=""
+/>
+
+<img
+  class="absolute right-0 -top-10 -z-20"
+  src="../../../../assets/image/home-page/gradient/229.png"
+  alt=""
+/>
+
+<div class="py-20">
+  <div class="container lg:mx-auto hp:mx-auto">
+    <h1
+      class="font-bold text-black lg:text-5xl hp:text-3xl lg:text-center hp:text-center mb-7"
+    >
+      Nex Team
+    </h1>
+
+    <div class="grid px-12 mb-4 lg:grid-cols-3 hp:grid-cols-1">
+      <div class="self-start col-span-2">
+        <p
+          class="mb-4 text-2xl font-bold lg:text-start hp:text-center font-jakarta"
+        >
+          {{ selectedTeam }}
+        </p>
+      </div>
+    </div>
+    <ng-container *ngIf="isNexTeamLoading">
+      <div class="flex items-center justify-center h-screen font-semibold">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isNexTeamLoading">
+      <ng-container *ngIf="nexTeam.length === 0">
+        <div
+          class="flex items-center justify-center min-h-screen font-semibold"
+        >
+          <h2>No Teams Available.</h2>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="nexTeam.length > 0">
+        <div class="flex min-h-screen gap-0">
+          <div class="flex flex-col justify-between flex-1 px-12">
+            <div class="grid gap-4 mb-4 lg:grid-cols-3 hp:grid-cols-1">
+              <div
+                class="max-w-md px-4 overflow-hidden bg-white shadow-md cursor-pointer rounded-xl hp:max-w-2xl"
+                *ngFor="let member of nexTeamMember; let i = index"
+                (click)="onViewUser(member.personalNumber)"
+              >
+                <ng-container *ngIf="isNexTeamMemberLoading[i]">
+                  <div class="flex items-center justify-center w-full h-full">
+                    <app-loading></app-loading>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!isNexTeamMemberLoading[i]">
+                  <div class="flex items-center gap-2 lg:flex-row hp:flex-col">
+                    <div class="w-24 lg:my-4 hp:mt-4">
+                      <img
+                        class="w-full rounded-full"
+                        [src]="member.personalImage"
+                        alt="Profile image"
+                      />
+                    </div>
+                    <div class="lg:py-8 hp:py-4">
+                      <p
+                        class="text-xl font-semibold hp:text-center lg:text-left font-jakarta"
+                      >
+                        {{
+                          member.personalName.length > 25
+                            ? member.personalName.substring(0, 25) + "..."
+                            : member.personalName
+                        }}
+                        ({{ member.personalUnit }})
+                      </p>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+
+            <div class="flex w-full mt-4 lg:justify-end hp:justify-center">
+              <form [formGroup]="mform">
+                <nav>
+                  <ul
+                    class="flex gap-3 mt-5 list-style-none place-self-center hp:flex-col sm:flex-row"
+                  >
+                    <div class="flex flex-row justify-center">
+                      <li class="mr-3 place-self-center">
+                        <p>Total : {{ totalData }}</p>
+                      </li>
+                      <li class="mr-1 place-self-center">
+                        <select
+                          class="px-2 py-1 border rounded boder-regal-blue place-self-center"
+                          formControlName="limit"
+                        >
+                          <option [value]="5">5</option>
+                          <option [value]="10">10</option>
+                          <option [value]="30">30</option>
+                          <option [value]="50">50</option>
+                          <option [value]="100">100</option>
+                        </select>
+                      </li>
+                      <li class="mr-3 place-self-center">
+                        <p>Data</p>
+                      </li>
+                    </div>
+
+                    <div class="flex flex-row justify-center">
+                      <li
+                        class="px-2 py-1 text-white rounded place-self-center"
+                      >
+                        <fa-icon
+                          [icon]="faCircleChevronLeft"
+                          (click)="prevPage()"
+                          [class]="
+                            this.mform.get('page')?.value > 1
+                              ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                              : 'place-self-center text-gray-500'
+                          "
+                        ></fa-icon>
+                      </li>
+                      <li
+                        *ngFor="let numPage of pageData"
+                        class="place-self-center"
+                      >
+                        <div
+                          [class]="
+                            numPage === this.mform.get('page')?.value
+                              ? 'relative block rounded px-3 py-1.5 text-base text-white transition-all duration-300 font-semibold bg-regal-blue'
+                              : 'cursor-pointer relative block rounded px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white'
+                          "
+                          (click)="changePage(numPage)"
+                        >
+                          {{ numPage }}
+                        </div>
+                      </li>
+                      <li
+                        class="px-2 py-1 text-white rounded place-self-center"
+                      >
+                        <fa-icon
+                          [icon]="faCircleChevronRight"
+                          (click)="nextPage()"
+                          [class]="
+                            this.mform.get('page')?.value < pageData.length
+                              ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                              : 'place-self-center text-gray-500'
+                          "
+                        ></fa-icon>
+                      </li>
+                    </div>
+
+                    <li class="flex flex-row justify-center">
+                      <p class="mr-3 place-self-center">Go to Page</p>
+                      <select
+                        class="px-4 py-1 border rounded boder-regal-blue place-self-center"
+                        formControlName="page"
+                      >
+                        <option *ngFor="let num of pageData" [value]="num">
+                          {{ num }}
+                        </option>
+                      </select>
+                    </li>
+                  </ul>
+                </nav>
+              </form>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+<!-- End of NEX Team -->

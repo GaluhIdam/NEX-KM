@@ -1,0 +1,59 @@
+<div class="min-[600px]:px-20 max-[600px]:px-10 min-[600px]:mt-28 max-[600px]:mt-18 gap-4">
+  <div class="grid min-[600px]:grid-cols-3 max-[600px]:grid-cols-1 gap-5">
+    <!-- Left -->
+    <div class="col-span-1">
+      <div class="mb-6 bg-blue-50 rounded-3xl py-4" *ngIf="merchandise!">
+        <img
+          id="mainImage"
+          class="cursor-pointer object-cover w-full h-full mx-auto rounded-lg"
+          [src]="merchandise!.imageMerchandise[0].path"
+          alt="main_image" />
+      </div>
+      <div class="first-feature flex gap-4" *ngIf="merchandise!">
+        <div class="hover:shadow-hover:rounded-lg cursor-pointer"
+          *ngFor="let merchandisee of merchandise!.imageMerchandise; let i = index">
+          <img
+            class="h-20 max-w-full cursor-pointer shadow-2xl rounded-lg"
+            [src]="merchandisee.path"
+            (click)="changeImage(i)" alt="image_{{ i }}" />
+        </div>
+      </div>
+    </div>
+    <!-- Right -->
+    <div class="col-span-2 min-[600px]:my-20 max-[600px]: my-10 min-[600px]:mx-10 max-[600px]: mx-0">
+      <h1 class="font-semibold min-[600px]:text-5xl max-[600px]:text-2xl  text-redeem-bar mb-5">
+        {{ merchandise?.title }}
+      </h1>
+      <h1 class="min-[600px]:text-2xl max-[600px]:text-lg font-bold  text-black mb-2">
+        Description
+      </h1>
+      <p class="min-[600px]:text-base max-[600px]: text-xs mb-3 text-justify">
+        {{ merchandise?.description }}
+      </p>
+      <h1 class="min-[600px]:text-2xl max-[600px]:text-lg font-bold  text-black mb-2">
+        Quantity
+      </h1>
+      <p class="min-[600px]:text-base max-[600px]: text-xs mb-3 text-justify">
+        {{ merchandise?.qty }}
+      </p>
+      <p class="text-regal-blue font-semibold min-[600px]:text-lg max-[600px]: text-sm min-[600px]:mb-0 max-[600px]:mb-5">
+        {{ merchandise?.point }} Point
+      </p>
+      <div class="text-right">
+        <button
+          (click)="merchandisePage()"
+          type="button"
+          class="inline-block  rounded mr-3 bg-gray-400 lg:px-10 xs:px-4 pb-2 pt-2.5 text-base font-medium shadow-lg leading-normal text-white transition duration-150 ease-in-out hover:bg-gray-500 focus:bg-gray-500 focus:outline-none focus:ring-0 active:bg-gray-600">
+          Back
+        </button>
+        <button
+          type="button"
+          (click)="redeemProduct(merchandise!.id)"
+          class="second-feature inline-block  rounded bg-primary lg:px-10 xs:px-4 pb-2 pt-2.5 text-base font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]">
+          Redeem
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<img class="absolute top-0 left-0 -z-20" src="../../../../assets/image/home-page/gradient/227.png" alt="" />

@@ -1,0 +1,188 @@
+<ng-container *ngIf="isSerieDetailLoading">
+  <div class="flex items-center justify-center h-screen font-semibold">
+    <app-loading></app-loading>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!isSerieDetailLoading">
+  <ng-container *ngIf="isSerieDetailError">
+    <app-service-error></app-service-error>
+  </ng-container>
+  <ng-container *ngIf="!isSerieDetailError">
+    <!-- header -->
+    <div class="px-20 mt-16">
+      <div class="mb-8">
+        <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+          <a class="mr-3 text-gray-400 cursor-pointer" (click)="onGoHomePage()"
+            >Home</a
+          >
+          <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+          <a
+            class="mr-3 text-gray-400 cursor-pointer"
+            (click)="onGoToNexTalkPage()"
+            >Nex Talk</a
+          >
+          <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+          <a routerLink="/user/nex-talks/podcast" class="mr-3 text-gray-400"
+            >Podcast</a
+          >
+          <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+          <a
+            routerLink="/user/nex-talks/podcast/list"
+            class="mr-3 text-gray-400"
+            >Podcast List</a
+          >
+          <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+          <p class="mr-3 text-black activeLink">Detail</p>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10">
+      <ng-container *ngIf="serieDetailData">
+        <div class="px-20 bg-[#CEE1A2]">
+          <div class="grid gap-8 p-8 sm:grid-cols-12 xs:grid-cols-1">
+            <div class="self-center col-span-2">
+              <img class="rounded-xl" [src]="serieDetailData.path" alt="" />
+            </div>
+            <div class="self-center col-span-3">
+              <h1
+                class="font-semibold text-blue-800 xl:text-5xl lg:text-3xl sm:text-xl xs:text-base"
+              >
+                {{ serieDetailData.title }}
+              </h1>
+              <p
+                class="mb-3 font-semibold text-blue-800 xl:text-lg lg:text-base sm:text-sm xs:text-xs"
+              >
+                {{ serieDetailData.creator.name }}
+              </p>
+              <div>
+                <button
+                  type="button"
+                  (click)="onSelectPodcastListToPlay()"
+                  [disabled]="isDeletePodcastLoading"
+                  class="disabled:bg-slate-500 inline-block rounded-full bg-primary xl:w-14 xl:h-14 lg:h-12 lg:w-12 sm:w-10 sm:h-10 xs:w-8 xs:h-8 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-8 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                >
+                  <ng-container *ngIf="!serieDetailData.isPause">
+                    <fa-icon
+                      [icon]="faPlay"
+                      class="text-white xl:text-2xl lg:text-lg sm:text-sm xs:text-xs"
+                    ></fa-icon>
+                  </ng-container>
+                  <ng-container *ngIf="serieDetailData.isPause">
+                    <fa-icon
+                      [icon]="faPause"
+                      class="text-white xl:text-2xl lg:text-lg sm:text-sm xs:text-xs"
+                    ></fa-icon>
+                  </ng-container>
+                </button>
+              </div>
+            </div>
+            <div
+              class="self-center col-span-7 lg:text-lg sm:text-sm xs:text-xs xs:-mt-4"
+            >
+              <p>
+                {{ serieDetailData.description }}
+              </p>
+              <span
+                class="inline-block my-2 cursor-pointer hover:bg-gray-500 rounded-full mr-3 bg-gray-400 px-[0.65em] pt-[0.35em] pb-[0.25em] text-center font-semibold lg:text-sm xs:text-xs text-white"
+              >
+                {{ serieDetailData.creator.talkCategory.name }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- Podcast List -->
+        <ng-container *ngIf="isPodcastListLoading">
+          <div class="flex items-center justify-center min-h-screen">
+            <app-loading></app-loading>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isPodcastListLoading">
+          <!-- Body -->
+          <div class="h-screen px-20 mt-8 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+              <div class="overflow-hidden">
+                <table class="min-w-full text-sm font-light text-center">
+                  <thead class="font-medium">
+                    <tr>
+                      <th scope="col" class="px-6 py-4">Title</th>
+                      <th scope="col" class="px-6 py-4">Episode</th>
+                      <th scope="col" class="px-6 py-4">Description</th>
+                      <th scope="col" class="px-6 py-4">Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Loop Here -->
+                    <ng-container *ngIf="podcastListData.length > 0">
+                    </ng-container>
+                    <tr
+                      *ngFor="let row of podcastListData; let i = index"
+                      class="cursor-pointer hover:bg-slate-200"
+                    >
+                      <td class="px-6 py-4">
+                        <div class="flex items-center justify-center gap-4">
+                          <button
+                            type="button"
+                            (click)="onSelectPodcastToPlay(row, i)"
+                            class="rounded-full bg-primary w-8 h-8 text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-8 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                          >
+                            <ng-container *ngIf="row.isPause">
+                              <fa-icon
+                                [icon]="faPause"
+                                class="text-xs text-white"
+                              ></fa-icon>
+                            </ng-container>
+                            <ng-container *ngIf="!row.isPause">
+                              <fa-icon
+                                [icon]="faPlay"
+                                class="text-xs text-white"
+                              ></fa-icon>
+                            </ng-container>
+                          </button>
+                          <img
+                            class="rounded-xl w-14 h-14"
+                            [src]="row.pathImage"
+                            alt=""
+                          />
+                          <div>
+                            {{
+                              row.seriePodcast.title.length > 30
+                                ? row.seriePodcast.title.substr(0, 30) + ".."
+                                : row.seriePodcast.title
+                            }}
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4">
+                        {{ row.title }}
+                      </td>
+                      <td class="px-6 py-4">
+                        {{
+                          row.description.length > 20
+                            ? row.description.substr(0, 20) + ".."
+                            : row.description
+                        }}
+                      </td>
+                      <td class="px-6 py-4">
+                        {{ row.duration }}
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="podcastListData.length === 0">
+                      <td
+                        colspan="5"
+                        class="items-center h-screen py-5 font-bold text-center text-gray-500"
+                      >
+                        No data available
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-container>

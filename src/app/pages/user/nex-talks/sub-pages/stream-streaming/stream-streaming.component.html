@@ -1,0 +1,167 @@
+<ng-container *ngIf="isDetailStreamLoading">
+  <div class="flex items-center justify-center font-semibold h-60">
+    <app-loading></app-loading>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!isDetailStreamLoading">
+  <ng-container *ngIf="isDetailStreamError">
+    <app-service-error></app-service-error>
+  </ng-container>
+  <ng-container *ngIf="!isDetailStreamError">
+    <ng-container *ngIf="streamDetailData; else emptyStreamDetailData">
+      <div class="px-20 mt-20">
+        <p class="mb-3 text-4xl font-medium text-blue-700">NEX Stream</p>
+        <div class="grid gap-5 lg:grid-cols-3 xs:grid-cols-1">
+          <!-- Left -->
+          <div class="col-span-2">
+            <!-- Video Player -->
+            <div
+              mat-card-image
+              plyr
+              [plyrTitle]="streamDetailData.title"
+              [plyrPlaysInline]="true"
+              [plyrCrossOrigin]="true"
+              [plyrPoster]="streamDetailData.pathThumbnail"
+              [plyrSources]="[
+                {
+                  src: streamDetailData.pathVideo,
+                  type: 'video/mp4',
+                  size: 576,
+                  provider: 'html5'
+                }
+              ]"
+              (plyrInit)="player = $event"
+              (plyrPlay)="played($event)"
+              (plyrEnded)="stopped($event)"
+            ></div>
+            <!-- Badges -->
+            <div class="my-5">
+              <!-- Loop here -->
+              <span
+                class="inline-block whitespace-nowrap rounded-full mr-3 bg-gray-400 px-[0.65em] pt-[0.35em] pb-[0.25em] text-center font-semibold text-sm text-white"
+              >
+                {{ streamDetailData.talkCategory.name }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Right -->
+          <div class="xs:mt-0 lg:mt-0">
+            <p class="mb-3 text-2xl font-semibold">
+              {{ streamDetailData.title }}
+            </p>
+            <div class="flex gap-0 my-3">
+              <div class="flex-none">
+                <img
+                  [src]="photoDetailStreamUploader"
+                  class="h-auto rounded-full w-14"
+                  alt="avatar"
+                  loading="lazy"
+                />
+              </div>
+              <div class="flex-1 ml-4">
+                <p class="text-lg font-medium">
+                  {{ streamDetailData.createdBy }}
+                </p>
+              </div>
+            </div>
+            <div class="flex-1 text-gray-400">
+              <span
+                >{{
+                  convertViewsFormat(streamDetailData.streamWatch.length)
+                }}
+                views</span
+              >
+              &nbsp;
+              <span>
+                {{ calculateTimeDifference(streamDetailData.createdAt) }}</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <p class="text-3xl font-semibold lg:mt-10 xs:mt-10">Description</p>
+        <p class="text-lg font-normal">
+          {{ streamDetailData.description }}
+        </p>
+        <!-- End of Body -->
+
+        <div class="grid grid-cols-2 mt-20 mb-10">
+          <div>
+            <p class="text-4xl font-semibold text-blue-800">Trending</p>
+          </div>
+          <div class="text-right">
+            <p
+              class="text-lg font-semibold text-blue-800 cursor-pointer hover:text-blue-500"
+              (click)="streamPageList('Trending')"
+            >
+              See All
+            </p>
+          </div>
+        </div>
+
+        <ng-container *ngIf="isStreamLoading">
+          <div class="flex items-center justify-center h-56">
+            <app-loading></app-loading>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isStreamLoading">
+          <ng-container *ngIf="streamData.length > 0; else emptyStreamData">
+            <div class="grid gap-3 lg:grid-cols-4 xs:grid-cols-1">
+              <!-- Loop Here -->
+              <ng-container *ngFor="let stream of streamData; let i = index">
+                <div
+                  class="block w-64 mb-5 rounded-lg cursor-pointer xs:mx-auto xs:w-full"
+                  (click)="streamStreamingPage(stream.uuid)"
+                >
+                  <img
+                    class="object-cover object-center w-full h-52 rounded-2xl"
+                    [src]="stream.pathThumbnail"
+                    alt=""
+                  />
+                  <div class="flex items-center gap-0 mt-3">
+                    <div class="">
+                      <img
+                        [src]="photoStreamUploaders[i]"
+                        class="object-cover object-center h-auto rounded-full w-14"
+                        alt="avatar"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="flex-1 ml-4">
+                      <p class="mt-2 text-base font-semibold">
+                        {{ stream.title }}
+                      </p>
+                      <p class="mt-2 text-sm">{{ stream.createdBy }}</p>
+                      <p class="text-sm">
+                        {{
+                          convertViewsFormat(stream.streamWatch.length)
+                        }}
+                        views •
+                        {{ calculateTimeDifference(stream.createdAt) }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+          <ng-template #emptyStreamData>
+            <div class="flex items-center justify-center h-40">
+              <h2>No Streams available.</h2>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<!-- Empty Stream Detail State -->
+<ng-template #emptyStreamDetailData>
+  <div class="flex items-center justify-center font-semibold h-96">
+    <h2>No Stream Information available.</h2>
+  </div>
+</ng-template>

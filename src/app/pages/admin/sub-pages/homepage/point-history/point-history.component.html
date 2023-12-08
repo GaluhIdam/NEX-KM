@@ -1,0 +1,96 @@
+<div class="grid grid-cols-2 gap-1 mb-8">
+  <div class="flex justify-start">
+      <div>
+          <h1 class="text-gray-500">NEX Settings</h1>
+          <h1 class="text-4xl -ml-0.5 font-semibold text-gray-700">{{ title.title }}</h1>
+          <nav class="flex justify-start -ml-2" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 xs:space-x-3">
+              <li>
+                <div class="flex items-center mt-5 mb-2">
+                  <a
+                    (click)="userList()"
+                    class="cursor-pointer text-sm font-medium text-gray-500 hover:text-gray-800 md:ml-2 dark:text-gray-400 dark:hover:text-white">
+                    User
+                  </a>
+                </div>
+              </li>
+              <li aria-current="page">
+                <div class="flex items-center mt-5 mb-2">
+                  <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 9 4-4-4-4" />
+                  </svg>
+                  <span class="text-sm font-medium text-gray-800 md:ml-2 dark:text-gray-400">Point History</span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+      </div>
+  </div>
+</div>
+
+
+<div class="mb-8">
+  <div class="max-w-full bg-gray-50 rounded-3xl border-solid border-2 border-gray-300 overflow-hidden">
+    <div class="border-solid border-b-2">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left text-sm font-light">
+            <thead class="border-solid border-b-2 font-medium bg-gray-100 text-gray-600 w-full">
+                <tr class="w-full">
+                    <th scope="col" class="px-6 py-4 whitespace-nowrap text-left font-semibold">Activity</th>
+                    <th scope="col" class="px-6 py-4 whitespace-nowrap text-left font-semibold">Date</th>
+                    <th scope="col" class="px-6 py-4 whitespace-nowrap text-left font-semibold">Point</th>
+                </tr>
+            </thead>
+            <tbody class="w-full">
+                <tr class="border-solid border-b-2 w-full">
+                    <td class="whitespace-nowrap px-6 py-4 text-left">
+                      <div class="flex-start md:flex">
+                        <div>
+                          <img
+                            class="rounded-full w-12 my-2 p-auto"
+                            src="https://tecdn.b-cdn.net/img/new/avatars/2.jpg"
+                            alt="">
+                        </div>
+                        <div class="ml-6 block max-w-full rounded-lg">
+                            <div class="text-start">
+                              <p class="text-md">Febri</p>
+                              <p class="text-md">Febriansyah</p>
+                            </div>
+                          </div>
+                        </div>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4 text-left">11/08/2022</td>
+                    <td class="whitespace-nowrap px-6 py-4 text-left">
+                      <fa-icon [icon]="faPlus" class="text-success mr-2"></fa-icon>
+                      25
+                    </td>
+                </tr>
+                <tr class="border-b dark:border-neutral-500 w-full">
+                    <td class="whitespace-nowrap px-6 py-4 text-left">
+                      <div class="flex-start md:flex">
+                        <div>
+                          <img
+                            class="rounded-full w-12 my-2 p-auto"
+                            src="https://tecdn.b-cdn.net/img/new/avatars/2.jpg"
+                            alt="">
+                        </div>
+                        <div class="ml-6 block max-w-full rounded-lg">
+                            <div class="text-start">
+                              <p class="text-md">Febri</p>
+                              <p class="text-md">Febriansyah</p>
+                            </div>
+                          </div>
+                        </div>
+                    </td>
+                    <td class="whitespace-nowrap px-6 py-4 text-left">11/08/2022</td>
+                    <td class="whitespace-nowrap px-6 py-4 text-left">
+                      <fa-icon [icon]="faPlus" class="text-success mr-2"></fa-icon>
+                      25
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+

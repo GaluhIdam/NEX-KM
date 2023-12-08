@@ -1,0 +1,131 @@
+<div class="mt-8">
+  <div
+    class="flex ml-auto bg-gray-100 shadow-md justify-endflex-wrap lg:-mt-3 xs:mt-2 lg:w-80 xs:w-full rounded-xl"
+  >
+    <button
+      class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+      type="button"
+      id="button-addon1"
+    >
+      <fa-icon [icon]="faSearch" class="text-gray-400"></fa-icon>
+    </button>
+    <input
+      type="text"
+      class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+      placeholder="Search For Topics"
+      aria-label="Example text with button addon"
+      aria-describedby="button-addon1"
+      (keyup)="searchByField($event)"
+    />
+  </div>
+  <!-- Content -->
+  <ng-container *ngIf="isLoading">
+    <div class="flex items-center justify-center min-h-screen font-semibold">
+      <app-loading></app-loading>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="streamData.length > 0; else emptyStreamData">
+      <div class="flex flex-col justify-between min-h-screen">
+        <div>
+          <!-- Loop here -->
+          <ng-container *ngFor="let stream of streamData">
+            <div
+              class="flex flex-col w-full my-5 rounded-lg shadow-md cursor-pointer md:flex-row hover:shadow-lg"
+              (click)="streamStreaming(stream.uuid)"
+            >
+              <img
+                class="object-cover h-28 w-44 rounded-xl md:rounded-l-lg"
+                [src]="stream.pathThumbnail"
+                [alt]="stream.title"
+              />
+              <div class="flex flex-col justify-start mt-6 xl:ml-3">
+                <h5 class="text-2xl font-semibold text-neutral-800">
+                  {{ stream.title }}
+                </h5>
+                <p class="text-lg font-semibold text-neutral-500">
+                  {{ stream.description }}
+                </p>
+                <p class="text-sm">
+                  {{ convertViewsFormat(stream.streamWatch.length) }} views •
+                  {{ calculateTimeDifference(stream.createdAt) }}
+                </p>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <!-- Pagination -->
+        <div
+          class="flex items-center justify-start mt-5"
+          *ngIf="paginator && !isLoading"
+        >
+          <h1 class="mr-5">Total : {{ paginator.totalData }}</h1>
+          <div class="flex items-center justify-start mx-10">
+            <span class="text-sm">Show</span>
+            <select
+              *ngIf="paginator"
+              [(ngModel)]="paginator.pageSize"
+              (ngModelChange)="changePageSize()"
+              class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+            >
+              <option
+                *ngFor="let size of paginator?.pageOption"
+                [ngValue]="size"
+              >
+                {{ size }} data
+              </option>
+            </select>
+          </div>
+          <div class="flex items-center justify-center mx-3">
+            <button
+              type="button"
+              (click)="changePageNumber(false)"
+              [disabled]="paginator.pageNumber == 1"
+              [class]="paginator.pageNumber == 1 ? 'bg-gray-200' : 'bg-gray-50'"
+              class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300"
+            >
+              Previous
+            </button>
+            <!-- <button
+                      class="ml-2 text-gray-400"
+                      (click)="goToPageNumberByPageClick(i + 1)"
+                      *ngFor="let page of pages; let i = index"
+                    >
+                      {{ i + 1 }}
+                    </button> -->
+            <button
+              type="button"
+              (click)="changePageNumber(true)"
+              [disabled]="paginator.pageNumber == paginator.totalPage"
+              [class]="
+                paginator.pageNumber == paginator.totalPage
+                  ? 'bg-gray-200'
+                  : 'bg-gray-50'
+              "
+              class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300 ml-2"
+            >
+              Next
+            </button>
+          </div>
+          <h1 class="w-fit">Go to Page</h1>
+          <select
+            *ngIf="paginator"
+            [(ngModel)]="paginator.pageNumber"
+            (ngModelChange)="goToPageNumberByPageSelect($event)"
+            class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+          >
+            <option *ngFor="let page of pages; let i = index" [ngValue]="i + 1">
+              {{ i + 1 }}
+            </option>
+          </select>
+        </div>
+        <!-- Pagination -->
+      </div>
+    </ng-container>
+    <ng-template #emptyStreamData>
+      <div class="flex items-center justify-center min-h-screen font-semibold">
+        <h2>No Streams available.</h2>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

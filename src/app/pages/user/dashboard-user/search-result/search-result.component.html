@@ -1,0 +1,186 @@
+<!-- Jumbotron Search -->
+<div class="bg-library bg-center flex justify-center py-20">
+  <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+    <div class="min-[600px]:w-[32rem] place-self-center">
+      <h1 class="text-white font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl">
+        Explore New Experience of Collaboration
+      </h1>
+    </div>
+    <div class="relative mb-4 flex min-[600px]:w-[800px] flex-wrap items-stretch bg-white rounded-full mt-4">
+      <button
+        class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+        type="button" id="button-addon1">
+        <fa-icon routerLink="/user/dashboard-user/search-result" [icon]="faSearch" class="text-black"></fa-icon>
+      </button>
+      <input type="text"
+        class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+        placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+    </div>
+    <h1 class="text-white">TRENDING SEARCH</h1>
+    <div>
+      <ul class="flex list-none flex-wrap pl-0 md:flex-row" role="tablist" data-te-nav-ref>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+            Travelling
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+            Interior Design
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+            Music
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+            Dancing
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- content -->
+<div class="my-8">
+  <div class="w-4/5 mx-auto bg-gray-50 rounded-3xl border-solid border-2 border-gray-300 overflow-hidden">
+    <div class="border-solid border-b-2">
+      <div class="grid grid-cols-1">
+        <div>
+          <p class="text-lg font-semibold ml-4 my-5 font-jakarta">Search result for</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mx-auto my-5">
+      <!-- Profile Name Picture -->
+      <div class="flex gap-0">
+        <div class="flex-1">
+          <!--First item-->
+          <div class="flex-start md:flex">
+            <div class="block max-w-full rounded-lg">
+              <p class="text-lg ml-6 font-bold font-jakarta">Forum</p>
+              <div class="mb-4 grid grid-cols-6">
+                <div *ngFor="let ebook of filteredEbookList" class="p-8 space-x-2 text-start">
+                  <img
+                    class="rounded-2xl"
+                    [src]="ebook.imgUrl"
+                    alt="">
+                  <h1
+                    class="font-jakarta block max-w-md mb-2 text-justify text-sm font-semibold text-gray-900 dark:text-white">
+                    {{ ebook.title }}
+                  </h1>
+                  <p class="font-jakarta block max-w-md mb-2 text-justify text-sm font-medium text-gray-900 dark:text-white">
+                    {{ ebook.description }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo Gallery -->
+          <div class="mb-4">
+            <p class="text-lg ml-6 font-bold font-jakarta">Photo Gallery</p>
+          </div>
+          <div class="mb-10 grid grid-cols-4">
+            <div *ngFor="let photo of filteredPhotoList" class="block w-60 rounded-2xl xs:mx-auto bg-gray-100 border-2 border-gray-300">
+              <a href="#!">
+                <img class="rounded-t-2xl "
+                [src]=photo.imgUrl
+                alt="Image Feeds" />
+              </a>
+              <div class="p-4">
+                <h5 class="mb-2 text-xs italic font-semibold text-gray-400 font-jakarta">
+                  {{ photo.date }}
+                </h5>
+                <h1 class="mb-2 text-sm font-semibold font-jakarta">
+                  {{ photo.title }}
+                </h1>
+                <p class="mb-2 text-sm font-normal font-jakarta">
+                  {{ photo.description }}
+                </p>
+                <button type="button"
+                  class="font-jakarta inline-block rounded-md bg-primary p-2 text-xs font-medium leading-normal text-white transition duration-150 ease-in-out hover:bg-primary-600 focus:bg-primary-600 focus:outline-none focus:ring-0 active:bg-primary-700 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]">
+                  View Album <fa-icon [icon]="faArrowRight" class="text-white mr-4"></fa-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- forum -->
+          <div class="mx-auto">
+            <!-- Profile Name Picture -->
+            <div class="flex gap-0">
+              <div class="flex-1">
+                <!--First item-->
+                <div class="flex-start md:flex">
+                  <div class="block max-w-full rounded-lg">
+                    <p class="text-lg ml-6 font-bold font-jakarta">Forum</p>
+                    <div class="mb-4 grid grid-cols-6">
+                      <div *ngFor="let forum of filteredForumList" class="p-8 space-x-2 text-start">
+                        <img
+                          class="rounded-2xl"
+                          [src]="forum.imgUrl"
+                          alt="">
+                        <h1
+                          class="font-jakarta block max-w-md mb-2 text-justify text-sm font-semibold text-gray-900 dark:text-white">
+                          {{ forum.title }}
+                        </h1>
+                        <p class="font-jakarta block max-w-md mb-2 text-justify text-sm font-medium text-gray-900 dark:text-white">
+                          {{ forum.description }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+          <!-- PODCAST -->
+          <div class="mx-auto">
+            <!-- Profile Name Picture -->
+            <div class="flex gap-0">
+              <div class="flex-1">
+                <!--First item-->
+                <div class="flex-start md:flex">
+                  <div class="block max-w-full rounded-lg">
+                    <p class="text-lg ml-6 font-bold font-jakarta">Podcast</p>
+                    <div class="grid grid-cols-6">
+                      <div *ngFor="let podcast of filteredPodcastList" class="p-8 space-x-2 text-start">
+                        <img
+                          class="rounded-2xl"
+                          [src]="podcast.imgUrl"
+                          alt="">
+                        <h1
+                          class="block max-w-md mb-2 text-justify text-sm font-semibold text-gray-900 dark:text-white">
+                          {{ podcast.title }}
+                        </h1>
+                        <p class="block max-w-md mb-2 text-justify text-sm font-medium text-gray-900 dark:text-white">
+                          {{ podcast.description }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- USERS -->
+                <p class="text-lg ml-6 mb-8 font-bold font-jakarta">Users</p>
+                <div class="max-w-full grid grid-cols-3 gap-4 mb-4 px-12 m-auto">
+                  <a *ngFor="let users of filteredUsersList" routerLink="../view-user">
+                    <div class="max-w-xs bg-white rounded-xl shadow-md overflow-hidden xs:max-w-md m-auto px-12">
+                      <div class="md:flex">
+                        <div class="md:flex-shrink-0">
+                          <img
+                            class="h-24 w-full object-cover md:w-24 rounded-full my-4"
+                            [src]="users.imgUrl"
+                            alt="Profile image" />
+                        </div>
+                        <div class="p-8">
+                          <p class="font-semibold text-md font-jakarta">{{ users.title }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+

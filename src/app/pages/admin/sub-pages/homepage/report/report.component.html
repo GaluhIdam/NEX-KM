@@ -1,0 +1,156 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+      <div>
+          <h1 class="text-gray-500">NEX Settings</h1>
+          <h1 class="text-4xl -ml-0.5 font-semibold text-gray-700">{{ titlePage.title }}</h1>
+          <div class="flex justify-start mt-5">
+              <h1 class="text-gray-400">Report</h1>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="bg-white shadow rounded-lg mt-5">
+  <div>
+    <div class="grid grid-cols-2 gap-1">
+        <div class="flex justify-start h-fit w-fit p-5">
+            <div class="relative flex w-full flex-wrap items-stretch bg-white rounded-lg border border-1">
+                <button
+                    class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+                    type="button" id="button-addon1">
+                    <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+                </button>
+                <input type="text"
+                    class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                    placeholder="Search" aria-label="Example text with button addon"
+                    aria-describedby="button-addon1"
+                    (keyup)="searchByField($event)"
+                    />
+            </div>
+        </div>
+        <div class="flex justify-end place-items-center p-5">
+            <button
+                class="px-2 opacity-50 border border-1 hover:bg-button-success hover:text-white border-button-success py-2 mx-2 rounded-lg text-button-success shadow-transparent h-fit"><fa-icon
+                    [icon]="faFilter"></fa-icon> Filter</button>
+            <button
+                class="px-2 border border-1 hover:bg-button-success hover:text-white border-button-success py-2 mx-2 rounded-lg text-button-success h-fit">
+                <fa-icon [icon]="faPrint"></fa-icon> Export To Excel</button>
+        </div>
+    </div>
+
+    <div class="flex flex-col overflow-x-auto">
+      <div class="p-5">
+          <div class="overflow-x-auto">
+              <table class="min-w-full text-left text-sm font-light">
+                  <thead class="border-b font-medium border-gray-500 bg-gray-100 text-gray-600 w-full">
+                      <tr class="w-full">
+                          <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">NO</th>
+                          <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">NAME</th>
+                          <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">UNIT</th>
+                          <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">EMAIL</th>
+                          <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">REPORT STATUS</th>
+                          <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">REPORT OVERVIEW</th>
+                          <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">ACTION</th>
+                      </tr>
+                  </thead>
+                  <tbody class="w-full">
+                    <ng-container *ngIf="isLoading">
+                      <tr>
+                        <td colspan="12" class="items-center h-40 py-5">
+                          <app-loading></app-loading>
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <ng-container *ngIf="!isLoading">
+                      <tr *ngFor="let report of ReportData; let i = index" class="border-b dark:border-neutral-500 w-full">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ (dataRequest?.offset ?? 1) + (i + 1) }}</td>
+                          <td class="whitespace-nowrap px-6 py-4 text-center">{{ ReportDirectoryUploaders[i].personalName }}</td>
+                          <td class="whitespace-nowrap px-6 py-4 text-center">{{ ReportDirectoryUploaders[i].personalUnit }}</td>
+                          <td class="whitespace-nowrap px-6 py-4 text-center">{{ ReportDirectoryUploaders[i].personalEmail }}</td>
+                          <td class="whitespace-nowrap px-6 py-4 text-center">{{ report.report_status }}</td>
+                          <td class="whitespace-nowrap px-6 py-4 text-center">{{ report.report_overview }}</td>
+                          <td class="whitespace-nowrap px-6 py-4 my-6 text-center">
+                            <button>
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 stroke-red-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                              </svg>
+                            </button>
+                          </td>
+                      </tr>
+                      <tr *ngIf="ReportData.length === 0">
+                        <td
+                          colspan="13"
+                          class="items-center h-40 py-5 font-bold text-center text-gray-500"
+                        >
+                          No data available
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+              </table>
+          </div>
+
+          <div class="flex justify-start mt-5">
+            <h1 class="mr-5">Total : 5</h1>
+            <div>
+                <div class="relative" data-te-dropdown-ref>
+                    <button
+                        class="flex items-center whitespace-nowrap rounded px-2 text-button-success transition duration-150 ease-in-out hover:bg-button-success hover:text-white border border-1 border-button-success rounded-lg"
+                        type=" button" id="dropdownMenuButton1" data-te-dropdown-toggle-ref
+                        aria-expanded="false" data-te-ripple-init data-te-ripple-color="light">
+                        10/Page
+                        <span class="ml-2 mr-2 w-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                class="h-5 w-5">
+                                <path fill-rule="evenodd"
+                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </button>
+                    <ul class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                        aria-labelledby="dropdownMenuButton1" data-te-dropdown-menu-ref>
+                        <li>
+                            <a class="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                href="#" data-te-dropdown-item-ref>Action</a>
+                        </li>
+                        <li>
+                            <a class="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                href="#" data-te-dropdown-item-ref>Another action</a>
+                        </li>
+                        <li>
+                            <a class="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                href="#" data-te-dropdown-item-ref>Something else here</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="flex justify-center mx-3">
+                <nav aria-label="Page navigation example">
+                    <ul class="list-style-none flex">
+                        <li>
+                            <a class="relative block rounded text-gray-500 mx-3" href="#">Previous</a>
+                        </li>
+                        <li>
+                            <a class="relative block rounded text-gray-500 mx-3" href="#">1</a>
+                        </li>
+                        <li aria-current="page">
+                            <a class="relative block rounded text-gray-500 mx-3" href="#">2</a>
+                        </li>
+                        <li>
+                            <a class="relative block rounded text-gray-500 mx-3" href="#">3</a>
+                        </li>
+                        <li>
+                            <a class="relative block rounded text-gray-500 mx-3" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <h1 class="w-fit">Go to <input type="number" value="5"
+                    class="w-16 ml-2 px-3 rounded-lg border border-1 border-button-success">
+            </h1>
+        </div>
+    </div>
+</div>
+</div>
+</div>

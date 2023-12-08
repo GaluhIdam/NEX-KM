@@ -1,0 +1,17 @@
+version: "3.6"
+services:
+  nex_km_frontend:
+    image: th/nex-frontend:latest
+    container_name: th-nex-frontend
+    restart: always
+    ports:
+      - "3011:80"
+    environment:
+      APPLICATION_PORT: 3011
+      NODE_ENV: prod
+    networks:
+      - microservice_network
+networks:
+  microservice_network:
+    external:
+      name: microservice_global_network

@@ -1,0 +1,166 @@
+<form [formGroup]="mform">
+  <div class="mt-8">
+    <div class="grid-cols-2 gap-4 flex flex-cols">
+      <!-- Categories Section -->
+      <div class="px-9 py-9 min-[600px]:w-80 shadow-lg mx-5 max-[600px]:hidden">
+        <h1 class="uppercase font-semibold text-primary tracking-wider">Manage Article</h1>
+        <div class="flex justify-start mt-5">
+          <ul class="w-96">
+            <li class="w-full py-2">
+              <p class="text-gray-400 text-soft-green font-semibold">
+                My Article
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Categories Section -->
+      <div class="w-full">
+        <div class="grid min-[600px]:grid-cols-1 max-[600px]:grid-rows-1 max-[600px]:hidden gap-4 flex px-5 mb-5">
+          <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+            <a class="text-gray-400 mr-3" routerLink="/">Home</a>
+            <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+            <a routerLink="../../nex-learning" class="text-gray-400 mr-3">NEX Learning</a>
+            <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+            <a routerLink="../../nex-learning/article" class="text-gray-400 mr-3">Article</a>
+            <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+            <p class="font-bold r-3 activeLink md:text-base">My Article</p>
+          </div>
+        </div>
+        <div class="min-[600px]:grid min-[600px]:grid-cols-2 min-[600px]:gap-4 content-center mb-5">
+          <div>
+            <h1 class="font-semibold text-2xl px-5 md:px-5 text-left md:mb-0 mb-4">My Article</h1>
+          </div>
+          <div
+            class="min-[600px]:flex min-[600px]:justify-end min-[600px]:px-10 max-[600px]:px-5 max-[600px]:flex max-[600px]:flex-rows">
+            <div class="relative mr-3 w-full mb-4 flex flex-wrap items-stretch bg-gray-100 rounded-full">
+              <button
+                class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+                type="button" id="button-addon1">
+                <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+              </button>
+              <input type="text" formControlName="search"
+                class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+            </div>
+            <div class="bg-gray-100 rounded-full px-4 py-3 w-44 h-fit">
+              <select class="w-full bg-transparent rounded-full" formControlName="sortBy">
+                <option disabled selected [value]="null">Sort By</option>
+                <option [value]="'trending'">Trending</option>
+                <option [value]="'desc'">Newst</option>
+                <option [value]="'asc'">Oldest</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="md:px-5 px-5">
+          <div *ngIf="!load">
+            <div class="w-full h-full mb-5 rounded-lg content-center" *ngFor="let row of articles">
+              <div class="flex justify-start">
+                <div class="w-fit min-[600px]:mr-8 max-[600px]:mr-4">
+                  <img [src]="row.path" [alt]="row.title" class="object-cover w-96 rounded-lg h-full">
+                </div>
+                <div class="w-full py-3 mr-1">
+                  <p class="mb-1 text-gray-500 text-sm">{{ formatDate(row.updatedAt) }}</p>
+                  <h1 class="md:text-2xl text-xl font-semibold h-fit mb-2 break-all">
+                    {{ trimString(row.title!, 110) }}</h1>
+                  <div>
+                    <h1 class="mb-1 text-gray-500 font-semibold">{{ row.unit }}</h1>
+                    <div class="flex flex-cols mt-2">
+                      <p *ngIf="row.approvalStatus == null"
+                        class="mr-1 text-white bg-warning w-fit px-2 rounded-lg md:text-sm text-xs py-1 text-center">
+                        <fa-icon [icon]="faClock" class="text-white"></fa-icon> <span
+                          class="max-[600px]:hidden ml-1">Waiting
+                          Approval</span>
+                      </p>
+                      <p *ngIf="row.approvalStatus == true"
+                        class="mr-1 text-white bg-success w-fit px-2 rounded-lg md:text-sm text-xs py-1 text-center">
+                        <fa-icon [icon]="faCircleCheck" class="text-white"></fa-icon> <span
+                          class="max-[600px]:hidden ml-1">Approved</span>
+                      </p>
+                      <p *ngIf="row.approvalStatus == false"
+                        class="mr-1 text-white bg-rose-500 w-fit px-2 rounded-lg md:text-sm text-xs py-1 text-center">
+                        <fa-icon [icon]="faXmarkCircle" class="text-white"></fa-icon> <span
+                          class="max-[600px]:hidden ml-1">Rejected</span>
+                      </p>
+                      <p *ngIf="row.bannedStatus == true"
+                        class="mr-1 text-white bg-danger-600 w-fit px-2 rounded-lg md:text-sm text-xs py-1 text-center">
+                        <fa-icon [icon]="faBan" class="text-white"></fa-icon> <span
+                          class="max-[600px]:hidden ml-1">Banned</span>
+                      </p>
+                    </div>
+                    <div *ngIf="row.approvalDesc" class="mt-2">
+                      <span class="text-xs mt-1 text-rose-500 font-semibold">Reject Message:</span>
+                      <p class="text-sm">{{ row.approvalDesc }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="relative" data-te-dropdown-ref>
+                    <button type="button" class="flex items-center whitespace-nowrap rounded hover:text-primary p-1"
+                      type="button" [id]="row.id" data-te-dropdown-toggle-ref data-te-ripple-init
+                      data-te-ripple-color="light">
+                      <fa-icon [icon]="faGripVertical"></fa-icon>
+                    </button>
+                    <ul
+                      class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                      aria-labelledby="dropdownMenuButton1" data-te-dropdown-menu-ref>
+                      <li>
+                        <button
+                          class="text-left block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                          (click)="viewArticle(row.uuid!)" data-te-dropdown-item-ref>View</button>
+                      </li>
+                      <li>
+                        <button
+                          class="text-left block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                          (click)="editArticle(row.uuid!)" data-te-dropdown-item-ref>Edit</button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <hr class="mt-5">
+            </div>
+            <p class="text-gray-400 text-center" *ngIf="!articles">Sorry, data is empty</p>
+          </div>
+          <div *ngIf="load">
+            <app-loading></app-loading>
+          </div>
+        </div>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+          <ul class="list-style-none flex px-5 md:px-0 mt-10 place-self-center">
+            <li class="mr-3 place-self-center">
+              <p>Total : {{ totalData }}</p>
+            </li>
+            <li class="mr-3 place-self-center">
+              <select class="border boder-primary rounded py-1 px-2 place-self-center" formControlName="limit">
+                <option [value]="10">10</option>
+                <option [value]="20">20</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+              </select>
+            </li>
+            <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+              <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                class="place-self-center hover:text-black text-primary cursor-pointer"></fa-icon>
+            </li>
+            <li *ngFor="let numPage of pageData" class="place-self-center">
+              <a class="relative block rounded bg-transparent px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100  dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                href="#!">{{ numPage }}</a>
+            </li>
+            <li class="place-self-center text-white rounded px-2 py-1">
+              <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                class="place-self-center hover:text-black text-primary cursor-pointer"></fa-icon>
+            </li>
+            <li class="ml-3 flex flex-cols">
+              <p class="place-self-center mr-3">Go to</p>
+              <input type="number" [value]="mform.get('page')?.value < 0 ? 1 : page"
+                class="border boder-primary rounded py-1 px-2 w-16" formControlName="page">
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</form>

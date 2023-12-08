@@ -1,0 +1,214 @@
+<div class="mt-8">
+  <div class="flex grid-cols-2 gap-4 flex-cols">
+    <!-- Categories Section -->
+    <div class="px-9 py-9 min-[600px]:w-80 shadow-lg mx-5 max-[600px]:hidden">
+      <h1 class="font-semibold tracking-wider uppercase text-regal-blue">
+        Manage Web Directory
+      </h1>
+      <div class="flex justify-start mt-5">
+        <ul class="w-96">
+          <li class="w-full py-2">
+            <a
+              routerLink="/nex-library/manage-book"
+              routerLinkActive="active"
+              class="text-gray-400 active:text-soft-green active:font-semibold"
+            >
+              Corporate Strategy & Business Development
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Categories Section -->
+    <div class="w-full">
+      <div class="grid min-[600px]:grid-cols-1 max-[600px]:grid-rows-1 gap-4">
+        <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+          <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+          <fa-icon [icon]="faArrowRight" class="mr-3 text-gray-400"></fa-icon>
+          <a routerLink="/nex-library" class="mr-3 text-gray-400"
+            >Nex Library</a
+          >
+          <fa-icon [icon]="faArrowRight" class="mr-3 text-gray-400"></fa-icon>
+          <p class="mr-3 text-gray-400 activeLink">My Ebook</p>
+        </div>
+      </div>
+      <div class="w-full px-4 mt-8 min-[600px]:hidden">
+        <div class="w-full px-5 py-5 mt-3 bg-gray-100 rounded-lg h-fit">
+          <h1 class="font-semibold tracking-wider uppercase text-regal-blue">
+            Manage Book
+          </h1>
+          <div class="flex justify-start mt-3">
+            <ul class="w-96">
+              <li class="w-full py-2">
+                <a
+                  routerLink="/nex-library/manage-book"
+                  routerLinkActive="active"
+                  class="text-gray-400 active:text-soft-green active:font-semibold"
+                >
+                  My Collection
+                </a>
+              </li>
+              <li class="w-full py-2">
+                <a
+                  routerLink="/nex-library/manage-book"
+                  routerLinkActive="active"
+                  class="text-gray-400 active:text-soft-green active:font-semibold"
+                >
+                  My Ebook
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid max-[600px]:grid-rows-2 min-[600px]:grid-cols-2 gap-4flex flex-cols py-5"
+      >
+        <div class="flex justify-start min-[600px]:px-10 max-[600px]:px-5">
+          <h1 class="mt-5 text-2xl font-semibold">My EBook</h1>
+        </div>
+        <div class="flex justify-end min-[600px]:px-10 max-[600px]:px-5">
+          <div
+            class="relative flex flex-wrap items-stretch w-full mt-4 mb-4 mr-3 bg-gray-100 rounded-full"
+          >
+            <button
+              class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+              type="button"
+              id="button-addon1"
+            >
+              <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+            </button>
+            <input
+              type="text"
+              class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+              placeholder="Search Category"
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+            />
+          </div>
+          <div class="px-4 py-3 mt-3 bg-gray-100 rounded-full w-36 h-fit">
+            <select class="w-full bg-transparent rounded-full">
+              <option disabled selected>Sort By</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+              <option value="4">Four</option>
+              <option value="5">Five</option>
+              <option value="6">Six</option>
+              <option value="7">Seven</option>
+              <option value="8">Eight</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="px-8">
+        <div
+          class="content-center w-full h-full mb-8 rounded-lg shadow-lg"
+          *ngFor="let row of data_book"
+        >
+          <div class="flex justify-start">
+            <div class="w-fit min-[600px]:mr-8 max-[600px]:mr-4">
+              <img
+                [src]="row.cover"
+                [alt]="row.title"
+                class="object-cover object-center rounded-lg"
+              />
+            </div>
+            <div class="w-full py-3 bg-slate-500">
+              <div class="mb-3 w-fit h-fit">
+                <p
+                  class="bg-new-primary min-[600px]:text-sm max-[600px]:text-xs text-white px-3 py-1 rounded-full"
+                >
+                  <fa-icon [icon]="faBookOpen" class="mr-1"></fa-icon> Published
+                </p>
+              </div>
+              <h1
+                class="min-[600px]:text-4xl min-[600px]:hidden max-[600px]:text-2xl font-semibold h-fit mb-2"
+              >
+                {{
+                  row.title.length > 10
+                    ? row.title.substr(0, 10) + ".."
+                    : row.title
+                }}
+              </h1>
+              <h1
+                class="min-[600px]:text-4xl max-[600px]:hidden max-[600px]:text-2xl font-semibold h-fit mb-2"
+              >
+                {{
+                  row.title.length > 25
+                    ? row.title.substr(0, 25) + ".."
+                    : row.title
+                }}
+              </h1>
+              <div style="overflow-wrap: anywhere">
+                <h1 class="mb-1">{{ row.description }}</h1>
+                <p class="mb-3 text-sm text-soft-green">
+                  {{ row.writer }}
+                </p>
+              </div>
+            </div>
+            <div class="w-fit">
+              <div class="flex justify-end">
+                <div>
+                  <div class="relative" data-te-dropdown-ref>
+                    <button
+                      class="flex items-center whitespace-nowrap rounded bg-transparent px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white"
+                      type="button"
+                      id="dropdownMenuButton1"
+                      data-te-dropdown-toggle-ref
+                      aria-expanded="false"
+                      data-te-ripple-init
+                      data-te-ripple-color="light"
+                    >
+                      <fa-icon
+                        [icon]="faBars"
+                        class="text-base text-black"
+                      ></fa-icon>
+                    </button>
+                    <ul
+                      class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                      aria-labelledby="dropdownMenuButton1"
+                      data-te-dropdown-menu-ref
+                    >
+                      <li>
+                        <a
+                          class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                          href="#"
+                          data-te-dropdown-item-ref
+                          >View</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                          href="#"
+                          data-te-dropdown-item-ref
+                          >Edit</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                          href="#"
+                          data-te-dropdown-item-ref
+                          >private</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                          href="#"
+                          data-te-dropdown-item-ref
+                          >public</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

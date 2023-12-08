@@ -1,0 +1,65 @@
+<ng-container *ngIf="isLoading === false">
+  <div class="flex items-center justify-center w-screen h-screen font-semibold">
+    <app-loading></app-loading>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isLoading === true">
+  <div *ngIf="roleSelected === 'USER'">
+    <app-layout-user></app-layout-user>
+  </div>
+  <div *ngIf="roleSelected === 'ADMIN'">
+    <app-layout-admin></app-layout-admin>
+  </div>
+  <div class="flex items-center justify-center" *ngIf="roleSelected === null">
+    <div class="flex items-center justify-center lg:h-screen">
+      <div class="p-10">
+        <div class="lg:px-40">
+          <div class="flex justify-center">
+            <img
+              class="mb-8 w-36"
+              src="../../../../assets/image/nex-logo.png"
+              alt="logo.png"
+            />
+          </div>
+          <h1 class="text-3xl font-semibold text-center text-primary">
+            Please Select Your Role First
+          </h1>
+          <p class="mt-3 text-center text-gray-500">
+            In NEX Knowledge Management, we value collaboration and
+            productivity. To ensure that you have access to the right tools and
+            information, we kindly request that you select your role within our
+            internal cooperative network.
+          </p>
+        </div>
+
+        <div class="flex flex-col justify-center mt-10 lg:flex-row">
+          <button
+            type="button"
+            (click)="selectRoles(data.listRole.page)"
+            *ngFor="let data of rolesUser"
+            [ngClass]="{
+              'bg-primary text-white': select == data.listRole.page
+            }"
+            class="w-64 p-10 mx-3 my-3 text-gray-500 rounded-lg shadow-lg hover:bg-primary-500 focus:bg-primary focus:text-white hover:text-white place-self-center"
+          >
+            <fa-icon [icon]="faUserGear" class="text-5xl"></fa-icon>
+            <h1 class="mt-3 font-semibold text-center">
+              {{ data.listRole.name }}
+            </h1>
+          </button>
+        </div>
+        <div class="flex justify-center mt-10">
+          <button
+            type="button"
+            (click)="continuePage()"
+            [disabled]="select === null || select === undefined"
+            class="px-5 py-2 text-xl text-white rounded-full shadow-lg hover:bg-primary-700 bg-primary disabled:bg-gray-400"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,62 @@
+<div class="px-20 mt-20">
+  <p class="text-blue-800 font-semibold text-4xl mb-5">Favorites</p>
+  <div class="grid grid-cols-2">
+    <div>
+      <p class="font-semibold text-2xl">Explore</p>
+    </div>
+    <div
+      class="lg:-mt-3 xs:mt-2 ml-auto flex lg:w-80 xs:w-full flex-wrap bg-gray-100 shadow-md rounded-xl"
+    >
+      <button
+        class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+        type="button"
+        id="button-addon1"
+      >
+        <fa-icon [icon]="faSearch" class="text-gray-400"></fa-icon>
+      </button>
+      <input
+        type="text"
+        class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+        placeholder="Search For Topics"
+        aria-label="Example text with button addon"
+        aria-describedby="button-addon1"
+      />
+    </div>
+  </div>
+
+  <div class="grid xl:grid-cols-5 xs:grid-cols-1 mt-5 gap-5">
+    <!-- Left -->
+    <div class="block w-64 rounded-lg xs:mx-auto xs:w-full mb-5 cursor-pointer">
+      <img
+        class="rounded-2xl h-44 w-64"
+        src="https://tecdn.b-cdn.net/img/new/standard/nature/182.jpg"
+        alt=""
+      />
+      <p class="text-blue-800 font-semibold text-2xl mt-3">Liked Videos</p>
+      <p class="text-gray-400">20 Videos</p>
+    </div>
+
+    <!-- Right -->
+    <div class="col-span-4">
+      <!-- Loop here -->
+      <div
+        class="flex flex-col mb-5 rounded-lg w-full md:flex-row cursor-pointer hover:shadow-md"
+        (click)="streamStreaming()"
+      >
+        <img
+          class="h-28 w-44 rounded-xl object-cover md:rounded-l-lg"
+          src="https://mdbootstrap.com/wp-content/uploads/2020/06/vertical.jpg"
+          alt=""
+        />
+        <div class="flex flex-col justify-start xl:ml-3 mt-6">
+          <h5 class="text-2xl font-semibold text-neutral-800">
+            Build it in Figma: Create a Design System — Foundations
+          </h5>
+          <p class="text-lg font-semibold text-neutral-500">
+            TB Learning Centre Unit
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

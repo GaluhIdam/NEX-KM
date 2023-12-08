@@ -1,0 +1,693 @@
+<!-- header -->
+<div class="px-20 mt-16">
+  <div class="mb-8">
+    <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+      <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a routerLink="/user/nex-talks" class="mr-3 text-gray-400">Nex Talk</a>
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a routerLink="/user/nex-talks/podcast" class="mr-3 text-gray-400"
+        >Podcast</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a
+        routerLink="/user/nex-talks/podcast/my-podcast"
+        class="mr-3 text-gray-400"
+        >My Podcast</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <p class="mr-3 text-black activeLink">Upload</p>
+    </div>
+  </div>
+</div>
+
+<div class="mt-10 sm:px-36 xs:px-10">
+  <div class="mb-10 text-center">
+    <h1 class="text-5xl font-semibold text-blue-800 font">
+      Welcome GMF Heroes!
+    </h1>
+    <p class="mt-4 font-semibold text-gray-500">Upload your podcast now</p>
+  </div>
+
+  <div [hidden]="progress == 0">
+    <div class="w-full mt-8 bg-neutral-200 dark:bg-neutral-600">
+      <div
+        class="bg-primary p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+        [style.width.%]="progress"
+      >
+        {{ progress }}%
+      </div>
+    </div>
+    <h1 class="mt-2 mb-2 text-xs italic text-danger">
+      Please wait and do not refresh or leave page!
+    </h1>
+  </div>
+  <ng-container *ngIf="selectedColaboratorData.length > 0">
+    <ng-container
+      *ngFor="let collaborator of selectedColaboratorData; let i = index"
+    >
+      <div [hidden]="progressCollaborator[i] === 0" class="mt-8">
+        <div>Adding Collaborator {{ i + 1 }}</div>
+        <div class="w-full mt-4 bg-neutral-200 dark:bg-neutral-600">
+          <div
+            class="bg-primary p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+            [style.width.%]="progressCollaborator[i]"
+          >
+            {{ progressCollaborator[i] }}%
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="isLoading">
+    <div class="flex items-center justify-center font-semibold h-60">
+      <app-loading></app-loading>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading">
+    <form
+      [formGroup]="podcastForm"
+      (ngSubmit)="onSaveClick()"
+      [hidden]="progress > 0"
+    >
+      <div
+        class="block w-full p-6 mb-5 bg-gray-100 rounded-lg shadow-xl shadow-gray-200"
+      >
+        <div>
+          <div class="xl:px-56 lg:px-40 sm:px-10 xs:px-0">
+            <div
+              class="py-32 mx-auto text-center bg-white border-2 rounded-sm"
+              (dragover)="onPodcastFileDragOver($event)"
+              (dragleave)="onPodcastFileDragLeave($event)"
+              (drop)="onPodcastFileDrop($event)"
+              *ngIf="selectedPodcastFile === null"
+            >
+              <p>Drag and drop MP3 up to 50 MB</p>
+              <div class="hidden p-2 border-2">
+                <input
+                  #podcastFileInput
+                  id="file_podcast"
+                  accept=".mp3"
+                  type="file"
+                  (change)="onPodcastFileUploaded($event)"
+                />
+              </div>
+              <button
+                type="button"
+                (click)="triggerPodcastFileInputClick()"
+                class="mt-4 w-fit rounded bg-primary px-6 pt-2.5 pb-2 text-sm text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+              >
+                Or choose File MP3 to Upload
+              </button>
+            </div>
+            <div
+              *ngIf="
+                !file_podcast?.valid &&
+                (file_podcast?.dirty || file_podcast?.touched)
+              "
+            >
+              <small
+                class="text-red-800"
+                [hidden]="!file_podcast?.errors?.required"
+              >
+                Podcast File is required
+              </small>
+            </div>
+          </div>
+          <div
+            *ngIf="selectedPodcastFile !== null"
+            class="xl:px-56 lg:px-40 sm:px-10 xs:px-0"
+          >
+            <div
+              class="flex items-center justify-between p-4 mt-8 bg-white rounded-lg"
+            >
+              <div class="flex items-center content-center">
+                <div>
+                  <fa-icon
+                    [icon]="faFile"
+                    class="p-4 mr-2 rounded-full bg-[#D4D4D4] text-gray-500"
+                  ></fa-icon>
+                </div>
+                <div>
+                  <p>{{ selectedPodcastFile.name }}</p>
+                  <p>
+                    {{ formatFileSize(selectedPodcastFile.size) }}
+                  </p>
+                </div>
+              </div>
+              <div class="" (click)="onRemovePodcastFile()">
+                <fa-icon
+                  [icon]="faTrash"
+                  class="p-4 ml-2 rounded-full bg-[#FFEBEE] text-danger"
+                ></fa-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid gap-4 p-6 bg-white rounded-lg shadow-xl sm:grid-cols-10 xs:grid-cols-1 shadow-gray-200"
+      >
+        <div class="sm:col-span-3">
+          <div
+            class="xs:flex xs:flex-row xs:justify-between xs:items-center xs:py-2"
+          >
+            <p class="font-semibold">
+              Image <span class="text-danger">*</span>
+            </p>
+            <div class="sm:hidden">
+              <button
+                *ngIf="selectedPodcastCoverFile === null"
+                (click)="triggerImageFileInputClick()"
+                class="w-fit rounded bg-primary px-6 pt-2.5 pb-2 text-sm text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+              >
+                <fa-icon
+                  [icon]="faUpload"
+                  class="mr-2 text-sm text-white"
+                ></fa-icon>
+                Upload Image
+              </button>
+              <button
+                *ngIf="selectedPodcastCoverFile !== null"
+                (click)="onRemovePodcastCover()"
+                class="w-fit rounded bg-danger px-6 pt-2.5 pb-2 text-sm mt-5 text-white transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-danger-600"
+              >
+                <fa-icon
+                  [icon]="faTrash"
+                  class="mr-2 text-sm text-white"
+                ></fa-icon>
+                Delete Image
+              </button>
+            </div>
+          </div>
+          <div *ngIf="selectedPodcastCoverFile === null">
+            <div
+              class="py-32 mx-auto text-center border-2 rounded-xl"
+              (dragover)="onPodcastCoverDragOver($event)"
+              (dragleave)="onPodcastCoverDragLeave($event)"
+              (drop)="onPodcastCoverDrop($event)"
+            >
+              <p><b>Upload a file</b> or drag and drop</p>
+              <p>Image File up to 1 MB</p>
+              <div class="hidden p-2 border-2">
+                <input
+                  #podcastCoverFileInput
+                  id="image"
+                  accept=".png, .jpg, .jpeg"
+                  type="file"
+                  (change)="onPodcastCoverUploaded($event)"
+                />
+              </div>
+            </div>
+            <div class="flex justify-between">
+              <div
+                *ngIf="
+                  !cover_podcast?.valid &&
+                  (cover_podcast?.dirty || cover_podcast?.touched)
+                "
+              >
+                <small
+                  class="text-red-800"
+                  [hidden]="!cover_podcast?.errors?.required"
+                >
+                  Image is required
+                </small>
+              </div>
+              <div></div>
+              <div class="sm:flex sm:justify-end xs:hidden">
+                <button
+                  type="button"
+                  (click)="triggerImageFileInputClick()"
+                  class="w-fit rounded bg-primary px-6 pt-2.5 pb-2 text-sm mt-5 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                >
+                  <fa-icon
+                    [icon]="faUpload"
+                    class="mr-2 text-sm text-white"
+                  ></fa-icon>
+                  Upload Image
+                </button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="selectedPodcastCoverFile !== null">
+            <div class="flex items-center" style="height: 310px">
+              <img
+                *ngIf="previewPodcastCover"
+                class="w-full h-full rounded-xl"
+                [src]="previewPodcastCover"
+                alt="Preview"
+              />
+            </div>
+            <div class="sm:flex sm:justify-end xs:hidden">
+              <button
+                (click)="onRemovePodcastCover()"
+                class="w-fit rounded bg-danger px-6 pt-2.5 pb-2 text-sm mt-5 text-white transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-danger-600"
+              >
+                <fa-icon
+                  [icon]="faTrash"
+                  class="mr-2 text-sm text-white"
+                ></fa-icon>
+                Delete Image
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="sm:col-span-7">
+          <div class="mb-8">
+            <label for="title" class="font-semibold"
+              >Title <span class="text-danger-700">*</span></label
+            >
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              class="mt-4 w-full min-w-0 flex-auto rounded-lg border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out focus:z-[3] focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
+              placeholder="Input Your Title Here..."
+            />
+            <div *ngIf="!title?.valid && (title?.dirty || title?.touched)">
+              <small class="text-red-800" [hidden]="!title?.errors?.required">
+                Title is required
+              </small>
+            </div>
+          </div>
+          <div class="mb-8">
+            <label for="description" class="font-semibold"
+              >Description <span class="text-danger-700">*</span></label
+            >
+            <textarea
+              class="mt-4 peer block min-h-[auto] w-full rounded-lg border border-neutral-300 bg-transparent py-[0.32rem] px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none"
+              id="description"
+              rows="3"
+              formControlName="description"
+              id="description"
+              placeholder="Input Your Description Here"
+            ></textarea>
+
+            <div
+              *ngIf="
+                !description?.valid &&
+                (description?.dirty || description?.touched)
+              "
+            >
+              <small
+                class="text-red-800"
+                [hidden]="!description?.errors?.required"
+              >
+                Description is required
+              </small>
+            </div>
+          </div>
+          <div class="mb-24">
+            <label for="seriesId" class="font-semibold"
+              >Series <span class="text-danger">*</span></label
+            >
+            <ng-select
+              class="mt-4"
+              id="seriesId"
+              name="seriesId"
+              formControlName="seriesId"
+              placeholder="Choose an existing series"
+            >
+              <ng-option *ngFor="let serie of serieData" value="{{ serie.id }}">
+                {{ serie.title }}
+              </ng-option>
+            </ng-select>
+            <div
+              *ngIf="!seriesId?.valid && (seriesId?.dirty || seriesId?.touched)"
+            >
+              <small
+                class="text-red-800"
+                [hidden]="!seriesId?.errors?.required"
+              >
+                Series is required
+              </small>
+            </div>
+          </div>
+          <div class="flex flex-col gap-2 mb-3 form-group">
+            <div>
+              <label for="collaborator" class="font-semibold"
+                >Collaborator</label
+              >
+              <!--Add collaborator button-->
+              <button
+                type="button"
+                (click)="onOpenColaboratorModal()"
+                class="w-6 h-6 ml-2 text-white border-none rounded-full bg-success hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+                aria-label="Close"
+              >
+                <fa-icon [icon]="faAdd" class="text-center"></fa-icon>
+              </button>
+            </div>
+
+            <ng-container
+              *ngIf="
+                selectedColaboratorData.length > 0 && !isColaboratorModalOpen
+              "
+            >
+              <div class="h-52">
+                <div
+                  class="flex flex-row flex-1 h-full overflow-scroll overflow-y-auto"
+                >
+                  <div class="grid grid-cols-1 gap-2 py-2 mb-4">
+                    <div
+                      class="relative"
+                      *ngFor="
+                        let collaborator of selectedColaboratorData;
+                        let i = index
+                      "
+                    >
+                      <div
+                        class="max-w-md px-4 bg-white shadow-md rounded-xl hp:max-w-2xl"
+                      >
+                        <div
+                          class="flex items-center gap-2 lg:flex-row hp:flex-col"
+                        >
+                          <div class="w-20 h-20 lg:my-4 hp:mt-4">
+                            <img
+                              class="w-full h-full rounded-full"
+                              [src]="collaborator.userPhoto"
+                              alt="Profile image"
+                            />
+                          </div>
+                          <div class="lg:py-8 hp:py-4">
+                            <p
+                              class="text-xl font-semibold hp:text-center lg:text-left font-jakarta"
+                            >
+                              {{
+                                collaborator.userName.length > 25
+                                  ? collaborator.userName.substring(0, 25) +
+                                    "..."
+                                  : collaborator.userName
+                              }}
+                              ({{ collaborator.personalUnit }})
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <!--Cancel button-->
+                      <ng-container>
+                        <button
+                          type="button"
+                          (click)="onRemoveSelectedCollaborator(i)"
+                          class="box-content absolute text-white bg-red-500 border-none rounded-full -right-1 -top-1 hover:no-underline hover:bg-danger focus:opacity-100 focus:shadow-none focus:outline-none"
+                          aria-label="Close"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-6 h-6"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div class="flex justify-end gap-2">
+            <button
+              type="button"
+              (click)="onCancelClick()"
+              class="mb-2 block w-fit rounded bg-danger px-6 pt-2.5 pb-2 text-base mt-5 font-medium leading-normal text-white"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="podcastForm.status === 'INVALID'"
+              class="disabled:bg-gray-400 mb-2 block w-fit rounded bg-primary px-6 pt-2.5 pb-2 text-base mt-5 font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+            >
+              Upload Your Podcast
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</div>
+
+<div
+  *ngIf="isColaboratorModalOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center"
+>
+  <div class="absolute inset-0 bg-black opacity-50"></div>
+  <div
+    class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-11/12 h-5/6 px-12 py-4 flex-col rounded-xl border-none bg-white bg-clip-padding text-current shadow-lg outline-none text-center"
+  >
+    <!--Close button-->
+    <button
+      type="button"
+      (click)="onCloseColaboratorModal()"
+      class="box-content absolute p-2 text-white bg-red-500 border-none rounded-full right-4 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+      data-te-modal-dismiss
+      aria-label="Close"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+    <p class="mt-4 font-bold">Collaborators</p>
+    <div class="lg:px-10 max-lg:px-5">
+      <div
+        class="flex items-center flex-shrink-0 w-full p-4 -mt-2 lg:flex-row max-lg:flex-col rounded-t-md"
+      >
+        <div
+          class="relative flex flex-wrap items-stretch justify-between w-full mt-4 mb-4 mr-3 bg-gray-100 rounded-full"
+        >
+          <button
+            class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+            type="button"
+            id="button-addon1"
+          >
+            <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+          </button>
+          <input
+            type="text"
+            class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+            placeholder="Search Collaborator"
+            aria-label="Example text with button addon"
+            aria-describedby="button-addon1"
+            (keyup)="searchByField($event)"
+          />
+        </div>
+
+        <!-- <button
+          type="button"
+          [disabled]="selectedColaboratorData.length === 0"
+          (click)="onConfirmationAddCollaborator()"
+          class="flex items-center gap-2 px-2 text-white border-none rounded-lg w-fit bg-success hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none disabled:bg-slate-400"
+        >
+          <fa-icon [icon]="faAdd" class=""></fa-icon>
+          <p>Add Collaborator</p>
+        </button> -->
+      </div>
+    </div>
+
+    <div
+      class="relative flex-auto p-4 -mt-2 overflow-scroll overflow-y-auto"
+      data-te-modal-body-ref
+    >
+      <!-- Content -->
+      <div class="">
+        <ng-container *ngIf="isCollaboratorLoading">
+          <div class="flex items-center justify-center font-semibold">
+            <app-loading></app-loading>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isCollaboratorLoading">
+          <ng-container *ngIf="colaboratorData.length === 0">
+            <div class="flex items-center justify-center h-full font-semibold">
+              <h2>No Collaborator Available.</h2>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="colaboratorData.length > 0">
+            <div class="flex gap-0 h-max">
+              <div class="flex flex-col justify-between flex-1 h-full px-12">
+                <div class="grid gap-4 mb-4 lg:grid-cols-3 hp:grid-cols-1">
+                  <div
+                    class="relative"
+                    *ngFor="let collaborator of colaboratorData; let i = index"
+                  >
+                    <div
+                      class="max-w-md px-4 shadow-md rounded-xl hp:max-w-2xl"
+                      (click)="
+                        !isSelectedCollaboratorChecked[i]
+                          ? onSelectCollaborator(collaborator, i)
+                          : null
+                      "
+                      [ngClass]="
+                        isSelectedCollaboratorChecked[i]
+                          ? 'bg-success text-white'
+                          : 'bg-white cursor-pointer text-black'
+                      "
+                    >
+                      <div
+                        class="flex items-center gap-2 lg:flex-row hp:flex-col"
+                      >
+                        <div class="w-24 lg:my-4 hp:mt-4">
+                          <img
+                            class="w-full rounded-full"
+                            [src]="collaborator.userPhoto"
+                            alt="Profile image"
+                          />
+                        </div>
+                        <div class="lg:py-8 hp:py-4">
+                          <p
+                            class="text-xl font-semibold hp:text-center lg:text-left font-jakarta"
+                          >
+                            {{
+                              collaborator.userName.length > 25
+                                ? collaborator.userName.substring(0, 25) + "..."
+                                : collaborator.userName
+                            }}
+                            ({{ collaborator.personalUnit }})
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <!--Cancel button-->
+                    <ng-container *ngIf="isSelectedCollaboratorChecked[i]">
+                      <button
+                        type="button"
+                        (click)="onDeSelectCollaborator(collaborator, i)"
+                        class="box-content absolute text-white bg-red-500 border-none rounded-full -right-1 -top-1 hover:no-underline hover:bg-danger focus:opacity-100 focus:shadow-none focus:outline-none"
+                        aria-label="Close"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="w-8 h-8"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex w-full mt-4 lg:justify-end hp:justify-center">
+                  <form [formGroup]="mform">
+                    <nav>
+                      <ul
+                        class="flex gap-3 mt-5 list-style-none place-self-center hp:flex-col sm:flex-row"
+                      >
+                        <div class="flex flex-row justify-center">
+                          <li class="mr-3 place-self-center">
+                            <p>Total : {{ totalData }}</p>
+                          </li>
+                          <li class="mr-1 place-self-center">
+                            <select
+                              class="px-2 py-1 border rounded boder-regal-blue place-self-center"
+                              formControlName="limit"
+                            >
+                              <option [value]="6">6</option>
+                              <option [value]="12">12</option>
+                              <option [value]="24">24</option>
+                              <option [value]="48">48</option>
+                              <option [value]="100">100</option>
+                            </select>
+                          </li>
+                          <li class="mr-3 place-self-center">
+                            <p>Data</p>
+                          </li>
+                        </div>
+
+                        <div class="flex flex-row justify-center">
+                          <li
+                            class="px-2 py-1 text-white rounded place-self-center"
+                          >
+                            <fa-icon
+                              [icon]="faCircleChevronLeft"
+                              (click)="prevPage()"
+                              [class]="
+                                this.mform.get('page')?.value > 1
+                                  ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                                  : 'place-self-center text-gray-500'
+                              "
+                            ></fa-icon>
+                          </li>
+                          <li
+                            *ngFor="let numPage of pageData"
+                            class="place-self-center"
+                          >
+                            <div
+                              [class]="
+                                numPage === this.mform.get('page')?.value
+                                  ? 'relative block rounded px-3 py-1.5 text-base text-white transition-all duration-300 font-semibold bg-regal-blue'
+                                  : 'cursor-pointer relative block rounded px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white'
+                              "
+                              (click)="changePage(numPage)"
+                            >
+                              {{ numPage }}
+                            </div>
+                          </li>
+                          <li
+                            class="px-2 py-1 text-white rounded place-self-center"
+                          >
+                            <fa-icon
+                              [icon]="faCircleChevronRight"
+                              (click)="nextPage()"
+                              [class]="
+                                this.mform.get('page')?.value < pageData.length
+                                  ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                                  : 'place-self-center text-gray-500'
+                              "
+                            ></fa-icon>
+                          </li>
+                        </div>
+
+                        <li class="flex flex-row justify-center">
+                          <p class="mr-3 place-self-center">Go to Page</p>
+                          <select
+                            class="px-4 py-1 border rounded boder-regal-blue place-self-center"
+                            formControlName="page"
+                          >
+                            <option *ngFor="let num of pageData" [value]="num">
+                              {{ num }}
+                            </option>
+                          </select>
+                        </li>
+                      </ul>
+                    </nav>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <!-- Content -->
+    </div>
+  </div>
+</div>

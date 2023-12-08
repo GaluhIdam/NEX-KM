@@ -1,0 +1,258 @@
+<!-- Header -->
+<div class="mt-10 lg:mx-10 mx-5 px-5 py-10 rounded-xl bg-cover bg-center"
+  [style.background-image]="'url('+ communityDetail.headlinedPhotoPath + ')'">
+  <div class="grid lg:grid-cols-2 xs:grid-cols-1 px-5 text-white">
+    <!-- Left -->
+    <div>
+      <p class="lg:text-3xl text-lg font-semibold">Welcome to</p>
+      <p class="lg:text-5xl text-3xl font-semibold uppercase mt-2">{{ communityDetail.name }}</p>
+      <div class="mt-10">
+        <p class="w-full my-1 text-sm">
+          <fa-icon [icon]="faUsers" class="text-white mr-1"></fa-icon>
+          {{ communityDetail._count.communitiesCommunityMembers }} Members
+        </p>
+        <p class="w-full my-1 text-sm">
+          <fa-icon [icon]="faCalendar" class="text-white mr-3"></fa-icon>
+          Founded at {{formatDateNotDays(communityDetail.createdAt)}}
+        </p>
+        <p class="w-full my-1 text-sm">
+          <fa-icon [icon]="faLocationPin" class="text-white mr-3"></fa-icon>
+          {{communityDetail.location}}
+        </p>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="text-end self-end xs:mt-10">
+      <p class="font-semibold text-md">Leader</p>
+      <img [src]="photo" class="rounded-full w-12 h-12 ml-auto" alt="Profile Image" loading="lazy" />
+      <p class="font-semibold text-md">{{communityDetail.leader}}</p>
+      <p class="text-sm">{{email}}</p>
+    </div>
+  </div>
+</div>
+
+<div class="mt-10 mx-5 lg:px-5">
+  <div class="p-5 shadow rounded-lg">
+    <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+      <a class="text-gray-400 mr-3 hover:text-black" routerLink="/user/nex-community">Nex Community</a>
+      <fa-icon [icon]="faArrowRight" class="text-gray-400 mr-3"></fa-icon>
+      <a [routerLink]="'/user/nex-community/'+uuid" class="text-gray-400 mr-3 hover:text-black">{{
+        communityDetail.name }}</a>
+      <fa-icon [icon]="faArrowRight" class="text-gray-400 mr-3"></fa-icon>
+      <p class="font-bold r-3 activeLink">Recent Activity</p>
+    </div>
+    <img class="rounded mt-5 w-full" [src]="activityDetail.path" alt="image">
+    <h1 class="lg:text-4xl text-2xl font-semibold mt-5">{{ activityDetail.title }}</h1>
+    <p class="font-semibold mt-3 lg:text-base text-sm">{{ personalName }}</p>
+    <p class="mt-2 lg:text-base text-sm text-justify">{{ activityDetail.description }}</p>
+  </div>
+  <form class="mb-6 mt-10" [formGroup]="mform" (submit)="createCommentData()">
+    <textarea id="comment" rows="6" #autoResizeTextareaCreate (input)="onInputCommentCreate($event)"
+      class="w-full text-sm text-gray-900 rounded-lg p-5 focus:outline-primary focus:outline-1 focus:outline shadow-lg"
+      placeholder="Write a comment..." formControlName="comments"></textarea>
+    <div class="text-right mt-3">
+      <button type="submit"
+        class="inline-flex shadow-lg items-center py-2 px-7 text-sm font-medium text-center text-white bg-primary rounded-full focus:ring-4 focus:ring-primary-200 hover:bg-primary-600">
+        <fa-icon class="mr-2" [icon]="faPaperPlane"></fa-icon>
+        Post
+      </button>
+    </div>
+  </form>
+  <div *ngFor="let data of commentActivity; let i = index">
+    <div class="flex flex-row shadow rounded-lg p-5 mb-5">
+      <div class="w-full">
+        <div class="mb-2">
+          <div class="">
+            <div class="flex justify-between">
+              <div class="flex flex-row">
+                <img class="mr-2 w-8 h-8 rounded-full" [src]="urlAvatar+data.personalNumber"
+                  [alt]="data.personalName" />
+                <div class="flex flex-col mr-2">
+                  <p class="text-sm font-semibold">{{ data.personalName }}</p>
+                  <span class="text-xs text-gray-500">{{ formatDate(data.updatedAt) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-sm tracking-normal break-normal mb-2" *ngIf="!editFormVisible[i]">
+          {{ data.comment }}
+        </p>
+        <!-- Edit Form -->
+        <a (click)="toggleShowReply(i, data.id)" *ngIf="showReply[i] == false && data._count.childComment > 0"
+          class="text-gray-500 text-xs mt-3 cursor-pointer hover:text-primary-500">---- View
+          {{data._count.childComment}} more replies</a>
+        <div class="flex items-center mt-4">
+          <button type="button" data-te-toggle="tooltip" title="Reply"
+            (click)="tagReplyCommentId(data.id, data.personalName, data.personalNumber, data.comment)"
+            class="text-xs mr-2 text-primary border cursor-pointer hover:bg-primary hover:text-white rounded-lg px-3 items-center text-center py-1 border-primary">
+            <fa-icon [icon]="faComment" class="mr-1"></fa-icon> Reply
+          </button>
+          <button type="button" data-te-toggle="tooltip" (click)="likeOrDislike(activityDetail.id, data.id, true)"
+            [ngClass]="{'bg-danger text-white': cekDataLike(data.commentLikeActivity) == true}"
+            class="text-xs mr-2 text-danger border cursor-pointer hover:bg-danger hover:text-white rounded-lg px-3 items-center text-center py-1 border-danger">
+            <fa-icon [icon]="faHeart" class="mr-1"></fa-icon>{{ data.like }}
+          </button>
+          <button type="button" data-te-toggle="tooltip" (click)="likeOrDislike(activityDetail.id, data.id, false)"
+            [ngClass]="{'bg-warning text-white': cekDataLike(data.commentLikeActivity) == false}"
+            class="text-xs mr-4 text-warning border cursor-pointer hover:bg-warning hover:text-white rounded-lg px-3 items-center text-center py-1 border-warning">
+            <fa-icon [icon]="faHeartBroken" class="mr-1"></fa-icon>{{ data.dislike }}
+          </button>
+          <div class="relative" data-te-dropdown-ref>
+            <button class="text-xs text-primary" type="button" [id]="'dropdownMenuButton'+i" data-te-dropdown-toggle-ref
+              aria-expanded="false">
+              More
+            </button>
+            <ul
+              class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+              aria-labelledby="dropdownMenuButton1" data-te-dropdown-menu-ref>
+              <!-- <li *ngIf="keycloakService.getUsername() === data.personalNumber">
+                              <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                (click)="toggleEditComment(i, data.comment)" data-te-dropdown-item-ref>Edit</a>
+                            </li> -->
+              <li *ngIf="keycloakService.getUsername() === data.personalNumber">
+                <a (click)="deleteComment(data.uuid)"
+                  class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-danger-700 hover:bg-neutral-100 active:text-danger-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-danger-400 dark:text-danger-200 dark:hover:bg-neutral-600"
+                  data-te-dropdown-item-ref>Delete</a>
+              </li>
+              <li *ngIf="keycloakService.getUsername() !== data.personalNumber">
+                <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-danger-700 hover:bg-neutral-100 active:text-danger-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-danger-400 dark:text-danger-200 dark:hover:bg-neutral-600"
+                  data-te-dropdown-item-ref>Report</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-4" *ngIf="replyComment && showReply[i]">
+          <div *ngFor="let subdata of replyComment; let x = index">
+            <div class="p-6 mb-3 text-base shadow-lg bg-white rounded-lg">
+              <div class="flex flex-row">
+                <div class="w-full">
+                  <div class="flex justify-between items-center mb-2">
+                    <div class="flex items-center">
+                      <div class="inline-flex items-center mr-3">
+                        <img class="mr-2 w-8 h-8 rounded-full" [src]="urlAvatar+subdata.personalNumber"
+                          [alt]="subdata.personalName" />
+                        <div class="flex flex-col">
+                          <p class="text-sm font-semibold">{{ subdata.personalName }}</p>
+                          <span class="text-xs text-gray-500">{{ formatDate(subdata.updatedAt) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="text-sm" *ngIf="!editReply[x]">
+                    <span class="font-semibold text-xs text-primary">{{ '@'+
+                      subdata.personalNameMention }}</span> {{ subdata.comment }}
+                  </p>
+                  <div class="flex items-center mt-4">
+                    <button type="button" data-te-toggle="tooltip" title="Reply"
+                      (click)="tagReplyCommentId(data.id, subdata.personalName, subdata.personalNumber, subdata.comment)"
+                      class="text-xs mr-2 text-primary border cursor-pointer hover:bg-primary hover:text-white rounded-lg px-3 items-center text-center py-1 border-primary">
+                      <fa-icon [icon]="faComment" class="mr-1"></fa-icon> Reply
+                    </button>
+                    <button type="button" data-te-toggle="tooltip" title="Like"
+                      (click)="likeOrDislike(activityDetail.id, subdata.id, true)"
+                      [ngClass]="{'bg-danger text-white': cekDataLike(subdata.commentLikeActivity) == true}"
+                      class="text-xs mr-2 text-danger border cursor-pointer hover:bg-danger hover:text-white rounded-lg px-3 items-center text-center py-1 border-danger">
+                      <fa-icon [icon]="faHeart" class="mr-1"></fa-icon>{{ subdata.like }}
+                    </button>
+                    <button type="button" data-te-toggle="tooltip" title="Dislike"
+                      (click)="likeOrDislike(activityDetail.id, subdata.id, false)"
+                      [ngClass]="{'bg-warning text-white': cekDataLike(subdata.commentLikeActivity) == false}"
+                      class="text-xs mr-4 text-warning border cursor-pointer hover:bg-warning hover:text-white rounded-lg px-3 items-center text-center py-1 border-warning">
+                      <fa-icon [icon]="faHeartBroken" class="mr-1"></fa-icon>{{ subdata.dislike }}
+                    </button>
+                    <div class="relative" data-te-dropdown-ref>
+                      <button class="text-xs text-primary" type="button" [id]="'dropdownMenuButton'+i"
+                        data-te-dropdown-toggle-ref aria-expanded="false">
+                        More
+                      </button>
+                      <ul
+                        class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                        aria-labelledby="dropdownMenuButton1" data-te-dropdown-menu-ref>
+                        <!-- <li *ngIf="keycloakService.getUsername() === subdata.personalNumber && !editReply[x]">
+                                        <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                          (click)="toggleEditReplyComment(x, subdata.comment)"
+                                          data-te-dropdown-item-ref>Edit</a>
+                                      </li> -->
+                        <li *ngIf="keycloakService.getUsername() === subdata.personalNumber">
+                          <a (click)="deleteComment(subdata.uuid)"
+                            class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-danger-700 hover:bg-neutral-100 active:text-danger-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-danger-400 dark:text-danger-200 dark:hover:bg-neutral-600"
+                            type="button" data-te-dropdown-item-ref>Delete</a>
+                        </li>
+                        <li *ngIf="keycloakService.getUsername() !== subdata.personalNumber">
+                          <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-danger-700 hover:bg-neutral-100 active:text-danger-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-danger-400 dark:text-danger-200 dark:hover:bg-neutral-600"
+                            data-te-dropdown-item-ref>Report</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button *ngIf="replyComment.length < totalReply" type="button"
+              class="text-gray-500 text-xs cursor-pointer hover:text-primary-500">
+              <p>Show more <fa-icon [icon]="faChevronDown" class="ml-1"></fa-icon></p>
+            </button>
+            <button *ngIf="replyComment.length == totalReply" type="button" (click)="toggleHideReplyMore(i, data.id)"
+              class="text-gray-500 text-xs cursor-pointer hover:text-primary-500">
+              <p>Hide Reply <fa-icon [icon]="faChevronUp" class="ml-1"></fa-icon></p>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button *ngIf="totalReply > limitReply && replyComment.length != totalReply" type="button"
+          class="text-gray-500 text-xs cursor-pointer hover:text-primary-500">
+          <p>Show more <fa-icon [icon]="faChevronDown" class="ml-1"></fa-icon></p>
+        </button>
+        <button *ngIf="totalReply > limitReply && replyComment.length == totalReply" type="button"
+          class="text-gray-500 text-xs cursor-pointer hover:text-primary-500">
+          <p>Hide Reply <fa-icon [icon]="faChevronUp" class="ml-1"></fa-icon></p>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav *ngIf="parentIdReply"
+  class="fixed bottom-0 flex w-full rounded-t-lg flex-wrap items-center justify-between bg-gray-100 text-neutral-500 shadow-lg hover:text-neutral-700 focus:text-neutral-700 dark:bg-neutral-600">
+  <div class="w-full px-3 bg-gray-300">
+    <div class="flex flex-row justify-between">
+      <p class="text-xs my-2 text-gray-700">Reply to {{ personalNameMention }}</p>
+      <button class="my-2 text-xs" (click)="closeReplyComment()"><fa-icon [icon]="faXmark"></fa-icon></button>
+    </div>
+    <p class="text-xs mb-2 text-gray-700">{{ commentReplyMention }}</p>
+  </div>
+  <div class="w-full items-center justify-between px-3 rounded-t-lg">
+    <div class="mx-1">
+      <form class="mt-3" [formGroup]="commentsForm" (submit)="createReplyCommentData()">
+        <div class="overflow-x-auto flex flex-row">
+          <a *ngFor="let emj of emoji" (click)="clickEmoji(emj)"
+            class="mr-2 mb-2 text-base sliding-emoticon cursor-pointer">{{ emj
+            }}</a>
+        </div>
+        <div class="flex flex-row mb-5 mt-2">
+          <img class="mr-2 w-10 h-9 rounded-full" [src]="urlAvatar+keycloakService.getUsername()"
+            [alt]="keycloakService.getUsername()" />
+          <textarea id="comment" rows="1" formControlName="comments"
+            class="px-0 w-full text-xs rounded-lg mr-2 px-3 py-2 border border-gray-200 text-gray-900 focus:ring-0 focus:outline-none"
+            placeholder="Write a reply..." (input)="onInput($event)" required #autoResizeTextarea
+            #contentInput></textarea>
+          <button type="submit"
+            class="inline-flex items-center w-8 h-8 text-md font-medium text-center text-primary rounded-full">
+            <fa-icon [icon]="faPaperPlane"></fa-icon>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<img class="absolute left-0 top-2/3 -z-20" src="../../../../assets/image/home-page/gradient/227.png" alt="" />
+
+<img class="absolute right-0 top-3/4 -z-10" src="../../../../assets/image/home-page/gradient/228.png" alt="" />
+
+<img class="absolute right-0 top-1/2 -z-20" src="../../../../assets/image/home-page/gradient/229.png" alt="" />

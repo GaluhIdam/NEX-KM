@@ -1,0 +1,10 @@
+@media (max-width: 600px) {
+  .relative.flex.flex-wrap.items-stretch {
+    margin-left: 0;
+    border: none;
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+}
+
+

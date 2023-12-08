@@ -1,0 +1,296 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX MILES</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">{{ title.title }}</h1>
+      <div class="flex justify-start mt-3">
+        <h1 class="text-gray-400">{{ title.title }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bg-white shadow rounded-lg mt-5">
+  <form [formGroup]="mform">
+    <div>
+      <div class="grid grid-cols-2 gap-1">
+        <div class="flex justify-start h-fit w-fit p-5">
+          <form [formGroup]="mform">
+            <div class="relative flex w-full flex-wrap items-stretch bg-white rounded-lg border border-1">
+              <button
+                class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+                type="button" id="button-addon1">
+                <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+              </button>
+              <input type="text" formControlName="search"
+                class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+            </div>
+          </form>
+        </div>
+        <div class="flex justify-end place-items-center p-5">
+          <button
+            class="px-2 border border-1 hover:bg-success hover:text-white border-success py-2 mx-2 rounded-lg text-success h-fit">
+            <fa-icon [icon]="faPrint"></fa-icon> Export To Excel</button>
+          <!-- Button trigger vertically centered modal-->
+          <button type="button" (click)="callModal(null, null, null, true)"
+            class="px-2 border border-1 hover:bg-success hover:text-white cursor-pointer border-success py-2 mx-2 rounded-lg text-success h-fit"
+            data-te-toggle="modal" data-te-target="#exampleModalXl" data-te-ripple-init data-te-ripple-color="light">
+            <fa-icon [icon]="faPlus"></fa-icon> Add Miles
+          </button>
+        </div>
+      </div>
+      <div class="flex flex-col overflow-x-auto">
+        <div class="p-5">
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-sm font-light">
+              <thead class="border-b font-medium border-gray-500 bg-gray-100 text-gray-600 w-full">
+                <tr class="w-full">
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">No</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Miles</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Category</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Name</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Range Point</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Image</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Status</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody class="w-full">
+                <tr class="border-b dark:border-neutral-500 w-full" *ngFor="let data of mileData; index as i">
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ i+1 }}.</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ data.level }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ data.category }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ data.name }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ data.minPoint }} -
+                    {{data.maxPoint}}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">
+                    <img [src]="data.path" [alt]="data.image" class="object-contain h-10 mx-auto" width="100" height="100">
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center" *ngIf="data.status === true"><span
+                      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-primary-700">
+                      Active
+                    </span></td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center" *ngIf="data.status === false"><span
+                      class="inline-block whitespace-nowrap rounded-[0.27rem] bg-danger-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-danger-700">
+                      Inactive
+                    </span></td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">
+                    <button type="button" (click)="callModal(data.name, data.id, data.uuid, false)"
+                      data-te-toggle="modal" data-te-target="#exampleModalXl" data-te-ripple-init
+                      data-te-ripple-color="light"
+                      class="mx-1 w-fit border text-primary border-1 border-primary px-2 py-1 rounded-lg">
+                      <fa-icon [icon]="faPencil"></fa-icon>
+                    </button>
+                    <button type="button" (click)="deleteMilesData(data.uuid)"
+                      class="mx-1 w-fit border text-danger border-1 border-danger px-2 py-1 rounded-lg">
+                      <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="!mileData">
+                  <td class="min-w-full text-center py-3 text-gray-500" colspan="14"><fa-icon
+                      [icon]="faSadTear"></fa-icon>
+                    Sorry, data is empty.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="flex justify-start w-full">
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation example">
+              <ul class="list-style-none flex mt-5 place-self-center">
+                <li class="mr-3 place-self-center">
+                  <p>Total : {{ totalData }}</p>
+                </li>
+                <li class="mr-3 place-self-center">
+                  <select class="border boder-regal-blue rounded py-1 px-2 place-self-center" formControlName="limit">
+                    <option [value]="10">10</option>
+                    <option [value]="20">20</option>
+                    <option [value]="30">30</option>
+                    <option [value]="40">40</option>
+                  </select>
+                </li>
+                <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+                  <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                    class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                </li>
+                <!-- <li *ngFor="let numPage of pageData" class="place-self-center">
+                  <a class="relative block rounded bg-transparent px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100  dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                    href="#!">{{ numPage }}</a>
+                </li> -->
+                <li class="place-self-center text-white rounded px-2 py-1">
+                  <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                    class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                </li>
+                <li class="ml-3 flex flex-cols">
+                  <p class="place-self-center mr-3">Go to</p>
+                  <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                    formControlName="page">
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="exampleModalXl" tabindex="-1" aria-labelledby="exampleModalXlLabel" aria-modal="true" role="dialog">
+  <div data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px] min-[992px]:max-w-[800px] min-[1200px]:max-w-[1140px]">
+    <div
+      class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600">
+      <div
+        class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+        <!--Modal title-->
+        <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+          id="exampleModalScrollableLabel">
+          {{ addOredit == true ? 'Add Miles' : 'Edit Miles' }}
+        </h5>
+        <!--Close button-->
+        <button type="button" (click)="reset()"
+          class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!--Modal body-->
+      <form [formGroup]="submitForm" (submit)="addOredit === true ? postCategory() : updateDataCategory()">
+        <div class="relative p-4">
+          <div class="grid grid-cols-3 gap-4">
+            <!-- Level Input -->
+            <div class="mb-4 flex flex-col col-span-1">
+              <label for="title" class="font-base text-gray-500 mb-1">Miles <span class="text-red-500">*</span></label>
+              <div
+                [ngClass]="{'border border-rose-500 rounded': submitForm.get('level')?.touched && submitForm.get('level')?.invalid }">
+                <input type="number" formControlName="level" class="w-full px-2 py-1 rounded border border-gray-300"
+                  id="exampleInput90" />
+              </div>
+              <p class="text-xs text-rose-500 italic mt-1"
+                *ngIf="submitForm.get('level')?.touched && submitForm.get('level')?.invalid">
+                * Level is required.
+              </p>
+            </div>
+            <!-- Level Input -->
+            <!-- Category Input -->
+            <div class="mb-4 flex flex-col col-span-2">
+              <label for="title" class="font-base text-gray-500 mb-1">Category <span
+                  class="text-red-500">*</span></label>
+              <div
+                [ngClass]="{'border border-rose-500 rounded': submitForm.get('category')?.touched && submitForm.get('category')?.invalid }">
+                <input type="text" formControlName="category" class="w-full px-2 py-1 rounded border border-gray-300"
+                  id="exampleInput90" />
+              </div>
+              <p class="text-xs text-rose-500 italic mt-1"
+                *ngIf="submitForm.get('category')?.touched && submitForm.get('category')?.invalid">
+                * Category is required.
+              </p>
+            </div>
+            <!-- Category Input -->
+          </div>
+          <!-- Name Input -->
+          <div class="mb-4 flex flex-col col-span-2">
+            <label for="title" class="font-base text-gray-500 mb-1">Name <span class="text-red-500">*</span></label>
+            <div
+              [ngClass]="{'border border-rose-500 rounded': submitForm.get('name')?.touched && submitForm.get('name')?.invalid }">
+              <input type="text" formControlName="name" class="w-full px-2 py-1 rounded border border-gray-300"
+                id="exampleInput90" />
+            </div>
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="submitForm.get('name')?.touched && submitForm.get('name')?.invalid">
+              * Name is required.
+            </p>
+          </div>
+          <!-- Name Input -->
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Min Input -->
+            <div class="mb-4 flex flex-col">
+              <label for="title" class="font-base text-gray-500 mb-1">Min Point <span
+                  class="text-red-500">*</span></label>
+              <div
+                [ngClass]="{'border border-rose-500 rounded': submitForm.get('minPoint')?.touched && submitForm.get('minPoint')?.invalid }">
+                <input type="number" formControlName="minPoint" class="w-full px-2 py-1 rounded border border-gray-300"
+                  id="exampleInput90" />
+              </div>
+              <p class="text-xs text-rose-500 italic mt-1"
+                *ngIf="submitForm.get('minPoint')?.touched && submitForm.get('minPoint')?.invalid">
+                * Min Point is required.
+              </p>
+            </div>
+            <!-- Min Input -->
+
+            <!-- Max Input -->
+            <div class="mb-4 flex flex-col col-span-1">
+              <label for="title" class="font-base text-gray-500 mb-1">Max Point <span
+                  class="text-red-500">*</span></label>
+              <div
+                [ngClass]="{'border border-rose-500 rounded': submitForm.get('maxPoint')?.touched && submitForm.get('maxPoint')?.invalid }">
+                <input type="number" formControlName="maxPoint" class="w-full px-2 py-1 rounded border border-gray-300"
+                  id="exampleInput90" />
+              </div>
+              <p class="text-xs text-rose-500 italic mt-1"
+                *ngIf="submitForm.get('maxPoint')?.touched && submitForm.get('maxPoint')?.invalid">
+                * Max Point is required.
+              </p>
+              <p class="text-xs text-rose-500 italic mt-1" *ngIf="submitForm.hasError('maxPointLessThanMinPoint')">
+                * Max Point must be greater than Min Point.
+              </p>
+            </div>
+            <!-- Max Input -->
+          </div>
+          <div class="mb-4">
+            <div class="grid grid-rows-1 gap-4 place-items-center">
+              <img *ngIf="imageValidator == null || imageValidator == false" class="object-cover w-full"
+                src="../../../../../../assets/image/level/mile/miles-1000X300.jpeg" alt="default">
+              <img *ngIf="imageValidator === true" [src]="imageShow" class="object-cover" alt="default-true">
+            </div>
+            <div class="mt-3 mb-2">
+              <label for="image" class="font-base text-gray-500">Image <span class="text-red-500">*</span></label>
+            </div>
+            <input class="px-2 py-1 rounded w-full" (change)="onFileSelected($event)" type="file">
+            <p *ngIf="imageValidator == false" class="text-red-500 text-xs italic mt-1">
+              * {{ imageValidatorMessage }}.
+            </p>
+          </div>
+          <div>
+            <label for="title" class="font-base text-gray-500 mb-1">Status <span class="text-red-500">*</span></label>
+            <div
+              [ngClass]="{'border border-rose-500 rounded': submitForm.get('status')?.touched && submitForm.get('status')?.invalid }">
+              <select data-te-select-init formControlName="status">
+                <option value="" hidden selected></option>
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+              </select>
+            </div>
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="submitForm.get('status')?.touched && submitForm.get('status')?.invalid">
+              * Status is required.
+            </p>
+          </div>
+        </div>
+
+        <!--Modal footer-->
+        <div
+          class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+          <button type="button" (click)="reset()"
+            class="bg-danger mr-2 rounded text-white px-3 py-1 hover:bg-danger-600" data-te-modal-dismiss
+            data-te-ripple-init data-te-ripple-color="light">
+            Discard
+          </button>
+          <button type="submit" class="bg-success rounded text-white px-3 py-1 hover:bg-success-600" data-te-ripple-init
+            data-te-modal-dismiss data-te-ripple-color="light">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

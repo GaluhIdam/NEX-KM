@@ -1,0 +1,317 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX LEARNING</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">Article</h1>
+      <div class="flex justify-start mt-3">
+        <h1 class="text-gray-400">{{ title.title }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="grid grid-cols-4 gap-5 mt-5">
+  <div class="p-5 border border-2 border-regal-blue rounded-xl bg-white shadow">
+    <h1 class="text-2xl">Article Creation - All Time</h1>
+    <h1 class="text-4xl font-semibold mt-3 text-gray-700">{{ statistic.allTime }}</h1>
+    <p class="text-gray-400">articles have been created</p>
+  </div>
+  <div class="p-5 border border-2 border-regal-blue rounded-xl bg-white shadow">
+    <h1 class="text-2xl">Article Creation - This Month</h1>
+    <div class="flex flex-row">
+      <h1 class="text-4xl font-semibold mt-3 mr-3 text-gray-700">{{ statistic.thisMonth }}</h1>
+      <div class="flex flex-col justify-start">
+        <p class="text-success text-xs mt-4"><span class="font-semibold">{{ statistic.percent }}%</span> more</p>
+        <p class="text-success text-xs">than last month</p>
+      </div>
+    </div>
+    <p class="text-gray-400">articles have been created this month</p>
+  </div>
+  <div class="p-5 border border-2 border-regal-blue rounded-xl bg-white shadow">
+    <h1 class="text-2xl">Published</h1>
+    <h1 class="text-4xl font-semibold mt-3 text-gray-700">{{ statistic.published }}</h1>
+    <p class="text-gray-400">articles have been published</p>
+  </div>
+  <div class="p-5 border border-2 border-regal-blue rounded-xl bg-white shadow">
+    <h1 class="text-2xl">Need Approval</h1>
+    <h1 class="text-4xl font-semibold mt-3 text-gray-700">{{ statistic.needApproval }}</h1>
+    <p class="text-gray-400">articles waiting to be approved</p>
+  </div>
+</div>
+<div class="bg-white shadow rounded-lg mt-5">
+  <div>
+    <div class="grid grid-cols-2 gap-1">
+      <div class="flex justify-start h-fit w-fit p-5">
+        <form [formGroup]="mform">
+          <div class="mb-3 relative flex w-full flex-wrap items-stretch bg-white rounded-lg border border-1">
+            <button
+              class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+              type="button" id="button-addon1">
+              <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+            </button>
+            <input type="text" formControlName="search"
+              class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+              placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+          </div>
+          <div class="flex flex-cols">
+            <h1 class="mr-2 place-self-center">Category :</h1>
+            <select formControlName="category" data-te-select-init data-te-select-auto-select="false"
+              data-te-select-filter="true"
+              class="m-0 w-full block mt-1 min-w-0 flex-auto rounded-l px-3 py-2 border-solid border-2 border-gray-200">
+              <option hidden disabled selected></option>
+              <option *ngFor="let data of categoryArticle" [value]="data.id">{{ data.title }}</option>
+            </select>
+            <button class="bg-danger text-white px-3 rounded-r" (click)="clear()"><fa-icon
+                [icon]="faCircleXmark"></fa-icon></button>
+          </div>
+        </form>
+      </div>
+      <div class="flex justify-end p-5">
+        <button
+          class="px-2 border border-1 hover:bg-success hover:text-white border-success py-2 mx-2 rounded-lg text-success h-fit">
+          <fa-icon [icon]="faPrint"></fa-icon> Export To Excel</button>
+      </div>
+    </div>
+    <div class="flex flex-col overflow-x-auto">
+      <div class="p-5">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm font-light">
+            <thead class="border-b font-medium border-gray-500 bg-gray-100 text-gray-600 w-full">
+              <tr class="w-full">
+                <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">No</th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Title</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('titleASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('titleDESC')" class="hover:text-regal-blue"
+                        style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Category</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('categoryASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('categoryDESC')" class="hover:text-regal-blue"
+                        style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Created By</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('createdByASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('createdByDESC')" class="hover:text-regal-blue"
+                        style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Unit</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('unitASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('unitDESC')" class="hover:text-regal-blue"
+                        style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Date Created</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('scoreASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('scoreDESC')" class="hover:text-regal-blue"
+                        style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Score</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('createdAtASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('createdAtDESC')" class="hover:text-regal-blue"
+                        style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Approval Status</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('approvalStatusASC')"
+                        class="hover:text-regal-blue" style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('approvalStatusDESC')"
+                        class="hover:text-regal-blue" style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Approval/Reject Description</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('approvalDescASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('approvalDescDESC')"
+                        class="hover:text-regal-blue" style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Approval/Reject By</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('approvalByASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('approvalByDESC')"
+                        class="hover:text-regal-blue" style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Editor Choice</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('editorChoiceASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('editorChoiceDESC')"
+                        class="hover:text-regal-blue" style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap content-center justify-center">
+                  <div class="flex flex-rows justify-center">
+                    <p class="mt-1">Ban</p>
+                    <div class="flex flex-col ml-2">
+                      <fa-icon [icon]="faCaretUp" (click)="sortByField('bannedStatusASC')" class="hover:text-regal-blue"
+                        style="height: 6px;"></fa-icon>
+                      <fa-icon [icon]="faCaretDown" (click)="sortByField('bannedStatusDESC')"
+                        class="hover:text-regal-blue" style="height: 6px; margin-top: 3px;"></fa-icon>
+                    </div>
+                  </div>
+                </th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody class="w-full">
+              <tr class="border-b dark:border-neutral-500 w-full" *ngFor="let data of articleList; index as i">
+                <td class="whitespace-nowrap px-6 py-4 font-medium">{{ i+1 }}</td>
+                <td class="whitespace-nowrap px-6 py-4">{{ trimString(data.title! , 25) }}</td>
+                <td class="whitespace-nowrap px-6 py-4"><span class="bg-gray-500 text-white px-3 py-2 rounded-lg">{{
+                    data.articleCategory!.title }}</span></td>
+                <td class="whitespace-nowrap px-6 py-4">{{ data.uploadBy }}</td>
+                <td class="whitespace-nowrap px-6 py-4">{{ data.unit }}</td>
+                <td class="whitespace-nowrap px-6 py-4">{{ formatDateNotDays(data.updatedAt) }}</td>
+                <td class="whitespace-nowrap px-6 py-4 text-center">{{ data.score }}</td>
+                <td class="whitespace-nowrap px-6 py-4 text-center" *ngIf="data.approvalStatus == true"><span
+                    class="text-success-700 font-semibold px-3 py-1 bg-success-200 rounded">Approved</span></td>
+                <td class="whitespace-nowrap px-6 py-4 text-center" *ngIf="data.approvalStatus == false"><span
+                    class="text-danger-700 font-semibold px-3 py-1 bg-danger-200 rounded">Rejected</span></td>
+                <td class="whitespace-nowrap px-6 py-4 text-center" *ngIf="data.approvalStatus == null"><span
+                    class="text-warning-700 font-semibold px-3 py-1 bg-warning-200 rounded">Waiting</span></td>
+                <td class="whitespace-nowrap px-6 py-4 text-center">{{ data.approvalDesc == null ? '-' :
+                  data.approvalDesc
+                  }}</td>
+                <td class="whitespace-nowrap px-6 py-4 text-center">{{ data.approvalBy == null ? '-' : data.approvalBy
+                  }}</td>
+                <td class="whitespace-nowrap px-6 py-4 text-center" *ngIf="data.editorChoice == true"><span
+                    class="text-success-700 font-semibold px-3 py-1 bg-success-200 rounded">Yes</span></td>
+                <td class="whitespace-nowrap px-6 py-4 text-center" *ngIf="data.editorChoice == false"><span
+                    class="text-danger-700 font-semibold px-3 py-1 bg-danger-200 rounded">No</span></td>
+                <td class="whitespace-nowrap px-6 py-4 text-center" *ngIf="data.bannedStatus == true"><span
+                    class="text-danger-700 font-semibold px-3 py-1 bg-danger-200 rounded">Banned</span></td>
+                <td class="whitespace-nowrap px-6 py-4 text-center" *ngIf="data.bannedStatus == false"><span
+                    class="text-success-700 font-semibold px-3 py-1 bg-success-200 rounded">Permitted</span></td>
+                <td class="whitespace-nowrap px-6 py-4">
+                  <div class="flex justify-center">
+                    <!-- Approve button -->
+                    <app-button-modal-center data-te-toggle="modal" [Approve]="true"
+                      [uuid]="data.uuid!"></app-button-modal-center>
+                    <!-- Approve button -->
+
+                    <!-- Editor button -->
+                    <app-button-modal-center data-te-toggle="modal" [Editor]="true"
+                      [uuid]="data.uuid!"></app-button-modal-center>
+                    <!-- Editor button -->
+
+                    <!-- Edit button -->
+                    <a [routerLink]="'/admin/article-edit/'+data.uuid"
+                      class="mx-1 w-fit border text-primary border-1 border-primary px-2 py-1 rounded-lg">
+                      <fa-icon [icon]="faPencil"></fa-icon>
+                    </a>
+                    <!-- Edit button -->
+
+                    <!-- Ban button -->
+                    <app-button-modal-center data-te-toggle="modal" [Ban]="true"
+                      [uuid]="data.uuid!"></app-button-modal-center>
+                    <!-- Ban button -->
+
+                    <!-- Modal -->
+                    <app-modal-center [uuid]="data.uuid!" (formData)="onFormData($event)" [Approve]="true"
+                      [Editor]="true" [Ban]="true" (saveClick)="approveReject(data.uuid!, true)"
+                      (rejectClick)="approveReject(data.uuid!, false)"
+                      (editorClick)="editorChoice(data.uuid!, data.editorChoice!)"
+                      (banClick)="banArticle(data.uuid, data.bannedStatus!)"
+                      [saveButton]="{ show: true, text: 'Approve' }"
+                      [modalContentApprove]="'Please confirm whether you want to approve or reject this request.'"
+                      [modalContentEditor]="data.editorChoice ? 'Are you sure you want to select this item as an Editors Choice?' : 'Are you sure you want to unselect this item as an Editors Choice?'"
+                      [modalContentBan]="data.bannedStatus ? 'Are you sure you want to active this item? Once active, it will be visible to our community and all links to the article will work.' : 'Are you sure you want to deactivate this item? Once deactivated, it will no longer be visible to our community and all links to the article will no longer work.'"></app-modal-center>
+                    <!-- Modal -->
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="!articleList">
+                <td class="min-w-full text-center py-3 text-gray-500" colspan="14"><fa-icon
+                    [icon]="faSadTear"></fa-icon> Sorry, data is empty.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <form [formGroup]="mform">
+          <!-- Pagination -->
+          <nav aria-label="Page navigation example">
+            <ul class="list-style-none flex mt-10 place-self-center">
+              <li class="mr-3 place-self-center">
+                <p>Total : {{ totalData }}</p>
+              </li>
+              <li class="mr-3 place-self-center">
+                <select class="border boder-regal-blue rounded py-1 px-2 place-self-center" formControlName="limit">
+                  <option [value]="10">10</option>
+                  <option [value]="20">20</option>
+                  <option [value]="50">50</option>
+                  <option [value]="100">100</option>
+                </select>
+              </li>
+              <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+                <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                  class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+              </li>
+              <li *ngFor="let numPage of pageData" class="place-self-center">
+                <a class="relative block rounded bg-transparent px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100  dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                  href="#!">{{ numPage }}</a>
+              </li>
+              <li class="place-self-center text-white rounded px-2 py-1">
+                <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                  class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+              </li>
+              <li class="ml-3 flex flex-cols">
+                <p class="place-self-center mr-3">Go to</p>
+                <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                  formControlName="page">
+              </li>
+            </ul>
+          </nav>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

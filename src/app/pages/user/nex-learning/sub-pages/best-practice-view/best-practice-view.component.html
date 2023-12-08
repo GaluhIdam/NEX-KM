@@ -1,0 +1,414 @@
+<div *ngIf="loading">
+  <app-loading></app-loading>
+</div>
+<div *ngIf="!loading">
+  <!-- Search & Trend Section -->
+  <div class="bg-library bg-center flex justify-center py-20">
+    <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+      <div class="place-self-center">
+        <h1 class="text-white mt-5 font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl">Explore New
+          Experience of
+          Collaboration</h1>
+      </div>
+    </div>
+  </div>
+  <!-- Search & Trend Section -->
+
+  <!-- Tab Nav and Button -->
+  <div class="md:px-20 md:py-5 md:mt-10 py-5 max-[600px]:hidden">
+    <div class="grid min-[600px]:grid-cols-2 max-[600px]:grid-rows-2 gap-4 flex">
+      <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+        <a class="text-gray-400 mr-3 hover:text-black" routerLink="/user">Home</a>
+        <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+        <a routerLink="/user/nex-learning" class="text-gray-400 mr-3 hover:text-black">Nex Learning</a>
+        <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+        <a routerLink="../../best-practice" class="text-gray-400 mr-3 hover:text-black">Best Practice</a>
+        <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+        <p class="font-bold r-3 activeLink">View Best Practice</p>
+      </div>
+    </div>
+  </div>
+  <div class="mt-10 ml-5 min-[600px]:hidden">
+    <a routerLink="../../article" class="bg-primary text-white rounded-lg px-3 py-2 shadow-sm"><fa-icon
+        [icon]="faArrowLeft" class="mr-1"></fa-icon> Back</a>
+  </div>
+  <!-- Tab Nav and Button -->
+
+  <!-- Article -->
+  <div class="md:px-20 px-5 mt-10">
+    <div class="md:grid md:grid-cols-3 md:gap-3 grid grid-rows-1">
+      <div class="md:col-span-2 md:mr-24 mb-5">
+
+        <!-- Article By Highlight -->
+        <div>
+          <img class="object-cover min-w-full rounded-xl h-80 md:h-full" [src]="image" [alt]="articleData.image" />
+          <h1 class="mt-5 font-bold md:text-3xl text-xl">
+            {{ articleData.title }}
+          </h1>
+          <p class="mb-0 mt-0 font-semibold text-lg md:text-xl text-gray-400">
+            {{ articleData.unit }}
+          </p>
+          <p class="font-bold md:text-sm text-sm mt-1">
+            {{ articleData.uploadBy }}
+          </p>
+          <p class="mb-5 mt-1 text-sm">
+            {{ formatDate(articleData.updatedAt) }}
+          </p>
+          <hr class="text-black">
+          <div class="mt-5 mb-5" [innerHTML]="getSanitizedHTML(articleData.content!)"></div>
+          <hr class="text-black">
+
+        </div>
+        <!-- Article By Highlight -->
+
+        <!-- Comment -->
+        <section class="mt-10">
+          <div class="w-full mx-auto">
+            <div class="grid grid-cols-2 mb-6">
+              <div>
+                <span class="text-sm text-primary border rounded-lg px-3 py-1 border-primary"><fa-icon
+                    [icon]="faComment"></fa-icon>
+                  {{ articleData._count.bestPracticeComment }}
+                  Comments</span>
+              </div>
+              <div class="ml-auto flex">
+                <span [ngClass]="{'text-primary underline underline-offset-1': !isTopComment}"
+                  (click)="getCommentData(articleData.id, page, limit, 'trending')"
+                  class="mr-3 cursor-pointer font-semibold text-lg hover:text-primary hover:underline hover:underline-offset-1 text-gray-400 text-sm md:text-base">Top
+                  Comment
+                </span>
+
+                &nbsp;
+                <span [ngClass]="{'text-primary underline underline-offset-1': isTopComment}"
+                  (click)="getCommentData(articleData.id, page, limit, 'desc')"
+                  class="mr-3 cursor-pointer font-semibold text-lg hover:text-primary hover:underline hover:underline-offset-1 text-gray-400 text-sm md:text-base">New
+                </span>
+              </div>
+            </div>
+
+
+            <form class="mb-6" [formGroup]="mform" (submit)="postComment(null)">
+              <textarea id="comment" rows="6"
+                class="w-full text-sm text-gray-900 rounded-lg p-5 focus:outline-primary focus:outline-1 focus:outline shadow-lg"
+                [ngClass]="{ 'border border-rose-500': mform.get('comments')?.touched && mform.get('comments')?.invalid}"
+                placeholder="Write a comment..." formControlName="comments"></textarea>
+              <div class="text-red-500" *ngIf="mform.get('comments')?.touched && mform.get('comments')?.invalid">
+                <p class="text-sm italic mt-2">
+                  Comment is required.
+                </p>
+              </div>
+              <div class="text-right mt-3">
+                <button type="submit"
+                  class="inline-flex shadow-lg items-center py-2 px-7 text-sm font-medium text-center text-white bg-primary rounded-full focus:ring-4 focus:ring-primary-200 hover:bg-primary-600">
+                  <fa-icon class="mr-2" [icon]="faPaperPlane"></fa-icon>
+                  Post
+                </button>
+              </div>
+            </form>
+
+
+
+            <!-- Main comment -->
+            <div *ngIf="loadingComment">
+              <app-loading></app-loading>
+            </div>
+            <div *ngFor="let data of articleComment; let i = index">
+              <div *ngIf="!loadingComment" class="p-6 mb-6 text-base shadow-lg rounded-lg">
+                <div class="flex flex-row">
+                  <!-- <div class="flex flex-col items-center mr-5">
+                    <fa-icon [icon]="faChevronUp"
+                      [ngClass]="{'text-primary': cekDataLike(data.commentLikeBestPractice) == true}"
+                      (click)="likeOrDislike(articleData.id, data.id, true)"
+                      class="hover:text-primary cursor-pointer"></fa-icon>
+                    <p class="font-bold text-lg text-primary">{{ data.like }}</p>
+                    <fa-icon [icon]="faChevronDown"
+                      [ngClass]="{'text-primary': cekDataLike(data.commentLikeBestPractice) ==  false}"
+                      (click)="likeOrDislike(articleData.id, data.id, false)"
+                      class="hover:text-primary cursor-pointer"></fa-icon>
+                  </div> -->
+                  <div class="w-full">
+                    <div class="flex justify-between items-center mb-2">
+                      <div class="flex items-center">
+                        <div class="inline-flex items-center mr-3">
+                          <img class="mr-2 w-6 h-6 rounded-full"
+                            [src]="urlAvatar+data.personalNumber"
+                            [alt]="data.personalName" />
+                          <div class="flex flex-col">
+                            <p class="text-sm font-semibold">{{ data.personalName }}</p>
+                            <span class="text-xs text-gray-500">{{ formatDate(data.updatedAt) }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <p *ngIf="!editFormVisible[i]" class="text-sm tracking-normal break-normal mb-2">
+                      {{ data.comment }}
+                    </p>
+
+                    <form class="mt-3" *ngIf="editFormVisible[i]" [formGroup]="commentsFormEdit"
+                      (submit)="updateReplyCommentData(data.uuid)">
+                      <div [ngClass]="{ 'border-rose-500': commentsFormEdit.invalid && commentsFormEdit.touched}"
+                        class="py-2 px-4 mb-2 bg-white rounded-lg rounded-t-lg border border-gray-200">
+                        <p class="text-xs text-gray-500 mb-2">Edit Comment :</p>
+                        <textarea id="commentEdit" rows="8" formControlName="comments"
+                          class="px-0 w-full text-sm text-gray-900 focus:ring-0 focus:outline-none"
+                          placeholder="Write a reply..." (input)="onInputEdit($event)"
+                          #autoResizeTextareaEdit>{{ commentsFormEdit.get('comments')?.value }}</textarea>
+
+                      </div>
+                      <div *ngIf="commentsFormEdit.invalid && commentsFormEdit.touched" class="text-red-500">
+                        <p class="text-xs italic">
+                          Comment is required.
+                        </p>
+                      </div>
+                      <div class="text-right">
+                        <button type="button"
+                          *ngIf="editFormVisible[i] && keycloakService.getUsername() === data.personalNumber"
+                          (click)="toggleEditComment(i, data.comment)"
+                          class="inline-flex items-center py-1 px-4 mr-2 text-sm font-medium text-center text-white bg-danger rounded-full focus:ring-4 focus:ring-danger-200 hover:bg-danger-600">
+                          Cancel
+                        </button>
+                        <button type="submit"
+                          class="inline-flex items-center py-1 px-4 text-sm font-medium text-center text-white bg-primary rounded-full focus:ring-4 focus:ring-primary-200 hover:bg-primary-600">
+                          Edit
+                        </button>
+                      </div>
+                    </form>
+
+                    <a (click)="toggleShowReply(i, data.id)"
+                      *ngIf="showReply[i] == false && data._count.childComment > 0"
+                      class="text-gray-500 text-xs mt-3 cursor-pointer hover:text-primary-500">---- View
+                      {{data._count.childComment}} more replies</a>
+                    <div class="flex items-center mt-4">
+                      <button type="button"
+                        (click)="tagReplyCommentId(data.id, data.personalName, data.personalNumber, data.comment)"
+                        data-te-toggle="tooltip" title="Reply"
+                        class="text-xs mr-2 text-primary border cursor-pointer hover:bg-primary hover:text-white rounded-lg px-3 items-center text-center py-1 border-primary">
+                        <fa-icon [icon]="faComment" class="mr-1"></fa-icon> Reply
+                      </button>
+                      <button type="button" (click)="likeOrDislike(articleData.id, data.id, true)"
+                        data-te-toggle="tooltip" title="Like"
+                        [ngClass]="{'bg-danger text-white': cekDataLike(data.commentLikeBestPractice) == true}"
+                        class="text-xs mr-2 text-danger border cursor-pointer hover:bg-danger hover:text-white rounded-lg px-3 items-center text-center py-1 border-danger">
+                        <fa-icon [icon]="faHeart" class="mr-1"></fa-icon>{{ data.like }}
+                      </button>
+                      <button type="button" (click)="likeOrDislike(articleData.id, data.id, false)"
+                        data-te-toggle="tooltip" title="Dislike"
+                        [ngClass]="{'bg-warning text-white': cekDataLike(data.commentLikeBestPractice) == false}"
+                        class="text-xs mr-4 text-warning border cursor-pointer hover:bg-warning hover:text-white rounded-lg px-3 items-center text-center py-1 border-warning">
+                        <fa-icon [icon]="faHeartBroken" class="mr-1"></fa-icon>{{ data.dislike }}
+                      </button>
+                      <div class="relative" data-te-dropdown-ref>
+                        <button class="text-xs text-primary" type="button" [id]="'dropdownMenuButton'+i"
+                          data-te-dropdown-toggle-ref aria-expanded="false">
+                          More
+                        </button>
+                        <ul
+                          class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                          aria-labelledby="dropdownMenuButton1" data-te-dropdown-menu-ref>
+                          <!-- <li *ngIf="keycloakService.getUsername() === data.personalNumber">
+                            <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                              (click)="toggleEditComment(i, data.comment)" data-te-dropdown-item-ref>Edit</a>
+                          </li> -->
+                          <li *ngIf="keycloakService.getUsername() === data.personalNumber">
+                            <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-danger-700 hover:bg-neutral-100 active:text-danger-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-danger-400 dark:text-danger-200 dark:hover:bg-neutral-600"
+                              (click)="deleteComment(data.uuid)" data-te-dropdown-item-ref>Delete</a>
+                          </li>
+                          <li *ngIf="keycloakService.getUsername() !== data.personalNumber">
+                            <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-danger-700 hover:bg-neutral-100 active:text-danger-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-danger-400 dark:text-danger-200 dark:hover:bg-neutral-600"
+                              data-te-dropdown-item-ref>Report</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- Reply Sub comment -->
+                <div class="mt-4" *ngIf="replyComment && showReply[i]">
+                  <div *ngFor="let subdata of replyComment; let x = index">
+                    <div class="p-6 mb-3 ml-5 lg:ml-5 text-base shadow-lg bg-white rounded-lg">
+                      <div class="flex flex-row">
+                        <div class="w-full">
+                          <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center">
+                              <div class="inline-flex items-center mr-3">
+                                <img class="mr-2 w-6 h-6 rounded-full"
+                                  [src]="urlAvatar+subdata.personalNumber"
+                                  [alt]="subdata.personalName" />
+                                <div class="flex flex-col">
+                                  <p class="text-sm font-semibold">{{ subdata.personalName }}</p>
+                                  <span class="text-xs text-gray-500">{{ formatDate(subdata.updatedAt) }}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <p class="text-sm" *ngIf="!editReply[x]">
+                            <span class="font-semibold text-xs text-primary">@{{
+                              subdata.personalNameMention }}</span> {{ subdata.comment }}
+                          </p>
+
+                          <!-- Edit Sub Form -->
+                          <form class="mt-3" *ngIf="editReply[x]" [formGroup]="commentsSubFormEdit"
+                            (submit)="updateReplyComment(subdata.uuid, subdata.id, subdata.personalNumber, commentsSubFormEdit.get('comments')?.value)">
+                            <div [ngClass]="{ 'border-rose-500': commentsFormEdit.invalid && commentsFormEdit.touched}"
+                              class="py-2 px-4 mb-2 bg-white rounded-lg rounded-t-lg border border-gray-200">
+                              <p class="text-xs text-gray-500 mb-2">Edit Comment :</p>
+                              <textarea id="commentEdit" rows="8" formControlName="comments"
+                                class="px-0 w-full text-sm text-gray-900 focus:ring-0 focus:outline-none"
+                                placeholder="Write a reply..." (input)="onInputEdit($event)"
+                                #autoResizeTextareaEdit>{{ commentsSubFormEdit.get('comments')?.value }}</textarea>
+
+                            </div>
+                            <div *ngIf="commentsSubFormEdit.invalid && commentsSubFormEdit.touched"
+                              class="text-red-500">
+                              <p class="text-xs italic">
+                                Comment is required.
+                              </p>
+                            </div>
+                            <div class="text-right">
+                              <button type="button"
+                                *ngIf="editReply[i] && keycloakService.getUsername() === data.personalNumber"
+                                (click)="toggleEditComment(x, subdata.comment)"
+                                class="inline-flex items-center py-1 px-4 mr-2 text-sm font-medium text-center text-white bg-danger rounded-full focus:ring-4 focus:ring-danger-200 hover:bg-danger-600">
+                                Cancel
+                              </button>
+                              <button type="submit"
+                                class="inline-flex items-center py-1 px-4 text-sm font-medium text-center text-white bg-primary rounded-full focus:ring-4 focus:ring-primary-200 hover:bg-primary-600">
+                                Edit
+                              </button>
+                            </div>
+                          </form>
+
+                          <div class="flex items-center mt-4">
+                            <button type="button"
+                              (click)="tagReplyCommentId(data.id, subdata.personalName, subdata.personalNumber, subdata.comment)"
+                              data-te-toggle="tooltip" title="Reply"
+                              class="text-xs mr-2 text-primary border cursor-pointer hover:bg-primary hover:text-white rounded-lg px-3 items-center text-center py-1 border-primary">
+                              <fa-icon [icon]="faComment" class="mr-1"></fa-icon> Reply
+                            </button>
+                            <button type="button" (click)="likeOrDislike(articleData.id, subdata.id, true)"
+                              data-te-toggle="tooltip" title="Like"
+                              [ngClass]="{'bg-danger text-white': cekDataLike(subdata.commentLikeBestPractice) == true}"
+                              class="text-xs mr-2 text-danger border cursor-pointer hover:bg-danger hover:text-white rounded-lg px-3 items-center text-center py-1 border-danger">
+                              <fa-icon [icon]="faHeart" class="mr-1"></fa-icon>{{ subdata.like }}
+                            </button>
+                            <button type="button" (click)="likeOrDislike(articleData.id, subdata.id, false)"
+                              data-te-toggle="tooltip" title="Dislike"
+                              [ngClass]="{'bg-warning text-white': cekDataLike(subdata.commentLikeBestPractice) == false}"
+                              class="text-xs mr-4 text-warning border cursor-pointer hover:bg-warning hover:text-white rounded-lg px-3 items-center text-center py-1 border-warning">
+                              <fa-icon [icon]="faHeartBroken" class="mr-1"></fa-icon>{{ subdata.dislike }}
+                            </button>
+                            <div class="relative" data-te-dropdown-ref>
+                              <button class="text-xs text-primary" type="button" [id]="'dropdownMenuButton'+i"
+                                data-te-dropdown-toggle-ref aria-expanded="false">
+                                More
+                              </button>
+                              <ul
+                                class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                                aria-labelledby="dropdownMenuButton1" data-te-dropdown-menu-ref>
+                                <!-- <li *ngIf="keycloakService.getUsername() === subdata.personalNumber">
+                                  <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                    (click)="toggleEditReplyComment(x, subdata.comment)"
+                                    data-te-dropdown-item-ref>Edit</a>
+                                </li> -->
+                                <li *ngIf="keycloakService.getUsername() === subdata.personalNumber">
+                                  <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-danger-700 hover:bg-neutral-100 active:text-danger-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-danger-400 dark:text-danger-200 dark:hover:bg-neutral-600"
+                                    (click)="deleteComment(subdata.uuid)" data-te-dropdown-item-ref>Delete</a>
+                                </li>
+                                <li *ngIf="keycloakService.getUsername() !== subdata.personalNumber">
+                                  <a class="block w-full cursor-pointer witespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-danger-700 hover:bg-neutral-100 active:text-danger-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-danger-400 dark:text-danger-200 dark:hover:bg-neutral-600"
+                                    data-te-dropdown-item-ref>Report</a>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <button *ngIf="totalReply > limitReply && replyComment.length != totalReply" type="button"
+                      (click)="toggleShowReplyMore(i, data.id)"
+                      class="text-gray-500 text-xs cursor-pointer hover:text-primary-500">
+                      <p>Show more <fa-icon [icon]="faChevronDown" class="ml-1"></fa-icon></p>
+                    </button>
+                    <button *ngIf="totalReply > limitReply && replyComment.length == totalReply" type="button"
+                      (click)="toggleHideReplyMore(i, data.id)"
+                      class="text-gray-500 text-xs cursor-pointer hover:text-primary-500">
+                      <p>Hide Reply <fa-icon [icon]="faChevronUp" class="ml-1"></fa-icon></p>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button *ngIf="totalComment > limit && articleComment.length != totalComment" type="button"
+                (click)="getCommentDataMore(articleData.id, page, limit, sortBy)"
+                class="text-primary hover:text-white hover:bg-primary px-2 py-1 rounded-lg">
+                <p>Show more <fa-icon [icon]="faChevronDown" class="ml-1"></fa-icon></p>
+              </button>
+            </div>
+          </div>
+        </section>
+        <!-- Comment -->
+
+      </div>
+      <!-- Article By Top -->
+      <div class="md:col-span-1">
+        <h1 class="md:text-3xl text-2xl font-semibold mb-5 text-primary">Top Article</h1>
+        <div class="col mb-10" *ngFor="let first of articleList">
+          <a [routerLink]="'/user/nex-learning/best-practice/'+first.uuid" class="hover:text-primary">
+            <img class="object-cover min-w-full rounded-xl h-52 md:h-64 md:w-auto" [src]="first.path"
+              [alt]="first.image" />
+            <p class="hover:text-primary mt-3 font-bold md:text-xl text-xl">{{ first.title }}</p>
+            <p class="mb-0 mt-0 font-semibold text-sm md:text-base text-gray-400">
+              {{ first.unit }}
+            </p>
+            <p class="md:text-sm text-xs">{{ first.uploadBy }}</p>
+          </a>
+        </div>
+      </div>
+      <!-- Article By Top -->
+
+    </div>
+    <!-- Article -->
+
+  </div>
+
+</div>
+
+<nav *ngIf="parentIdReply"
+  class="fixed bottom-0 flex w-full rounded-t-lg flex-wrap items-center justify-between bg-gray-100 text-neutral-500 shadow-lg hover:text-neutral-700 focus:text-neutral-700 dark:bg-neutral-600">
+  <div class="w-full px-3 bg-gray-300">
+    <div class="flex flex-row justify-between">
+      <p class="text-xs my-2 text-gray-700">Reply to {{ personalNameMention }}</p>
+      <button class="my-2 text-xs" (click)="closeReplyComment()"><fa-icon [icon]="faXmark"></fa-icon></button>
+    </div>
+    <p class="text-xs mb-2 text-gray-700">{{ commentReplyMention }}</p>
+  </div>
+  <div class="w-full items-center justify-between px-3 rounded-t-lg">
+    <div class="mx-1">
+      <form class="mt-3" [formGroup]="commentsForm" (submit)="createReplyCommentData()">
+        <div class="overflow-x-auto flex flex-row">
+          <a *ngFor="let emj of emoji" (click)="clickEmoji(emj)"
+            class="mr-2 mb-2 text-base sliding-emoticon cursor-pointer">{{ emj
+            }}</a>
+        </div>
+        <div class="flex flex-row mb-5 mt-2">
+          <img class="mr-2 w-10 h-9 rounded-full"
+            [src]="urlAvatar+keycloakService.getUsername()"
+            [alt]="keycloakService.getUsername()" />
+          <textarea id="comment" rows="1" formControlName="comments"
+            class="px-0 w-full text-xs rounded-lg mr-2 px-3 py-2 border border-gray-200 text-gray-900 focus:ring-0 focus:outline-none"
+            placeholder="Write a reply..." (input)="onInput($event)" required #autoResizeTextarea
+            #contentInput></textarea>
+          <button type="submit"
+            class="inline-flex items-center w-8 h-8 text-md font-medium text-center text-primary rounded-full">
+            <fa-icon [icon]="faPaperPlane"></fa-icon>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</nav>

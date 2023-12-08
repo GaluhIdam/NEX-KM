@@ -1,0 +1,185 @@
+<div *ngIf="load">
+  <app-loading></app-loading>
+</div>
+
+<div *ngIf="!load">
+  <!-- Search & Trend Section -->
+  <div class="bg-library bg-center flex justify-center py-20">
+    <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+      <div class="min-[600px]:w-[32rem] place-self-center">
+        <h1 class="text-white font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl">Explore new
+          Experience of
+          Collaboration</h1>
+      </div>
+      <form [formGroup]="mform">
+        <div class="relative mb-4 flex min-[600px]:w-[800px] flex-wrap items-stretch bg-white rounded-full mt-4">
+          <button
+            class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+            type="button" id="button-addon1">
+            <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+          </button>
+          <input type="text" formControlName="search"
+            class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+            placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+        </div>
+      </form>
+      <!-- <h1 class="text-white">TRENDING SEARCH</h1>
+      <div>
+        <ul class="flex list-none flex-wrap pl-0 md:flex-row" role="tablist" data-te-nav-ref>
+          <li class="mx-2 mb-2">
+            <button type="button"
+              class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+              Travelling
+            </button>
+          </li>
+          <li class="mx-2 mb-2">
+            <button type="button"
+              class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+              Interior Design
+            </button>
+          </li>
+          <li class="mx-2 mb-2">
+            <button type="button"
+              class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+              Music
+            </button>
+          </li>
+          <li class="mx-2 mb-2">
+            <button type="button"
+              class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+              Dancing
+            </button>
+          </li>
+        </ul>
+      </div> -->
+    </div>
+  </div>
+  <!-- Search & Trend Section -->
+
+  <!-- Tab Nav and Button -->
+  <div class="md:px-20 md:py-20 py-10">
+    <div class="grid min-[600px]:grid-cols-2 max-[600px]:grid-rows-2 gap-4 flex">
+      <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+        <a class="text-gray-400 mr-3 hover:text-black" routerLink="/">Home</a>
+        <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+        <a routerLink="/user/nex-learning" class="text-gray-400 mr-3 hover:text-black">Nex Learning</a>
+        <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+        <p class="font-bold r-3 activeLink">Best Practice</p>
+      </div>
+    </div>
+  </div>
+  <!-- Tab Nav and Button -->
+
+  <!-- Article -->
+  <div class="md:px-20 px-5" *ngIf="mform.get('search')?.value === ''">
+    <div class="md:grid md:grid-cols-3 md:gap-3 grid grid-rows-1">
+      <div class="md:col-span-2 md:mr-24 mb-5">
+
+        <!-- Article By Highlight -->
+        <h1 class="md:text-3xl text-2xl font-semibold mb-5 text-primary">Editor Choice</h1>
+        <div *ngFor="let first of articles">
+          <img class="object-cover min-w-full rounded-xl h-80 md:h-full" [src]="first.path" [alt]="first.image" />
+          <a [routerLink]="'/user/nex-learning/best-practice/'+first.uuid" class="hover:text-primary">
+            <h1 class="mt-3 font-bold md:text-3xl text-xl">{{ first.title }}</h1>
+            <p class="mb-0 mt-0 font-semibold text-lg md:text-xl text-gray-400">
+              {{ first.unit }}
+            </p>
+            <p class="font-bold md:text-sm text-sm mt-1">{{ first.uploadBy }}</p>
+          </a>
+          <div [innerHTML]="getSanitizedHTML(first.content!)" class="mt-3 text-justify text-sm mb-3"></div>
+          <span class="text-sm text-primary border rounded-lg px-3 py-1 border-primary"><fa-icon
+              [icon]="faComment"></fa-icon> {{ first._count!.bestPracticeComment }} Comments</span>
+        </div>
+        <div *ngIf="!articles">
+          <h1 class="text-center text-gray-400">Sorry, data is empty</h1>
+        </div>
+        <!-- Article By Highlight -->
+
+        <!-- Article By Recent -->
+        <div class="md:mt-20 mt-10">
+          <h1 class="md:text-3xl font-semibold text-2xl mb-5 text-primary">Recent Published</h1>
+          <div *ngFor="let data of articlesRecent">
+            <a [routerLink]="'/user/nex-learning/best-practice/'+data.uuid" class="hover:text-primary">
+              <div
+                class="flex flex-col md:items-start md:flex-row mb-10 shadow-xl rounded-xl md:shadow-none md:rounded-none">
+                <img class="object-cover w-full rounded-xl bg-transparent md:w-32" [src]="data.path"
+                  [alt]="data.image" />
+                <div class="flex flex-col md:justify-between leading-normal md:p-0 p-5 ml-10">
+                  <p class="font-normal md:text-xs text-xs mt-1 text-gray-400">{{ formatDate(data.updatedAt) }}</p>
+                  <p type="button" class="mb-0 md:text-2xl text-left text-lg font-semibold hover:text-primary">
+                    {{ data.title }}
+                  </p>
+                  <p class="mb-0 font-semibold text-lg md:text-1xl text-gray-400">
+                    {{ data.unit }}
+                  </p>
+                  <p class="font-normal md:text-xs text-sm mt-1">{{ data.uploadBy }}</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div *ngIf="!articlesRecent">
+            <h1 class="text-center text-gray-400">Sorry, data is empty</h1>
+          </div>
+        </div>
+        <!-- Article By Recent -->
+      </div>
+      <!-- Article By Top -->
+      <div class="md:col-span-1">
+        <h1 class="md:text-3xl text-2xl font-semibold mb-5 text-primary">Top Best Practice</h1>
+        <div class="col mb-10" *ngFor="let first of articles1">
+          <a [routerLink]="'/user/nex-learning/best-practice/'+first.uuid" class="hover:text-primary">
+            <img class="object-cover min-w-full rounded-xl h-52 md:h-64 md:w-auto" [src]="first.path"
+              [alt]="first.image" />
+            <p class="hover:text-primary mt-3 font-bold md:text-xl text-xl break-all">{{ trimString(first.title, 75) }}
+            </p>
+            <p class="mb-0 mt-0 font-semibold text-sm md:text-base text-gray-400">
+              {{ first.unit }}
+            </p>
+            <p class="md:text-sm text-xs">{{ first.uploadBy }}</p>
+          </a>
+        </div>
+        <div *ngIf="!articles">
+          <h1 class="text-center text-gray-400">Sorry, data is empty</h1>
+        </div>
+      </div>
+    </div>
+    <!-- Article By Top -->
+  </div>
+
+  <div *ngIf="mform.get('search')?.value !== ''" class="flex flex-col min-[800px]:mx-20 max-[800px]:mx-10">
+    <div class="flex min-[800px]:flex-row max-[800px]:flex-col mb-10" *ngFor="let data of articlesResult">
+      <img class="object-cover min-[800px]:w-16 min-[800px]:w-16 min-[800px]:mr-5 max-[800px]:mb-3 rounded"
+        [src]="data.path" alt="image">
+      <div class="flex flex-col">
+        <div>
+          <div class="flex flex-row">
+            <img class="w-7 h-7 rounded-full mr-3" [src]="urlAvatar+data.personalNumber" alt="image">
+            <div class="flex flex-col">
+              <h1 class="text-xs font-light">{{ data.personalNumber }}</h1>
+              <p class="text-xs font-light">{{ data.unit }}</p>
+            </div>
+          </div>
+          <div class="mt-1">
+            <a [routerLink]="'/user/nex-learning/article/'+data.uuid"
+              class="cursor-pointer font-semibold text-lg font-normal text-primary hover:text-primary-700 hover:underline hover:underline-offset-2">{{
+              trimString(data.title!, 50) }}</a>
+            <p class="text-xs max-[800px]:hidden" [innerHTML]="trimString(data.content!, 350)"></p>
+            <p class="text-xs min-[800px]:hidden" [innerHTML]="trimString(data.content!, 150)"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p *ngIf="!articlesResult" class="text-gray-400 text-sm text-center">Content not
+      found!</p>
+
+    <!-- Pagination -->
+    <button type="button" *ngIf="articlesResult && (articlesResult.length != totalData)"
+      class="text-primary text-sm hover:text-primary-700" (click)="showMore()">Show more</button>
+  </div>
+  <!-- Article -->
+</div>
+<img class="absolute left-0 top-2/3 -z-20" src="../../../../../assets/image/home-page/gradient/227.png" alt="" />
+
+<img class="absolute right-0 top-3/4 -z-10" src="../../../../../assets/image/home-page/gradient/228.png" alt="" />
+
+<img class="absolute right-0 top-1/2 -z-20" src="../../../../../assets/image/home-page/gradient/229.png" alt="" />

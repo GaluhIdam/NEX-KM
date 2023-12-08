@@ -1,0 +1,209 @@
+<div class="min-[600px]:px-36 min-[600px]:py-12 max-[600px]:px-8">
+  <h1
+    class="min-[600px]:text-3xl text-new-primary font-semibold max-[600px]:text-2xl"
+  >
+    List Website
+  </h1>
+  <p class="text-gray-400">
+    Unleash your creativity and share your ideas by uploading your directory
+    here.
+  </p>
+  <div [hidden]="progress == 0">
+    <div class="w-full mt-8 bg-neutral-200 dark:bg-neutral-600">
+      <div
+        class="bg-primary p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+        [style.width.%]="progress"
+      >
+        {{ progress }}%
+      </div>
+    </div>
+    <h1 class="mt-2 mb-2 text-xs italic text-danger">
+      Please wait and do not refresh or leave page!
+    </h1>
+  </div>
+  <ng-container *ngIf="isLoading">
+    <div class="flex items-center justify-center font-semibold h-60">
+      <app-loading></app-loading>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isLoading">
+    <form
+      [formGroup]="publishDirectoryForm"
+      (ngSubmit)="onSubmit()"
+      [hidden]="progress > 0"
+    >
+      <div class="mt-8">
+        <label for="title" class="font-semibold"
+          >Title <span class="text-danger">*</span></label
+        >
+        <input
+          type="text"
+          formControlName="title"
+          class="w-full px-3 py-2 mt-2 border border-gray-300 rounded-md"
+          placeholder="Input your title here..."
+        />
+        <div *ngIf="!title?.valid && (title?.dirty || title?.touched)">
+          <small class="text-red-800" [hidden]="!title?.errors?.['required']">
+            Title is required
+          </small>
+        </div>
+      </div>
+      <div class="mt-5">
+        <label for="album_category" class="font-semibold"
+          >Unit <span class="text-danger">*</span></label
+        >
+        <ng-select
+          id="id_unit_dinas"
+          name="id_unit_dinas"
+          formControlName="id_unit_dinas"
+          placeholder="Select Unit"
+          class="mt-2"
+        >
+          <ng-option *ngFor="let unit of unitDinasData" value="{{ unit.id }}">
+            {{ unit.name }}
+          </ng-option>
+        </ng-select>
+        <div
+          *ngIf="
+            !id_unit_dinas?.valid &&
+            (id_unit_dinas?.dirty || id_unit_dinas?.touched)
+          "
+        >
+          <small
+            class="text-red-800"
+            [hidden]="!id_unit_dinas?.errors?.['required']"
+          >
+            Unit is required
+          </small>
+        </div>
+      </div>
+      <div class="mt-5">
+        <label for="link" class="font-semibold"
+          >Link <span class="text-danger">*</span></label
+        >
+        <input
+          type="text"
+          formControlName="link"
+          class="w-full px-3 py-2 mt-2 border border-gray-300 rounded-md"
+          placeholder="Input your link here..."
+        />
+        <div *ngIf="!link?.valid && (link?.dirty || link?.touched)">
+          <small class="text-red-800" [hidden]="!link?.errors?.['required']">
+            Link is required
+          </small>
+        </div>
+      </div>
+      <div>
+        <p class="mt-5 mb-3 font-semibold">
+          Description <span class="text-danger">*</span>
+        </p>
+        <textarea
+          name="description"
+          formControlName="description"
+          rows="10"
+          class="w-full px-3 py-3 border border-gray-300 rounded-md"
+          placeholder="Input Your Description Here"
+        ></textarea>
+        <div
+          *ngIf="
+            !description?.valid && (description?.dirty || description?.touched)
+          "
+        >
+          <small
+            class="text-red-800"
+            [hidden]="!description?.errors?.['required']"
+          >
+            Description is required
+          </small>
+        </div>
+      </div>
+      <div class="mt-8">
+        <p class="mt-5 mb-3 font-semibold">
+          Cover Thumbnail <span class="text-danger">*</span>
+          <strong
+            ><span class="text-xs italic font-normal"
+              >(Dimension: 1920x1080)</span
+            ></strong
+          >
+        </p>
+        <div>
+          <div
+            class="py-32 mx-auto text-center border border-gray-300 rounded-md"
+            (dragover)="onDirectoryCoverDragOver($event)"
+            (dragleave)="onDirectoryCoverDragLeave($event)"
+            (drop)="onDirectoryCoverDrop($event)"
+            (click)="triggerDirectoryCoverFileInputClick()"
+            *ngIf="selectedDirectoryCoverFile === null"
+          >
+            <p><b>Upload a file</b> or drag and drop</p>
+            <p>Image File up to 1 MB</p>
+            <div class="hidden p-2 border-2">
+              <input
+                #directoryCoverFileInput
+                id="image"
+                accept=".png, .jpg, .jpeg"
+                type="file"
+                (change)="onDirectoryCoverUploaded($event)"
+              />
+            </div>
+          </div>
+          <div
+            *ngIf="
+              !cover_image?.valid &&
+              (cover_image?.dirty || cover_image?.touched)
+            "
+          >
+            <small
+              class="text-red-800"
+              [hidden]="!cover_image?.errors?.['required']"
+            >
+              Cover Thumbnail is required
+            </small>
+          </div>
+        </div>
+        <div *ngIf="selectedDirectoryCoverFile !== null">
+          <div
+            class="flex items-center rounded-xl min-[600px]:w-96 min-[600px]:h-80 max-[600px]:w-56 max-[600px]:h-60"
+          >
+            <img
+              *ngIf="previewDirectoryCoverImage"
+              class="object-cover object-center w-full h-full rounded-xl"
+              [src]="previewDirectoryCoverImage"
+              alt="Preview"
+            />
+
+            <div class="" (click)="onRemoveDirectoryCover()">
+              <fa-icon
+                [icon]="faTrash"
+                class="p-4 ml-2 rounded-full bg-[#FFEBEE] text-danger cursor-pointer"
+              ></fa-icon>
+            </div>
+          </div>
+          <div *ngIf="!isDirectoryThumbnailValid">
+            <small class="text-red-800">
+              The size of the cover thumbnail cannot exceed 1 MB
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end w-full mt-5 mb-8">
+        <button
+          class="px-3 py-2 mx-2 font-semibold bg-white rounded-lg shadow text-1xl text-new-primary"
+          (click)="onPreviousPage()"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-3 py-2 mx-2 font-semibold text-white rounded-lg shadow bg-new-primary text-1xl disabled:bg-gray-500"
+          type="submit"
+          [disabled]="
+            publishDirectoryForm.status === 'INVALID' ||
+            !isDirectoryThumbnailValid
+          "
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</div>

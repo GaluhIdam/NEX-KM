@@ -1,0 +1,420 @@
+<!-- Carousel -->
+<div
+  id="carouselExampleCaptions"
+  class="relative"
+  data-te-carousel-init
+  data-te-carousel-slide
+>
+  <div
+    class="absolute right-0 bottom-0 left-0 z-[2] mx-[15%] mb-4 flex list-none justify-center p-0"
+    data-te-carousel-indicators
+  >
+    <button
+      type="button"
+      data-te-target="#carouselExampleCaptions"
+      data-te-slide-to="0"
+      data-te-carousel-active
+      class="mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-[600ms] ease-[cubic-bezier (0.25,0.1,0.25,1.0)] motion-reduce:transition-none"
+      aria-current="true"
+      aria-label="Slide 1"
+    ></button>
+    <button
+      type="button"
+      data-te-target="#carouselExampleCaptions"
+      data-te-slide-to="1"
+      class="mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-[600ms] ease-[cubic-bezier (0.25,0.1,0.25,1.0)] motion-reduce:transition-none"
+      aria-label="Slide 2"
+    ></button>
+    <button
+      type="button"
+      data-te-target="#carouselExampleCaptions"
+      data-te-slide-to="2"
+      class="mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-[600ms] ease-[cubic-bezier (0.25,0.1,0.25,1.0)] motion-reduce:transition-none"
+      aria-label="Slide 3"
+    ></button>
+  </div>
+  <div
+    class="relative w-full overflow-hidden after:clear-both after:block after:content-['']"
+  >
+    <!-- carousel1 -->
+    <div
+      class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
+      data-te-carousel-active
+      data-te-carousel-item
+      style="backface-visibility: hidden"
+    >
+      <div
+        class="grid lg:grid-cols-2 lg:bg-blue-300 hp:bg-blue-300 lg:w-full hp:w-full hp:grid-cols-1 text-justify"
+        *ngFor="let slider of dataSliders"
+      >
+        <div class="mx-40 lg:justify-self-center hp:justify-self-center">
+          <p
+            *ngIf="slider.sequence === 1"
+            class="text-5xl font-bold font-jakarta mt-44"
+          >
+            {{ slider.title }}
+          </p>
+          <p *ngIf="slider.sequence === 1" class="mt-3 text-lg">
+            {{ trimString(slider.description, 450) }}
+          </p>
+        </div>
+        <div
+          class="lg:h-full lg:w-[79rem] lg:mx-auto md:mx-auto sm:mx-auto xs:mx-auto"
+        >
+          <img
+            *ngIf="slider.sequence === 1"
+            [src]="slider.backgroundImage"
+            alt="Carousel Picture"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- carousel2 -->
+    <div
+      class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
+      data-te-carousel-item
+      style="backface-visibility: hidden"
+    >
+      <div
+        class="grid lg:grid-cols-2 lg:bg-blue-300 hp:bg-blue-300 lg:w-full hp:w-full hp:grid-cols-1 text-justify"
+        *ngFor="let slider of dataSliders"
+      >
+        <div class="mx-40 lg:justify-self-center hp:justify-self-center">
+          <p
+            *ngIf="slider.sequence === 2"
+            class="text-5xl font-bold font-jakarta mt-44"
+          >
+            {{ slider.title }}
+          </p>
+          <p *ngIf="slider.sequence === 2" class="mt-3 text-lg">
+            {{ trimString(slider.description, 450) }}
+          </p>
+        </div>
+        <div
+          class="lg:h-full lg:w-[79rem] lg:mx-auto md:mx-auto sm:mx-auto xs:mx-auto"
+        >
+          <img
+            *ngIf="slider.sequence === 2"
+            [src]="slider.backgroundImage"
+            alt="Carousel Picture"
+          />
+        </div>
+      </div>
+    </div>
+    <!-- carousel3 -->
+    <div
+      class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
+      data-te-carousel-item
+      style="backface-visibility: hidden"
+    >
+      <div
+        class="grid lg:grid-cols-2 lg:bg-blue-300 hp:bg-blue-300 lg:w-full hp:w-full hp:grid-cols-1 text-justify"
+        *ngFor="let slider of dataSliders"
+      >
+        <div class="mx-40 lg:justify-self-center hp:justify-self-center">
+          <p
+            *ngIf="slider.sequence === 3"
+            class="text-5xl font-bold font-jakarta mt-44"
+          >
+            {{ slider.title }}
+          </p>
+          <p *ngIf="slider.sequence === 3" class="mt-3 text-lg">
+            {{ trimString(slider.description, 450) }}
+          </p>
+        </div>
+        <div
+          class="lg:h-full lg:w-[79rem] lg:mx-auto md:mx-auto sm:mx-auto xs:mx-auto"
+        >
+          <img
+            *ngIf="slider.sequence === 3"
+            [src]="slider.backgroundImage"
+            alt="Carousel Picture"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    class="absolute top-0 bottom-0 left-0 z-[1] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
+    type="button"
+    data-te-target="#carouselExampleCaptions"
+    data-te-slide="prev"
+  >
+    <span class="inline-block w-8 h-8">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.75 19.5L8.25 12l7.5-7.5"
+        />
+      </svg>
+    </span>
+    <span
+      class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+      >Previous</span
+    >
+  </button>
+  <button
+    class="absolute top-0 bottom-0 right-0 z-[1] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none"
+    type="button"
+    data-te-target="#carouselExampleCaptions"
+    data-te-slide="next"
+  >
+    <span class="inline-block w-8 h-8">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M8.25 4.5l7.5 7.5-7.5 7.5"
+        />
+      </svg>
+    </span>
+    <span
+      class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+      >Next</span
+    >
+  </button>
+</div>
+<!-- End of Carousel -->
+
+<!-- Jumbotron -->
+<div class="lg:bg-blue-100 hp:bg-blue-100 lg:py-52 hp:py-52">
+  <div class="container lg:mx-auto hp:mx-auto">
+    <div
+      class="font-jakarta lg:text-center hp:text-center lg:justify-center hp:justify-center"
+    >
+      <h1
+        class="text-black font-jakarta lg:text-2xl hp:text-2xl lg:font-medium lg:mb-4 lg:p-0 lg:m-0 hp:mb-0 hp:p-4 hp:m-4"
+      >
+        Welcome to the
+      </h1>
+      <p
+        class="font-bold font-jakarta lg:text-5xl lg:p-0 lg:m-0 hp:m-4 hp:p-4 hp:text-2xl"
+      >
+        New Experience of Collaboration
+      </p>
+      <p class="text-black font-jakarta lg:text-base lg:mt-6 hp:mt-0">
+        NEX adalah Knowledge Management GMF yang menjadi wadah bagi GMF Heroes
+        <br />
+        untuk sharing dan berbagi eksperience di mana GMF Heroes dapat berbagi
+        knowlegde.
+      </p>
+    </div>
+  </div>
+</div>
+<!-- End of Jumbotron -->
+
+<!-- NEX Library -->
+<div class="relative">
+  <div class="grid mt-5 lg:grid-cols-2 hp:grid-cols-1">
+    <div class="lg:justify-self-center hp:justify-self-center">
+      <p
+        class="font-bold font-jakarta lg:text-5xl lg:mt-44 lg:p-0 lg:m-0 hp:m-4 hp:p-4 hp:text-2xl"
+      >
+        NEX Library
+      </p>
+      <p
+        class="text-lg font-jakarta lg:mt-3 hp:mt-0 lg:p-0 lg:m-0 hp:m-4 hp:p-4"
+      >
+        Lets get your team working, no matter their location, we can streamline
+        their <br />
+        process, create team bonds and watch productivity soar
+      </p>
+      <button
+        type="button"
+        class="inline-block font-jakarta rounded bg-primary px-6 pt-2.5 pb-2 my-4 text-base font-medium leading-normal text-white"
+        (click)="onGotoNexLibrary()"
+      >
+        Explore More
+        <fa-icon [icon]="faChevronRight"></fa-icon>
+      </button>
+    </div>
+    <div class="lg:justify-self-center hp:justify-self-center">
+      <img
+        src="../../../../assets/image/people2.png"
+        alt="NEX Library Picture"
+      />
+    </div>
+  </div>
+  <img
+    class="absolute right-0 rotate-180 top-10 -z-20"
+    src="../../../../assets/image/home-page/gradient/227.png"
+    alt=""
+  />
+</div>
+
+<!-- End of NEX Library -->
+
+<!-- NEX Community -->
+<div class="relative">
+  <div class="grid mt-5 lg:grid-cols-2 hp:grid-cols-1">
+    <div class="lg:justify-self-center hp:justify-self-center">
+      <img
+        src="../../../../assets/image/people3.png"
+        alt="NEX Community Picture"
+      />
+    </div>
+    <div class="justify-self-center hp:justify-self-center">
+      <p
+        class="font-bold font-jakarta lg:text-5xl lg:mt-44 lg:p-0 lg:m-0 hp:m-4 hp:p-4 hp:text-2xl"
+      >
+        NEX Community
+      </p>
+      <p
+        class="text-lg font-jakarta lg:mt-3 hp:mt-0 lg:p-0 lg:m-0 hp:m-4 hp:p-4"
+      >
+        Lets get your team working, no matter their location, we can streamline
+        their <br />
+        process, create team bonds and watch productivity soar
+      </p>
+      <button
+        type="button"
+        (click)="onGotoCommunity()"
+        class="inline-block font-jakarta rounded bg-primary px-6 pt-2.5 pb-2 text-base font-medium leading-normal text-white"
+      >
+        Explore More
+        <fa-icon [icon]="faChevronRight"></fa-icon>
+      </button>
+    </div>
+  </div>
+
+  <img
+    class="absolute left-0 top-32 -z-20"
+    src="../../../../assets/image/home-page/gradient/227.png"
+    alt=""
+  />
+</div>
+
+<!-- End of NEX Community -->
+
+<!-- NEX Talk -->
+<div class="relative">
+  <div class="grid mt-5 lg:grid-cols-2 hp:grid-cols-1">
+    <div class="lg:justify-self-center hp:justify-self-center">
+      <p
+        class="font-bold font-jakarta lg:text-5xl lg:mt-44 lg:p-0 lg:m-0 hp:m-4 hp:p-4 hp:text-2xl"
+      >
+        NEX Talk
+      </p>
+      <p
+        class="text-lg font-jakarta lg:mt-3 hp:mt-0 lg:p-0 lg:m-0 hp:m-4 hp:p-4"
+      >
+        Lets get your team working, no matter their location, we can streamline
+        their <br />
+        process, create team bonds and watch productivity soar
+      </p>
+      <button
+        type="button"
+        (click)="onGotoNexTalk()"
+        class="inline-block font-jakarta rounded bg-primary px-6 pt-2.5 pb-2 text-base font-medium leading-normal text-white"
+      >
+        Explore More
+        <fa-icon [icon]="faChevronRight"></fa-icon>
+      </button>
+    </div>
+    <div class="justify-self-center">
+      <img src="../../../../assets/image/people4.png" alt="NEX Talk Picture" />
+    </div>
+  </div>
+
+  <img
+    class="absolute right-0 rotate-180 top-32 -z-20"
+    src="../../../../assets/image/home-page/gradient/227.png"
+    alt=""
+  />
+</div>
+
+<!-- End of NEX Talk -->
+
+<!-- NEX Level -->
+<div class="relative">
+  <div class="grid mt-5 lg:grid-cols-2 hp:grid-cols-1">
+    <div class="lg:justify-self-center hp:justify-self-center">
+      <img src="../../../../assets/image/people5.png" alt="NEX Level Picture" />
+    </div>
+    <div class="lg:justify-self-center hp:justify-self-center">
+      <p
+        class="font-bold font-jakarta lg:text-5xl lg:mt-44 lg:p-0 lg:m-0 hp:m-4 hp:p-4 hp:text-2xl"
+      >
+        NEX Level
+      </p>
+      <p
+        class="text-lg font-jakarta lg:mt-3 hp:mt-0 lg:p-0 lg:m-0 hp:m-4 hp:p-4"
+      >
+        Lets get your team working, no matter their location, we can streamline
+        their <br />
+        process, create team bonds and watch productivity soar
+      </p>
+      <button
+        type="button"
+        (click)="onGotoNexLevel()"
+        class="inline-block font-jakarta rounded bg-primary px-6 pt-2.5 pb-2 text-base font-medium leading-normal text-white"
+      >
+        Explore More
+        <fa-icon [icon]="faChevronRight"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <img
+    class="absolute left-0 top-40 -z-10"
+    src="../../../../assets/image/home-page/gradient/227.png"
+    alt=""
+  />
+</div>
+
+<!-- End of NEX Level -->
+
+<!-- NEX Learning -->
+<div class="relative">
+  <div class="grid mt-5 lg:grid-cols-2 hp:grid-cols-1">
+    <div class="lg:justify-self-center hp:justify-self-center">
+      <p
+        class="font-bold font-jakarta lg:text-5xl lg:mt-44 lg:p-0 lg:m-0 hp:m-4 hp:p-4 hp:text-2xl"
+      >
+        NEX Learning
+      </p>
+      <p
+        class="text-lg font-jakarta lg:mt-3 hp:mt-0 lg:p-0 lg:m-0 hp:m-4 hp:p-4"
+      >
+        Lets get your team working, no matter their location, we can streamline
+        their <br />
+        process, create team bonds and watch productivity soar
+      </p>
+      <button
+        type="button"
+        (click)="onGotoLearning()"
+        class="inline-block font-jakarta rounded bg-primary px-6 pt-2.5 pb-2 text-base font-medium leading-normal text-white"
+      >
+        Explore More
+        <fa-icon [icon]="faChevronRight"></fa-icon>
+      </button>
+    </div>
+    <div class="lg:justify-self-center hp:justify-self-center">
+      <img
+        src="../../../../assets/image/people6.png"
+        alt="NEX Learning Picture"
+      />
+    </div>
+  </div>
+  <img
+    class="absolute top-0 right-0 rotate-180 -z-20"
+    src="../../../../assets/image/home-page/gradient/227.png"
+    alt=""
+  />
+</div>
+
+<!-- End of NEX Learning -->

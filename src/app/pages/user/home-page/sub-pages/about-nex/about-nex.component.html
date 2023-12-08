@@ -1,0 +1,305 @@
+<!-- About Nex -->
+<div class="bg-blue-100 lg:py-72 hp:py-36">
+  <div class="container lg:mx-auto hp:mx-auto">
+    <div
+      class="lg:text-center hp:text-center lg:justify-center hp:justify-center"
+    >
+      <h1 class="font-bold text-black lg:text-5xl hp:text-3xl mb-7">
+        About Nex
+      </h1>
+      <p
+        class="px-12 text-base font-medium text-black lg:text-center hp:text-justify"
+      >
+        Now you can see the changes on our website where we offer the latest
+        innovations that are more interesting to try. <br />
+        NEX community adalah Knowledge Management GMF yang menjadi wadah bagi
+        GMF Heroes <br />
+        untuk sharing dan berbagi eksperience di mana GMF Heroes dapat berbagi
+        knowlede,
+      </p>
+    </div>
+  </div>
+</div>
+<!-- End of About Nex -->
+
+<!-- Monthly Report -->
+<div class="py-20 bg-blue-200">
+  <div class="container lg:mx-auto hp:mx-auto">
+    <div
+      class="lg:text-center hp:text-center lg:justify-center hp:justify-center"
+    >
+      <h1 class="font-bold text-black lg:text-5xl hp:text-3xl mb-7">
+        Monthly Report
+      </h1>
+      <p
+        class="px-12 font-medium text-black lg:text-base lg:text-center hp:text-justify"
+      >
+        Now you can see the changes on our website where we offer the latest
+        innovations that are more interesting to try. <br />
+        NEX community adalah Knowledge Management GMF yang menjadi wadah bagi
+        GMF Heroes <br />
+        untuk sharing dan berbagi eksperience di mana GMF Heroes dapat berbagi
+        knowlede,
+      </p>
+      <div class="grid gap-4 px-12 mt-10 lg:grid-cols-3 hp:grid-cols-1">
+        <div>
+          <img src="../../../../../../assets/image/pie-chart.png" alt="Chart" />
+        </div>
+        <div>
+          <img src="../../../../../../assets/image/bar-chart.png" alt="Chart" />
+        </div>
+        <div>
+          <img
+            src="../../../../../../assets/image/donut-chart.png"
+            alt="Chart"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Monthly Report -->
+
+<!-- NEX Team -->
+<div class="py-20 bg-blue-300">
+  <div class="container lg:mx-auto hp:mx-auto">
+    <h1
+      class="font-bold text-black lg:text-5xl hp:text-3xl lg:text-center hp:text-center mb-7"
+    >
+      NEX Team
+    </h1>
+
+    <ng-container
+      *ngIf="
+        nexTeamCorporatee.length === 0 &&
+        nexTeamLearning.length === 0 &&
+        nexTeamDeveloper.length === 0 &&
+        !isNexTeamLearningLoading &&
+        !isNexTeamCorporateeLoading &&
+        !isNexTeamDeveloperLoading
+      "
+    >
+      <div class="flex items-center justify-center font-semibold h-60">
+        <h2>No Teams Available.</h2>
+      </div>
+    </ng-container>
+
+    <ng-container
+      *ngIf="
+        !(
+          nexTeamCorporatee.length === 0 &&
+          nexTeamLearning.length === 0 &&
+          nexTeamDeveloper.length === 0 &&
+          !isNexTeamLearningLoading &&
+          !isNexTeamCorporateeLoading &&
+          !isNexTeamDeveloperLoading
+        )
+      "
+    >
+      <!-- Corporatee Culture & Knowledge management -->
+      <ng-container *ngIf="nexTeamCorporatee.length > 0">
+        <div class="grid px-12 mb-4 lg:grid-cols-3 hp:grid-cols-1">
+          <div class="self-start col-span-2">
+            <p
+              class="mb-4 text-2xl font-bold lg:text-start hp:text-start font-jakarta"
+            >
+              Corporatee Culture & Knowledge Management
+            </p>
+          </div>
+          <ng-container *ngIf="nexTeamCorporatee.length > 3">
+            <div class="flex items-end justify-end">
+              <button
+                (click)="onGoToTeamList('corporatee')"
+                class="text-lg font-bold text-blue-700 lg:px-12 hp:text-end"
+              >
+                See More
+              </button>
+            </div>
+          </ng-container>
+        </div>
+        <div class="grid gap-4 px-12 mb-4 lg:grid-cols-3 hp:grid-cols-1">
+          <ng-container *ngIf="isNexTeamCorporateeLoading">
+            <div class="lg:col-span-3 hp:col-span-1">
+              <app-loading></app-loading>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!isNexTeamCorporateeLoading">
+            <div
+              class="max-w-md px-4 overflow-hidden bg-white shadow-md cursor-pointer rounded-xl md:max-w-2xl"
+              *ngFor="let member of nexTeamCorporateeMember; let i = index"
+              (click)="onViewUser(member.personalNumber)"
+            >
+              <ng-container *ngIf="isNexTeamCorporateeMemberLoading[i]">
+                <div class="flex items-center justify-center w-full h-full">
+                  <app-loading></app-loading>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!isNexTeamCorporateeMemberLoading[i]">
+                <ng-container *ngIf="i < 3">
+                  <div class="flex items-center gap-2 lg:flex-row hp:flex-col">
+                    <div class="w-24 lg:my-4 hp:mt-4">
+                      <img
+                        class="w-full rounded-full"
+                        [src]="member.personalImage"
+                        alt="Profile image"
+                      />
+                    </div>
+                    <div class="lg:py-8 hp:py-4">
+                      <p
+                        class="text-xl font-semibold hp:text-center lg:text-left font-jakarta"
+                      >
+                        {{
+                          member.personalName.length > 25
+                            ? member.personalName.substring(0, 25) + "..."
+                            : member.personalName
+                        }}
+                        ({{ member.personalUnit }})
+                      </p>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <!-- Learning Center Unit -->
+      <ng-container *ngIf="nexTeamLearning.length > 0">
+        <div class="grid px-12 mb-4 lg:grid-cols-3 hp:grid-cols-1">
+          <div class="self-start col-span-2">
+            <p
+              class="mb-4 text-2xl font-bold lg:text-start hp:text-start font-jakarta"
+            >
+              Learning Center Unit
+            </p>
+          </div>
+          <ng-container *ngIf="nexTeamLearning.length > 3">
+            <div class="flex items-end justify-end">
+              <button
+                (click)="onGoToTeamList('learning')"
+                class="text-lg font-bold text-blue-700 lg:px-12 hp:text-end"
+              >
+                See More
+              </button>
+            </div>
+          </ng-container>
+        </div>
+        <div class="grid gap-4 px-12 mb-4 lg:grid-cols-3 hp:grid-cols-1">
+          <ng-container *ngIf="isNexTeamLearningLoading">
+            <div class="lg:col-span-3 hp:col-span-1">
+              <app-loading></app-loading>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!isNexTeamLearningLoading">
+            <div
+              class="max-w-md px-4 overflow-hidden bg-white shadow-md cursor-pointer rounded-xl md:max-w-2xl"
+              *ngFor="let member of nexTeamLearningMember; let i = index"
+              (click)="onViewUser(member.personalNumber)"
+            >
+              <ng-container *ngIf="isNexTeamLearningMemberLoading[i]">
+                <div class="flex items-center justify-center w-full h-full">
+                  <app-loading></app-loading>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!isNexTeamLearningMemberLoading[i]">
+                <ng-container *ngIf="i < 3">
+                  <div class="flex items-center gap-2 lg:flex-row hp:flex-col">
+                    <div class="w-24 lg:my-4 hp:mt-4">
+                      <img
+                        class="w-full rounded-full"
+                        [src]="member.personalImage"
+                        alt="Profile image"
+                      />
+                    </div>
+                    <div class="lg:py-8 hp:py-4">
+                      <p
+                        class="text-xl font-semibold hp:text-center lg:text-left font-jakarta"
+                      >
+                        {{
+                          member.personalName.length > 25
+                            ? member.personalName.substring(0, 25) + "..."
+                            : member.personalName
+                        }}
+                        ({{ member.personalUnit }})
+                      </p>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <!-- IT Developer -->
+      <ng-container *ngIf="nexTeamDeveloper.length > 0">
+        <div class="grid px-12 mb-4 lg:grid-cols-3 hp:grid-cols-1">
+          <div class="self-start col-span-2">
+            <p
+              class="mb-4 text-2xl font-bold lg:text-start hp:text-start font-jakarta"
+            >
+              IT Developer
+            </p>
+          </div>
+          <ng-container *ngIf="nexTeamDeveloper.length > 3">
+            <div class="flex items-end justify-end">
+              <button
+                (click)="onGoToTeamList('developer')"
+                class="text-lg font-bold text-blue-700 lg:px-12 hp:text-end"
+              >
+                See More
+              </button>
+            </div>
+          </ng-container>
+        </div>
+        <div class="grid gap-4 px-12 mb-4 lg:grid-cols-3 hp:grid-cols-1">
+          <ng-container *ngIf="isNexTeamDeveloperLoading">
+            <div class="lg:col-span-3 hp:col-span-1">
+              <app-loading></app-loading>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!isNexTeamDeveloperLoading">
+            <div
+              class="max-w-md px-4 overflow-hidden bg-white shadow-md cursor-pointer rounded-xl md:max-w-2xl"
+              *ngFor="let member of nexTeamDeveloperMember; let i = index"
+              (click)="onViewUser(member.personalNumber)"
+            >
+              <ng-container *ngIf="isNexTeamDeveloperMemberLoading[i]">
+                <div class="flex items-center justify-center w-full h-full">
+                  <app-loading></app-loading>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!isNexTeamDeveloperMemberLoading[i]">
+                <ng-container *ngIf="i < 3">
+                  <div class="flex items-center gap-2 lg:flex-row hp:flex-col">
+                    <div class="w-24 lg:my-4 hp:mt-4">
+                      <img
+                        class="w-full rounded-full"
+                        [src]="member.personalImage"
+                        alt="Profile image"
+                      />
+                    </div>
+                    <div class="lg:py-8 hp:py-4">
+                      <p
+                        class="text-xl font-semibold hp:text-center lg:text-left font-jakarta"
+                      >
+                        {{
+                          member.personalName.length > 25
+                            ? member.personalName.substring(0, 25) + "..."
+                            : member.personalName
+                        }}
+                        ({{ member.personalUnit }})
+                      </p>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+<!-- End of NEX Team -->

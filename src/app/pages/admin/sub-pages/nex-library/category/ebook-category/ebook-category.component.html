@@ -1,0 +1,543 @@
+<ng-container>
+  <div>
+    <div class="grid grid-cols-2 gap-1">
+      <div class="flex justify-start p-5 h-fit w-fit">
+        <div
+          class="relative flex flex-wrap items-stretch w-full bg-white border rounded-lg border-1"
+        >
+          <button
+            class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+            type="button"
+            id="button-addon1"
+          >
+            <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+          </button>
+          <input
+            type="text"
+            class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+            placeholder="Search by name"
+            aria-label="Example text with button addon"
+            aria-describedby="button-addon1"
+            (keyup)="searchByField($event)"
+          />
+        </div>
+      </div>
+      <div class="flex justify-end p-5 place-items-center">
+        <button
+          class="px-2 py-2 mx-2 border rounded-lg border-1 hover:bg-success hover:text-white border-success text-success h-fit"
+        >
+          <fa-icon [icon]="faFilter"></fa-icon> Filter
+        </button>
+        <button
+          class="px-2 py-2 mx-2 border rounded-lg border-1 hover:bg-success hover:text-white border-success text-success h-fit"
+        >
+          <fa-icon [icon]="faPrint"></fa-icon> Export To Excel
+        </button>
+        <button
+          type="button"
+          data-te-toggle="modal"
+          data-te-target="#editorEbook"
+          data-te-ripple-init
+          data-te-ripple-color="light"
+          (click)="onChangeEditMode(false)"
+          class="px-2 py-2 mx-2 border rounded-lg border-1 hover:bg-success hover:text-white border-success text-success h-fit"
+        >
+          <fa-icon [icon]="faPlus"></fa-icon> Add Category
+        </button>
+      </div>
+    </div>
+    <div class="flex flex-col overflow-x-auto">
+      <div class="p-5">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm font-light text-left">
+            <thead
+              class="w-full font-medium text-gray-600 bg-gray-100 border-b border-gray-500"
+            >
+              <tr class="w-full">
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  No
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Name
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Item Count
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Status
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody class="w-full">
+              <ng-container *ngIf="isLoading">
+                <tr>
+                  <td colspan="5" class="items-center h-40 py-5">
+                    <app-loading></app-loading>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="!isLoading">
+                <tr
+                  class="w-full border-b dark:border-neutral-500"
+                  *ngFor="let category of ebookCategoryData; let i = index"
+                >
+                  <td
+                    class="px-6 py-4 font-medium text-center whitespace-nowrap"
+                  >
+                    {{ (dataRequest?.offset ?? 1) + (i + 1) }}
+                  </td>
+                  <td class="px-6 py-4 text-center whitespace-nowrap">
+                    <ng-container *ngIf="category.name.length <= 20">
+                      {{ category.name }}
+                    </ng-container>
+                    <ng-container *ngIf="category.name.length > 20">
+                      <app-table-row-longest-text-tooltip
+                        [substringLength]="20"
+                        [name]="category.name"
+                        [showToolTip]="showTooltips[i]"
+                        [columnHover]="false"
+                      ></app-table-row-longest-text-tooltip>
+                    </ng-container>
+                  </td>
+                  <td class="px-6 py-4 text-center whitespace-nowrap">
+                    {{ category.ebookCategoriesEbooks.length }}
+                  </td>
+                  <td
+                    class="flex justify-center px-6 py-4 text-center whitespace-nowrap"
+                  >
+                    <div
+                      *ngIf="category.isActive === true"
+                      class="w-4/6 p-2 text-white bg-green-700 rounded-lg"
+                    >
+                      Active
+                    </div>
+                    <div
+                      *ngIf="category.isActive === false"
+                      class="w-4/6 p-2 text-white bg-red-700 rounded-lg"
+                    >
+                      Not Active
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex justify-center">
+                      <button
+                        type="button"
+                        (click)="openEditorModal(category)"
+                        data-te-toggle="modal"
+                        class="px-2 py-1 mx-1 border rounded-lg w-fit text-orange border-1 border-orange"
+                        data-te-target="#editorEbook"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        (click)="onChangeEditMode(true)"
+                      >
+                        <fa-icon [icon]="faPencil"></fa-icon>
+                      </button>
+                      <button
+                        type="button"
+                        data-te-toggle="modal"
+                        class="px-2 py-1 mx-1 border rounded-lg w-fit text-primary border-1 border-primary"
+                        data-te-target="#ebookActivate"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        [hidden]="category.isActive === true"
+                        (click)="onSelectEbookCategory(category)"
+                      >
+                        <fa-icon [icon]="faRefresh"></fa-icon>
+                      </button>
+                      <button
+                        type="button"
+                        data-te-toggle="modal"
+                        class="px-2 py-1 mx-1 border rounded-lg w-fit text-danger border-1 border-danger"
+                        data-te-target="#ebookDeactivate"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        [hidden]="category.isActive === false"
+                        (click)="onSelectEbookCategory(category)"
+                      >
+                        <fa-icon [icon]="faBan"></fa-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="ebookCategoryData.length == 0">
+                  <td
+                    colspan="5"
+                    class="items-center h-40 py-5 font-bold text-center text-gray-500"
+                  >
+                    No data available
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <!-- Table Pagination -->
+          <div
+            class="flex items-center justify-start mt-5"
+            *ngIf="paginator && !isLoading"
+          >
+            <h1 class="mr-5">Total : {{ paginator.totalData }}</h1>
+            <div class="flex items-center justify-start mx-10">
+              <span class="text-sm">Show</span>
+              <select
+                *ngIf="paginator"
+                [(ngModel)]="paginator.pageSize"
+                (ngModelChange)="changePageSize()"
+                class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+              >
+                <option
+                  *ngFor="let size of paginator?.pageOption"
+                  [ngValue]="size"
+                >
+                  {{ size }} data
+                </option>
+              </select>
+            </div>
+            <div class="flex items-center justify-center mx-3">
+              <button
+                type="button"
+                (click)="changePageNumber(false)"
+                [disabled]="paginator.pageNumber == 1"
+                [class]="
+                  paginator.pageNumber == 1 ? 'bg-gray-200' : 'bg-gray-50'
+                "
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300"
+              >
+                Previous
+              </button>
+              <!-- <button
+            class="ml-2 text-gray-400"
+            (click)="goToPageNumberByPageClick(i + 1)"
+            *ngFor="let page of pages; let i = index"
+          >
+            {{ i + 1 }}
+          </button> -->
+              <button
+                type="button"
+                (click)="changePageNumber(true)"
+                [disabled]="paginator.pageNumber == paginator.totalPage"
+                [class]="
+                  paginator.pageNumber == paginator.totalPage
+                    ? 'bg-gray-200'
+                    : 'bg-gray-50'
+                "
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300 ml-2"
+              >
+                Next
+              </button>
+            </div>
+            <h1 class="w-fit">Go to Page</h1>
+            <select
+              *ngIf="paginator"
+              [(ngModel)]="paginator.pageNumber"
+              (ngModelChange)="goToPageNumberByPageSelect($event)"
+              class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+            >
+              <option
+                *ngFor="let page of pages; let i = index"
+                [ngValue]="i + 1"
+              >
+                {{ i + 1 }}
+              </option>
+            </select>
+          </div>
+          <!-- Table Pagination -->
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Editor -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="editorEbook"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px] min-[992px]:max-w-[800px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          {{ editMode ? "Edit" : "Add" }} Category
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <form [formGroup]="ebookCategoryForm" (ngSubmit)="onSubmit()">
+        <div
+          class="relative flex-auto p-6 place-items-center"
+          data-te-modal-body-ref
+        >
+          <div class="mt-2">
+            <label for="title" class="font-medium"
+              >Name <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="name"
+              class="w-full px-3 py-2 mt-2 border border-gray-300 rounded-md"
+              placeholder="Input category name here..."
+            />
+            <div *ngIf="!name?.valid && (name?.dirty || name?.touched)">
+              <small
+                class="text-red-800"
+                [hidden]="!name?.errors?.['required']"
+              >
+                Name is required
+              </small>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+        >
+          <button
+            type="button"
+            class="inline-block px-5 py-2 text-white rounded-lg bg-danger"
+            data-te-modal-dismiss
+            data-te-ripple-init
+            data-te-ripple-color="light"
+            (click)="onClickCancel()"
+          >
+            <fa-icon [icon]="faXmark"></fa-icon>
+            Discard
+          </button>
+          <button
+            type="submit"
+            class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success disabled:bg-slate-500"
+            data-te-ripple-init
+            data-te-ripple-color="light"
+            data-te-modal-dismiss=""
+            [disabled]="ebookCategoryForm.status === 'INVALID'"
+          >
+            <fa-icon [icon]="faCircleCheck"></fa-icon>
+            {{ editMode ? "Edit" : "Submit" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Deactivation -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="ebookDeactivate"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          Confirm Deactivation
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="relative flex-auto p-4 text-center place-items-center"
+        data-te-modal-body-ref
+      >
+        <div class="flex justify-center">
+          <h1
+            class="p-2 text-4xl text-center border rounded-lg border-1 border-danger w-fit text-danger"
+          >
+            <fa-icon [icon]="faBan"></fa-icon>
+          </h1>
+        </div>
+        <p class="mt-5 text-center">
+          Are you sure you want to deactivate this item? Once deactivated, it
+          will no longer be visible to our community and all links to the
+          article will no longer work.
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+      >
+        <button
+          type="button"
+          class="inline-block px-5 py-2 text-white rounded-lg bg-danger"
+          data-te-modal-dismiss
+          data-te-ripple-init
+          data-te-ripple-color="light"
+        >
+          <fa-icon [icon]="faXmark"></fa-icon>
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success"
+          data-te-ripple-init
+          data-te-ripple-color="light"
+          data-te-modal-dismiss
+          (click)="changeEbookCategoryStatus(false)"
+        >
+          <fa-icon [icon]="faCircleCheck"></fa-icon>
+          Sure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Activation -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="ebookActivate"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          Confirm Activation
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="relative flex-auto p-4 text-center place-items-center"
+        data-te-modal-body-ref
+      >
+        <div class="flex justify-center">
+          <h1
+            class="p-2 text-4xl text-center border rounded-lg border-1 border-primary w-fit text-primary"
+          >
+            <fa-icon [icon]="faRefresh"></fa-icon>
+          </h1>
+        </div>
+        <p class="mt-5 text-center">
+          Are you sure you want to activate this item? Once Activated, it will
+          be visible to our community.
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+      >
+        <button
+          type="button"
+          class="inline-block px-5 py-2 text-white rounded-lg bg-danger"
+          data-te-modal-dismiss
+          data-te-ripple-init
+          data-te-ripple-color="light"
+        >
+          <fa-icon [icon]="faXmark"></fa-icon>
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success"
+          data-te-ripple-init
+          data-te-ripple-color="light"
+          data-te-modal-dismiss
+          (click)="changeEbookCategoryStatus(true)"
+        >
+          <fa-icon [icon]="faCircleCheck"></fa-icon>
+          Sure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- trigger modal pop up -->
+<button data-te-toggle="modal"></button>
+<!-- trigger modal pop up -->

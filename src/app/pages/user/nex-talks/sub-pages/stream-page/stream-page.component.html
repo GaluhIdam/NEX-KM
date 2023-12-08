@@ -1,0 +1,319 @@
+<!-- Search & Trend Section -->
+<div class="flex justify-center py-20 bg-center bg-library">
+  <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+    <div class="min-[600px]:w-[32rem] place-self-center">
+      <h1
+        class="text-white font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl"
+      >
+        Explore New Experience of Collaboration
+      </h1>
+    </div>
+    <div
+      class="relative mb-4 flex min-[600px]:w-[800px] flex-wrap items-stretch bg-white rounded-full mt-4"
+    >
+      <button
+        class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+        type="button"
+        id="button-addon1"
+      >
+        <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+      </button>
+      <input
+        type="text"
+        class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+        placeholder="Search"
+        aria-label="Example text with button addon"
+        aria-describedby="button-addon1"
+      />
+    </div>
+    <h1 class="text-white">TRENDING SEARCH</h1>
+    <div>
+      <ul
+        class="flex flex-wrap pl-0 list-none md:flex-row"
+        role="tablist"
+        data-te-nav-ref
+      >
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Travelling
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Interior Design
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Music
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Dancing
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="w-11/12 mx-auto mt-8">
+  <div>
+    <p class="mb-4 text-5xl font-semibold text-blue-800">NEX STREAM</p>
+  </div>
+  <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+    <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <a routerLink="/user/nex-talks" class="mr-3 text-gray-400">Nex Talk</a>
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <p class="mr-3 text-black activeLink">Stream</p>
+  </div>
+  <div class="py-20 mt-8 bg-center bg-talk_stream rounded-2xl">
+    <div class="px-10 pt-10 mt-20 text-white">
+      <h1 class="mb-4 text-4xl font-semibold">Weather With You</h1>
+      <p>
+        Corrupt politicians, frenzied nationalists, and other warmongering
+        forces constantly jeopardize the thin veneer of peace between
+        neighboring countries Ostania and Westalis.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="px-20 mt-10">
+  <div class="grid grid-cols-1">
+    <div>
+      <p class="text-3xl font-semibold">Explore</p>
+      <p class="text-xl text-gray-400">What are you gonna watch today?</p>
+    </div>
+  </div>
+
+  <!-- Editor Choices -->
+  <section>
+    <div class="grid grid-cols-2 mt-10 mb-10">
+      <div>
+        <p class="text-4xl font-semibold text-blue-800">Editor Choices</p>
+      </div>
+      <div class="text-right">
+        <p
+          class="text-lg font-semibold text-blue-800 cursor-pointer hover:text-blue-500"
+          (click)="streamPageList('Editor Choice')"
+        >
+          See All
+        </p>
+      </div>
+    </div>
+    <!-- Body -->
+    <ng-container *ngIf="isStreamEditorChoiceLoading">
+      <div class="flex items-center justify-center h-56">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isStreamEditorChoiceLoading">
+      <ng-container
+        *ngIf="
+          streamEditorChoiceData.length > 0;
+          else emptyStreamEditorChoiceData
+        "
+      >
+        <div class="grid gap-3 lg:grid-cols-4 xs:grid-cols-1">
+          <!-- Loop Here -->
+          <ng-container
+            *ngFor="let stream of streamEditorChoiceData; let i = index"
+          >
+            <div
+              class="block w-64 mb-5 rounded-lg cursor-pointer xs:mx-auto xs:w-full"
+              (click)="streamStreaming(stream.uuid)"
+            >
+              <img
+                class="w-full h-52 rounded-2xl"
+                [src]="stream.pathThumbnail"
+                alt=""
+              />
+              <div class="flex items-center gap-0 mt-3">
+                <div class="">
+                  <img
+                    [src]="photoStreamEditorChoiceUploaders[i]"
+                    class="object-cover object-center h-auto rounded-full w-14"
+                    alt="avatar"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex-1 ml-4">
+                  <p class="mt-2 text-base font-semibold">
+                    {{ stream.title }}
+                  </p>
+                  <p class="mt-2 text-sm">{{ stream.createdBy }}</p>
+                  <p class="text-sm">
+                    {{ convertViewsFormat(stream.streamWatch.length) }} views •
+                    {{ calculateTimeDifference(stream.createdAt) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #emptyStreamEditorChoiceData>
+        <div class="flex items-center justify-center h-40">
+          <h2>No Trending Stream available.</h2>
+        </div>
+      </ng-template>
+    </ng-container>
+  </section>
+  <!-- End of Editor Choices -->
+
+  <!-- Trending -->
+  <section>
+    <div class="grid grid-cols-2 mt-10 mb-10">
+      <div>
+        <p class="text-4xl font-semibold text-blue-800">Trending</p>
+      </div>
+      <div class="text-right">
+        <p
+          class="text-lg font-semibold text-blue-800 cursor-pointer hover:text-blue-500"
+          (click)="streamPageList('Trending')"
+        >
+          See All
+        </p>
+      </div>
+    </div>
+    <!-- Body -->
+    <ng-container *ngIf="isStreamTrendingLoading">
+      <div class="flex items-center justify-center h-56">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isStreamTrendingLoading">
+      <ng-container
+        *ngIf="streamTrendingData.length > 0; else emptyStreamTrendingData"
+      >
+        <div class="grid gap-3 lg:grid-cols-4 xs:grid-cols-1">
+          <!-- Loop Here -->
+          <ng-container
+            *ngFor="let stream of streamTrendingData; let i = index"
+          >
+            <div
+              class="block w-64 mb-5 rounded-lg cursor-pointer xs:mx-auto xs:w-full"
+              (click)="streamStreaming(stream.uuid)"
+            >
+              <img
+                class="object-cover object-center w-full h-52 rounded-2xl"
+                [src]="stream.pathThumbnail"
+                alt=""
+              />
+              <div class="flex items-center gap-0 mt-3">
+                <div class="">
+                  <img
+                    [src]="photoStreamTrendingUploaders[i]"
+                    class="object-cover object-center h-auto rounded-full w-14"
+                    alt="avatar"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex-1 ml-4">
+                  <p class="mt-2 text-base font-semibold">
+                    {{ stream.title }}
+                  </p>
+                  <p class="mt-2 text-sm">{{ stream.createdBy }}</p>
+                  <p class="text-sm">
+                    {{ convertViewsFormat(stream.streamWatch.length) }} views •
+                    {{ calculateTimeDifference(stream.createdAt) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #emptyStreamTrendingData>
+        <div class="flex items-center justify-center h-40">
+          <h2>No Trending Stream available.</h2>
+        </div>
+      </ng-template>
+    </ng-container>
+  </section>
+  <!-- End of Trending -->
+
+  <!-- User Stream -->
+  <section>
+    <div class="grid grid-cols-2 mt-10 mb-10">
+      <div>
+        <p class="text-4xl font-semibold text-blue-800">My Video</p>
+      </div>
+      <div class="text-right">
+        <p
+          class="text-lg font-semibold text-blue-800 cursor-pointer hover:text-blue-500"
+          (click)="streamPageList('My Video')"
+        >
+          See All
+        </p>
+      </div>
+    </div>
+    <!-- Body -->
+    <ng-container *ngIf="isStreamUserLoading">
+      <div class="flex items-center justify-center h-56">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isStreamUserLoading">
+      <ng-container *ngIf="streamUserData.length > 0; else emptyStreamUserData">
+        <div class="grid gap-3 lg:grid-cols-4 xs:grid-cols-1">
+          <!-- Loop Here -->
+          <ng-container *ngFor="let stream of streamUserData; let i = index">
+            <div
+              class="block w-64 mb-5 rounded-lg cursor-pointer xs:mx-auto xs:w-full"
+              (click)="streamStreaming(stream.uuid)"
+            >
+              <img
+                class="object-cover object-center w-full h-52 rounded-2xl"
+                [src]="stream.pathThumbnail"
+                alt=""
+              />
+              <div class="flex items-center gap-0 mt-3">
+                <div class="">
+                  <img
+                    [src]="photoStreamUserUploaders[i]"
+                    class="object-cover object-center h-auto rounded-full w-14"
+                    alt="avatar"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="flex-1 ml-4">
+                  <p class="mt-2 text-base font-semibold">
+                    {{ stream.title }}
+                  </p>
+                  <p class="mt-2 text-sm">{{ stream.createdBy }}</p>
+                  <p class="text-sm">
+                    {{ convertViewsFormat(stream.streamWatch.length) }} views •
+                    {{ calculateTimeDifference(stream.createdAt) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #emptyStreamUserData>
+        <div class="flex items-center justify-center h-40">
+          <h2>No Stream available.</h2>
+        </div>
+      </ng-template>
+    </ng-container>
+  </section>
+  <!-- End of Favorites -->
+</div>

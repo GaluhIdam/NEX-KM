@@ -1,0 +1,293 @@
+<!-- Jumbotron Search -->
+<div class="flex justify-center py-20 bg-center bg-library">
+  <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+    <div class="min-[600px]:w-[32rem] place-self-center">
+      <h1 class="text-white font-jakarta font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl">
+        Explore new Experience of Collaboration
+      </h1>
+    </div>
+    <div class="relative mb-4 flex min-[600px]:w-[800px] flex-wrap items-stretch bg-white rounded-full mt-4">
+      <button
+        class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+        type="button" id="button-addon1">
+        <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+      </button>
+      <input type="text"
+        class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+        placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+    </div>
+    <h1 class="text-white font-jakarta">TRENDING SEARCH</h1>
+    <div>
+      <ul class="flex flex-wrap pl-0 list-none md:flex-row" role="tablist" data-te-nav-ref>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black font-jakarta">
+            Travelling
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black font-jakarta">
+            Interior Design
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black font-jakarta">
+            Music
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black font-jakarta">
+            Dancing
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- End of Jumbotron Search -->
+
+<div class="grid mt-5 lg:grid-cols-3 xs:grid-cols-1 lg:-ml-2 xs:ml-0 lg:p-0 hp:p-6">
+  <!-- Left (User Profile) -->
+  <div class="grid justify-center mb-8">
+    <div class="max-w-md overflow-hidden bg-gray-100 border-2 border-gray-300 border-solid rounded-xl h-fit">
+      <div class="my-10 ml-6">
+        <ng-container *ngIf="isUserLoading || isNexLevelLoading">
+          <div class="py-96 h-96">
+            <app-loading></app-loading>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="!isUserLoading && !isNexLevelLoading">
+          <!-- Profile Name Picture -->
+          <div class="flex gap-0">
+            <div class="flex-none">
+              <img [src]="user?.personalImage ?? photoDefault" class="w-16 rounded-full" alt="avatar" loading="lazy" />
+            </div>
+            <div class="flex-1 mt-2 ml-4">
+              <div class="flex items-center">
+                <p class="text-lg font-semibold text-blue-600">
+                  {{ user?.personalName ?? "-" }}
+                </p>
+                <img src="../../../../assets/image/verified.png" class="w-4 ml-2" alt="" />
+              </div>
+              <p class="font-medium">
+                {{ user?.personalUnit ?? "-" }} - {{ user?.personalTitle }}
+              </p>
+            </div>
+          </div>
+          <!-- End of Profile Name Picture -->
+
+          <!-- Count Social Media -->
+          <div class="mt-6">
+            <div class="flex flex-wrap gap-10 text-center lg:ml-7">
+              <div>
+                <div class="text-xs font-semibold text-gray-400 uppercase">
+                  Posts
+                </div>
+                <div class="text-xl font-bold text-lime-500 lg:mt-2">{{ totalFeeds }}</div>
+              </div>
+              <div class="mr-4">
+                <div class="text-xs font-semibold text-gray-400 uppercase">
+                  Following
+                </div>
+                <div class="text-xl font-bold text-lime-500 lg:mt-2">
+                  {{ user?.followingUser?.length }}
+                </div>
+              </div>
+              <div class="mr-4">
+                <div class="text-xs font-semibold text-gray-400 uppercase">
+                  Followers
+                </div>
+                <div class="text-xl font-bold text-lime-500 lg:mt-2">
+                  {{ user?.followerUser?.length }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End of Count Social Media -->
+
+          <!-- Level -->
+          <div class="mt-8 lg:w-96">
+            <p class="mb-2 text-lg font-semibold">NEX LEVEL</p>
+            <div class="w-full">
+              <div class="flex h-4 mx-auto mb-4 overflow-hidden text-xs bg-gray-300 rounded-full xs:mr-4">
+                <div [style]="'width:' + totalPoint + '%'"
+                  class="flex flex-col justify-center text-center text-white bg-blue-500 shadow-none whitespace-nowrap rounded-e-full">
+                </div>
+                <div [style]="'width:' + remainingPointByPersen + '%'"
+                  class="flex flex-col justify-center text-center text-white bg-gray-300 shadow-none whitespace-nowrap">
+                </div>
+              </div>
+            </div>
+            <p class="-mt-2 text-sm text-gray-500">{{ nameLevel }}</p>
+          </div>
+          <!-- End of Level -->
+
+          <!-- Interest -->
+          <div class="mt-8">
+            <p class="text-lg font-semibold">INTEREST</p>
+
+            <div class="grid">
+              <div class="flex flex-wrap items-end space-x-2 space-y-2">
+                <ng-container *ngIf="user">
+                  <ng-container *ngIf="user.interestUser.length > 0">
+                    <ng-container *ngFor="let interest of user.interestUser">
+                      <span class="inline-block px-3 py-0.5 rounded-full text-sm text-white font-medium bg-blue-600">
+                        {{ interest.interestList.name }}
+                      </span>
+                    </ng-container>
+                  </ng-container>
+
+                  <ng-container *ngIf="user.interestUser.length <= 0">
+                    <span class="inline-block px-3 py-0.5 rounded-full text-sm text-white font-medium bg-red-600">
+                      Don't have interest
+                    </span>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <!-- End of Interest -->
+
+          <!-- Skill -->
+          <div class="mt-8">
+            <p class="text-lg font-semibold">SKILL</p>
+
+            <div class="grid">
+              <div class="flex flex-wrap items-end space-x-2 space-y-2">
+                <ng-container *ngIf="user">
+                  <ng-container *ngIf="user.skillUser.length > 0">
+                    <ng-container *ngFor="let skill of user.skillUser">
+                      <span class="inline-block px-3 py-0.5 rounded-full text-sm text-white font-medium bg-blue-600">
+                        {{ skill.skillList.name }}
+                      </span>
+                    </ng-container>
+                  </ng-container>
+
+                  <ng-container *ngIf="user.skillUser.length <= 0">
+                    <span class="inline-block px-3 py-0.5 rounded-full text-sm text-white font-medium bg-red-600">
+                      Don't have skill
+                    </span>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <!-- End of Skill -->
+
+          <!-- Community -->
+          <div class="mt-6">
+            <p class="mb-3 text-lg font-semibold">COMMUNITY</p>
+
+            <div class="grid grid-cols-3">
+              <!-- Loop Here -->
+              <div class="block p-6 mb-2 text-center bg-white shadow-lg cursor-pointer w-28 rounded-xl hover:shadow-md">
+                <img src="../../../../assets/image/avatar.png" class="w-32 mb-2" alt="Comunity Image" />
+                <h5 class="text-sm font-medium leading-tight text-black">
+                  GMF Basketball
+                </h5>
+              </div>
+            </div>
+          </div>
+          <!-- End of Community -->
+
+          <!-- Social media -->
+          <div class="mt-6">
+            <p class="mb-3 text-lg font-semibold">SOCIAL MEDIA</p>
+
+            <div class="flex flex-wrap">
+              <!-- Linkedin -->
+              <button type="button" data-te-ripple-init data-te-ripple-color="light"
+                (click)="user ? onGotoLinkedinPage(user.linkedIn) : null"
+                class="mb-2 inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                style="background-color: #0077b5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
+                </svg>
+              </button>
+              <!-- Instagram -->
+              <button type="button" data-te-ripple-init data-te-ripple-color="light"
+                (click)="user ? onGotoInstagramPage(user.instagram) : null"
+                class="mb-2 mx-3 inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                style="background-color: #c13584">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+              </button>
+
+              <!-- Facebook -->
+              <button type="button" data-te-ripple-init data-te-ripple-color="light"
+                (click)="user ? onGotoFacebookPage(user.facebook) : null"
+                class="mb-2 inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                style="background-color: #1877f2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <!-- End of Social media -->
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right (Main content) -->
+  <div class="col-span-2 lg:ml-4">
+    <!-- Tabs menu -->
+    <ul class="flex flex-col flex-wrap pl-0 mb-5 list-none border-b-0 md:flex-row sm:justify-center lg:justify-start"
+      role="tablist" data-te-nav-ref>
+      <ng-container *ngFor="let category of categoryData">
+        <li role="presentation">
+          <a (click)="onChangeDashboardCategory(category)" [class.bg-soft-green]="
+              selectedDashboardCategory.name === category.name
+            " [class.text-white]="
+              selectedDashboardCategory.name === category.name
+            " [class.font-semibold]="
+              selectedDashboardCategory.name === category.name
+            "
+            class="my-2 block border-x-0 border-t-0 border-b-2 border-transparent px-7 pt-4 pb-3.5 text-base font-medium leading-tight text-black-500 hover:isolate hover:border-transparent hover:bg-black-100 data-[te-nav-active]:text-black data-[te-nav-active]:font-bold dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:text-black-400 rounded-xl">
+            <ng-container *ngIf="category.name === 'Feeds'">
+              <fa-icon [icon]="faBookOpen" class="mr-2 text-black" [class.text-white]="
+                  selectedDashboardCategory.name === category.name
+                "></fa-icon>
+            </ng-container>
+            <ng-container *ngIf="category.name === 'Sharing Experiences'">
+              <fa-icon [icon]="faBullhorn" class="mr-2 text-black" [class.text-white]="
+                  selectedDashboardCategory.name === category.name
+                "></fa-icon>
+            </ng-container>
+            <ng-container *ngIf="category.name === 'Notifications'">
+              <fa-icon [icon]="faBell" class="mr-2 text-black" [class.text-white]="
+                  selectedDashboardCategory.name === category.name
+                "></fa-icon>
+            </ng-container>
+
+            {{ category.name }}
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+
+    <ng-container *ngIf="personalNumber">
+      <!-- Feeds -->
+      <div *ngIf="selectedDashboardCategory.name === 'Feeds'">
+        <app-user-feeds [userPhoto]="user?.userPhoto ?? photoDefault" (totalFeeds)="totalFeeds = $event"
+          [personnelTitle]="user?.personalTitle" [personnelUnit]="user?.personalUnit"></app-user-feeds>
+      </div>
+      <!-- Feeds -->
+
+      <!-- User Sharing -->
+      <div *ngIf="selectedDashboardCategory.name === 'Sharing Experiences'">
+        <app-sharing-experience [personalNumber]="personalNumber"></app-sharing-experience>
+      </div>
+      <!-- User Sharing -->
+    </ng-container>
+  </div>
+</div>

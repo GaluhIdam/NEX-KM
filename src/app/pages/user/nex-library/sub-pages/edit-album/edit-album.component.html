@@ -1,0 +1,224 @@
+<div class="min-[600px]:px-36 min-[600px]:py-12 max-[600px]:px-8">
+  <h1
+    class="min-[600px]:text-3xl text-new-primary font-semibold max-[600px]:text-2xl"
+  >
+    Edit Album
+  </h1>
+  <p class="text-gray-400">
+    Unleash your creativity and share your ideas by uploading your Photo here.
+  </p>
+  <div [hidden]="progressAlbum == 0" class="mt-8">
+    <div>Uploading Album</div>
+    <div class="w-full mt-4 bg-neutral-200 dark:bg-neutral-600">
+      <div
+        class="bg-primary p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+        [style.width.%]="progressAlbum"
+      >
+        {{ progressAlbum }}%
+      </div>
+    </div>
+    <h1 class="mt-2 mb-2 text-xs italic text-danger">
+      Please wait and do not refresh or leave page!
+    </h1>
+  </div>
+  <ng-container *ngIf="galeryFiles.length > 0">
+    <ng-container *ngFor="let file of galeryFiles; let i = index">
+      <div [hidden]="progressGallery[i] === 0" class="mt-8">
+        <div>Uploading Photo Gallery {{ i + 1 }}</div>
+        <div class="w-full mt-4 bg-neutral-200 dark:bg-neutral-600">
+          <div
+            class="bg-primary p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+            [style.width.%]="progressGallery[i]"
+          >
+            {{ progressGallery[i] }}%
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="isLoading || isImageLoading">
+    <div class="flex items-center justify-center font-semibold h-60">
+      <app-loading></app-loading>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isLoading && !isImageLoading">
+    <form [formGroup]="editAlbumForm" (ngSubmit)="onSubmit()">
+      <div class="mt-8">
+        <label for="title" class="font-semibold"
+          >Title <span class="text-danger">*</span></label
+        >
+        <input
+          type="text"
+          formControlName="title"
+          class="w-full px-3 py-2 mt-2 border border-gray-300 rounded-md"
+          placeholder="Input your title here..."
+        />
+        <div *ngIf="!title?.valid && (title?.dirty || title?.touched)">
+          <small class="text-red-800" [hidden]="!title?.errors?.['required']">
+            Title is required
+          </small>
+        </div>
+      </div>
+      <div class="mt-5">
+        <label for="album_category" class="font-semibold"
+          >Category <span class="text-danger">*</span></label
+        >
+        <ng-select
+          id="album_category"
+          name="album_category"
+          formControlName="categoryAlbum"
+          placeholder="Select Album Category"
+          class="mt-2"
+        >
+          <ng-option
+            *ngFor="let albumCategory of albumCategoryData"
+            value="{{ albumCategory.id }}"
+          >
+            {{ albumCategory.name }}
+          </ng-option>
+        </ng-select>
+        <div
+          *ngIf="
+            !categoryAlbum?.valid &&
+            (categoryAlbum?.dirty || categoryAlbum?.touched)
+          "
+        >
+          <small
+            class="text-red-800"
+            [hidden]="!categoryAlbum?.errors?.['required']"
+          >
+            Album Category is required
+          </small>
+        </div>
+      </div>
+      <div>
+        <p class="mt-5 mb-3 font-semibold">
+          Description <span class="text-danger">*</span>
+        </p>
+        <textarea
+          name="description"
+          formControlName="description"
+          rows="10"
+          class="w-full px-3 py-3 border border-gray-300 rounded-md"
+          placeholder="Input Your Description Here"
+        ></textarea>
+        <div
+          *ngIf="
+            !description?.valid && (description?.dirty || description?.touched)
+          "
+        >
+          <small
+            class="text-red-800"
+            [hidden]="!description?.errors?.['required']"
+          >
+            Description is required
+          </small>
+        </div>
+      </div>
+      <div class="mt-8">
+        <p class="mt-5 mb-3 font-semibold">
+          Cover Thumbnail <span class="text-danger">*</span>
+          <strong
+            ><span class="text-xs italic font-normal"
+              >(Dimension: 1920x1080)</span
+            ></strong
+          >
+        </p>
+        <div>
+          <div
+            class="py-32 mx-auto text-center border border-gray-300 rounded-md"
+            (dragover)="onAlbumCoverDragOver($event)"
+            (dragleave)="onAlbumCoverDragLeave($event)"
+            (drop)="onAlbumCoverDrop($event)"
+            (click)="triggerAlbumCoverFileInputClick()"
+            *ngIf="selectedAlbumCoverFile === null"
+          >
+            <p><b>Upload a file</b> or drag and drop</p>
+            <p>Image File up to 50mb</p>
+            <div class="hidden p-2 border-2">
+              <input
+                #albumCoverFileInput
+                id="image"
+                accept=".png, .jpg, .jpeg"
+                type="file"
+                (change)="onAlbumCoverUploaded($event)"
+              />
+            </div>
+          </div>
+          <div *ngIf="!image?.valid && (image?.dirty || image?.touched)">
+            <small class="text-red-800" [hidden]="!image?.errors?.['required']">
+              Cover Thumbnail is required
+            </small>
+          </div>
+        </div>
+        <div *ngIf="selectedAlbumCoverFile !== null">
+          <div
+            class="flex items-center rounded-xl min-[600px]:w-96 min-[600px]:h-80 max-[600px]:w-56 max-[600px]:h-60"
+          >
+            <img
+              *ngIf="previewAlbumCoverImage"
+              class="object-cover object-center w-full h-full rounded-xl"
+              [src]="previewAlbumCoverImage"
+              alt="Preview"
+            />
+
+            <div class="" (click)="onRemoveAlbumCover()">
+              <fa-icon
+                [icon]="faTrash"
+                class="p-4 ml-2 rounded-full bg-[#FFEBEE] text-danger cursor-pointer"
+              ></fa-icon>
+            </div>
+          </div>
+          <div *ngIf="!isAlbumThumbnailValid">
+            <small class="text-red-800">
+              The size of the cover thumbnail cannot exceed 1 MB
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8">
+        <p class="mt-5 mb-3 font-semibold">
+          Galery <span class="text-danger">*</span>
+        </p>
+        <ngx-dropzone
+          (change)="onSelectGalery($event)"
+          [multiple]="true"
+          [accept]="'image/*'"
+          [disabled]="isDeleteGalleryLoading"
+          style="height: 250px"
+        >
+          <ngx-dropzone-label
+            >Upload a file or drag and drop (max: 50 MB)</ngx-dropzone-label
+          >
+          <ngx-dropzone-image-preview
+            ngProjectAs="ngx-dropzone-preview"
+            *ngFor="let f of galeryFiles"
+            [file]="f.file"
+            [removable]="true"
+            (removed)="onRemoveGalery(f.file)"
+          >
+          </ngx-dropzone-image-preview>
+        </ngx-dropzone>
+      </div>
+      <div class="flex justify-end w-full mt-5 mb-8">
+        <button
+          class="px-3 py-2 mx-2 font-semibold bg-white rounded-lg shadow text-1xl text-new-primary"
+          (click)="onPreviousPage()"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-3 py-2 mx-2 font-semibold text-white rounded-lg shadow bg-new-primary text-1xl disabled:bg-gray-500"
+          type="submit"
+          [disabled]="
+            editAlbumForm.status === 'INVALID' ||
+            !isAlbumThumbnailValid ||
+            galeryFiles.length === 0
+          "
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</div>

@@ -1,0 +1,317 @@
+<div class="mt-8">
+  <div class="flex grid-cols-2 gap-4 flex-cols">
+    <!-- Categories Section -->
+    <div
+      class="first-feature px-9 py-9 min-[600px]:w-60 shadow-lg mx-5 max-[600px]:hidden"
+    >
+      <h1 class="font-semibold tracking-wider uppercase text-regal-blue">
+        Categories
+      </h1>
+      <ng-container *ngIf="isCategoryLoading">
+        <div
+          class="flex items-center justify-center min-h-screen font-semibold"
+        >
+          <app-loading></app-loading>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!isCategoryLoading">
+        <div class="flex justify-start mt-5">
+          <ul class="w-96">
+            <li class="w-full py-2" *ngFor="let row of albumCategoryData">
+              <div
+                (click)="onChangeAlbumCategory(row)"
+                [class.text-soft-green]="
+                  selectedAlbumCategory?.name === row.name
+                "
+                [class.font-semibold]="selectedAlbumCategory?.name === row.name"
+                class="text-gray-400 cursor-pointer"
+              >
+                {{
+                  row.name.length > 15
+                    ? row.name.substring(0, 15) + "..."
+                    : row.name
+                }}
+              </div>
+            </li>
+          </ul>
+        </div>
+      </ng-container>
+    </div>
+    <!-- Categories Section -->
+    <div class="w-full">
+      <div>
+        <div class="grid min-[600px]:grid-cols-2 max-[600px]:grid-rows-2 gap-4">
+          <div
+            class="flex min-[600px]:justify-start max-[600px]:justify-center"
+          >
+            <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+            <fa-icon
+              [icon]="faChevronRight"
+              class="mr-3 text-gray-400"
+            ></fa-icon>
+            <a routerLink="/user/nex-library" class="mr-3 text-gray-400"
+              >Nex Library</a
+            >
+            <fa-icon
+              [icon]="faChevronRight"
+              class="mr-3 text-gray-400"
+            ></fa-icon>
+            <p class="mr-3 font-bold text-black">Album</p>
+          </div>
+          <div
+            class="flex min-[600px]:justify-end max-[600px]:justify-center px-9"
+          >
+            <button
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              (click)="onGoToManageAlbumPage()"
+              class="second-feature w-fit inline-block mx-2 rounded bg-regal-blue px-3 py-2 text-sm max-[600px]:text-xs uppercase text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-new-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-new-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-new-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+            >
+              <fa-icon
+                [icon]="faBookBookmark"
+                class="mr-2 text-white"
+              ></fa-icon>
+              Manage Album
+            </button>
+            <button
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              (click)="onGoToPublishAlbumPage()"
+              class="third-feature w-fit inline-block mx-2 rounded bg-new-primary px-3 py-2 text-sm max-[600px]:text-xs uppercase text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-new-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-new-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-new-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+            >
+              <fa-icon [icon]="faImage" class="mr-2 text-white"></fa-icon>
+              Publish Album
+            </button>
+          </div>
+        </div>
+        <!-- Categories Section -->
+        <div
+          class="px-9 py-9 min-[600px]:hidden shadow-lg mx-5 max-[600px]:w-full"
+        >
+          <h1 class="font-semibold tracking-wider uppercase text-regal-blue">
+            Categories
+          </h1>
+          <ng-container *ngIf="isCategoryLoading">
+            <div
+              class="flex items-center justify-center min-h-screen font-semibold"
+            >
+              <app-loading></app-loading>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!isCategoryLoading">
+            <div class="flex justify-start mt-5">
+              <ul class="w-96">
+                <li class="w-full py-2" *ngFor="let row of albumCategoryData">
+                  <div
+                    (click)="onChangeAlbumCategory(row)"
+                    [class.text-soft-green]="
+                      selectedAlbumCategory?.name === row.name
+                    "
+                    [class.font-semibold]="
+                      selectedAlbumCategory?.name === row.name
+                    "
+                    class="text-gray-400 cursor-pointer"
+                  >
+                    {{
+                      row.name.length > 15
+                        ? row.name.substring(0, 15) + "..."
+                        : row.name
+                    }}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+        </div>
+        <!-- Categories Section -->
+        <div
+          class="min-[600px]:grid min-[600px]:grid-cols-2 min-[600px]:gap-4 mt-8 h-fit"
+        >
+          <div class="flex justify-start max-[600px]:px-5">
+            <h1 class="mt-5 text-2xl font-semibold">
+              Category :
+              {{
+                selectedAlbumCategory
+                  ? selectedAlbumCategory.name.length > 15
+                    ? selectedAlbumCategory.name.substring(0, 15) + "..."
+                    : selectedAlbumCategory.name
+                  : "-"
+              }}
+            </h1>
+          </div>
+          <div class="flex justify-end min-[600px]:px-10 max-[600px]:px-5">
+            <div
+              class="relative flex flex-wrap items-stretch w-full mt-4 mb-4 mr-3 bg-gray-100 rounded-full"
+            >
+              <button
+                class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+                type="button"
+                id="button-addon1"
+              >
+                <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+              </button>
+              <input
+                type="text"
+                class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                placeholder="Search Category"
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+                (keyup)="searchByField($event)"
+              />
+            </div>
+            <div class="px-4 py-3 mt-3 bg-gray-100 rounded-full w-36 h-fit">
+              <select
+                class="w-full bg-transparent rounded-full"
+                (change)="onChangeSortStatus($event)"
+              >
+                <option hidden [selected]="sortStatus == 0">Sort By</option>
+                <option disabled selected *ngIf="sortStatus == 0">
+                  Sort By
+                </option>
+                <option *ngIf="sortStatus != 0" value="0">Reset</option>
+                <option value="1">Trendings</option>
+                <option value="2">Latest</option>
+                <option value="3">Oldest</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="isContentLoading">
+          <div
+            class="flex items-center justify-center min-h-screen font-semibold"
+          >
+            <app-loading></app-loading>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isContentLoading">
+          <ng-container *ngIf="albumData.length > 0; else emptyAlbumData">
+            <div class="flex flex-col justify-between min-h-screen">
+              <div
+                class="grid min-[600px]:grid-cols-3 max-[600px]:grid-cols-1 gap-2 min-[600px]:mr-10 max-[600px]:px-4"
+              >
+                <div
+                  class="flex justify-center mx-1 mt-5"
+                  style="overflow-wrap: anywhere"
+                  *ngFor="let row of albumData"
+                >
+                  <div class="block max-w-sm bg-white rounded-lg shadow-lg">
+                    <img
+                      class="w-full px-3 mt-3 rounded-t-lg h-60"
+                      [src]="row.path"
+                      [alt]="row.title"
+                    />
+                    <div class="p-5">
+                      <p class="mb-3 text-sm text-gray-500">
+                        {{ formattedDate(row.createdAt) }}
+                      </p>
+                      <h5 class="mb-2 text-xl font-semibold leading-tight">
+                        {{
+                          row.title.length > 15
+                            ? row.title.substring(0, 15) + "..."
+                            : row.title
+                        }}
+                      </h5>
+                      <p class="mb-4 text-base">
+                        {{
+                          row.description.length > 30
+                            ? row.description.substring(0, 30) + "..."
+                            : row.description
+                        }}
+                      </p>
+                      <a
+                        (click)="onGoToDetailAlbum(row.uuid)"
+                        class="inline-block px-4 py-2 text-xs font-medium text-white rounded shadow bg-primary hover:bg-new-primary"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                      >
+                        View Album
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Table Pagination -->
+              <div
+                class="flex items-center justify-start mt-5"
+                *ngIf="paginator && !isContentLoading"
+              >
+                <h1 class="mr-5">Total : {{ paginator.totalData }}</h1>
+                <div class="flex items-center justify-start mx-10">
+                  <span class="text-sm">Show</span>
+                  <select
+                    *ngIf="paginator"
+                    [(ngModel)]="paginator.pageSize"
+                    (ngModelChange)="changePageSize()"
+                    class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+                  >
+                    <option
+                      *ngFor="let size of paginator?.pageOption"
+                      [ngValue]="size"
+                    >
+                      {{ size }} data
+                    </option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-center mx-3">
+                  <button
+                    type="button"
+                    (click)="changePageNumber(false)"
+                    [disabled]="paginator.pageNumber == 1"
+                    [class]="
+                      paginator.pageNumber == 1 ? 'bg-gray-200' : 'bg-gray-50'
+                    "
+                    class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300"
+                  >
+                    Previous
+                  </button>
+                  <!-- <button
+                class="ml-2 text-gray-400"
+                (click)="goToPageNumberByPageClick(i + 1)"
+                *ngFor="let page of pages; let i = index"
+              >
+                {{ i + 1 }}
+              </button> -->
+                  <button
+                    type="button"
+                    (click)="changePageNumber(true)"
+                    [disabled]="paginator.pageNumber == paginator.totalPage"
+                    [class]="
+                      paginator.pageNumber == paginator.totalPage
+                        ? 'bg-gray-200'
+                        : 'bg-gray-50'
+                    "
+                    class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300 ml-2"
+                  >
+                    Next
+                  </button>
+                </div>
+                <h1 class="w-fit">Go to Page</h1>
+                <select
+                  *ngIf="paginator"
+                  [(ngModel)]="paginator.pageNumber"
+                  (ngModelChange)="goToPageNumberByPageSelect($event)"
+                  class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+                >
+                  <option
+                    *ngFor="let page of pages; let i = index"
+                    [ngValue]="i + 1"
+                  >
+                    {{ i + 1 }}
+                  </option>
+                </select>
+              </div>
+              <!-- Table Pagination -->
+            </div>
+          </ng-container>
+          <ng-template #emptyAlbumData>
+            <div
+              class="flex items-center justify-center min-h-screen font-semibold"
+            >
+              <h2>No Albums available.</h2>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,425 @@
+<div class="mt-8">
+  <div class="flex grid-cols-2 gap-4 flex-cols">
+    <!-- Categories Section -->
+    <div
+      class="mx-5 shadow-lg px-9 py-9 lg:w-80 max-lg:hidden bg-neutral-50 rounded-xl"
+    >
+      <h1 class="font-semibold tracking-wider uppercase text-regal-blue">
+        Bussiness Unit
+      </h1>
+      <ng-container *ngIf="isCategoryLoading">
+        <div
+          class="flex items-center justify-center min-h-screen font-semibold"
+        >
+          <app-loading></app-loading>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!isCategoryLoading">
+        <div class="flex justify-start mt-5">
+          <ul class="w-96">
+            <li class="w-full py-2" *ngFor="let row of bussinessUnitData">
+              <div
+                class="flex items-center gap-2"
+                (click)="onChangeBussinessUnit(row)"
+              >
+                <div
+                  [class.bg-blue-400]="selectedBussinessUnit?.name === row.name"
+                  class="p-2 text-xs font-semibold text-center rounded bg-[#7DBE31] w-14"
+                >
+                  {{ row.code }}
+                </div>
+                <div
+                  [class.text-gray-400]="
+                    selectedBussinessUnit?.name !== row.name
+                  "
+                  [class.font-semibold]="
+                    selectedBussinessUnit?.name === row.name
+                  "
+                  class="text-sm text-[#0C82B9] w-full cursor-pointer"
+                >
+                  {{ row.name }}
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </ng-container>
+    </div>
+    <!-- Categories Section -->
+    <div class="w-full">
+      <div>
+        <div
+          class="grid gap-4 xl:grid-cols-2 xs:grid-rows-2 xs:place-items-center xl:place-items-stretch"
+        >
+          <div
+            class="flex min-[600px]:justify-start max-[600px]:justify-center"
+          >
+            <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+            <fa-icon
+              [icon]="faChevronRight"
+              class="mr-3 text-gray-400"
+            ></fa-icon>
+            <a routerLink="/user/nex-library" class="mr-3 text-gray-400"
+              >Nex Library</a
+            >
+            <fa-icon
+              [icon]="faChevronRight"
+              class="mr-3 text-gray-400"
+            ></fa-icon>
+            <a
+              routerLink="/user/nex-library/directory"
+              class="mr-3 text-gray-400"
+              >Web Directory</a
+            >
+            <fa-icon
+              [icon]="faChevronRight"
+              class="mr-3 text-gray-400"
+            ></fa-icon>
+            <p class="mr-3 font-bold text-black">Manage</p>
+          </div>
+        </div>
+        <!-- Categories Section -->
+        <div
+          class="px-8 py-8 mt-4 shadow-lg lg:hidden max-lg:w-full bg-neutral-50"
+        >
+          <h1 class="font-semibold tracking-wider uppercase text-regal-blue">
+            Bussiness Unit
+          </h1>
+          <ng-container *ngIf="isCategoryLoading">
+            <div
+              class="flex items-center justify-center min-h-screen font-semibold"
+            >
+              <app-loading></app-loading>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="!isCategoryLoading">
+            <div class="flex justify-start mt-5">
+              <ul class="w-96">
+                <li class="w-full py-2" *ngFor="let row of bussinessUnitData">
+                  <div
+                    class="flex items-center gap-2"
+                    (click)="onChangeBussinessUnit(row)"
+                  >
+                    <div
+                      [class.bg-blue-400]="
+                        selectedBussinessUnit?.name === row.name
+                      "
+                      class="p-2 text-xs font-semibold text-center rounded bg-[#7DBE31] w-14"
+                    >
+                      {{ row.code }}
+                    </div>
+                    <div
+                      [class.text-gray-400]="
+                        selectedBussinessUnit?.name !== row.name
+                      "
+                      [class.font-semibold]="
+                        selectedBussinessUnit?.name === row.name
+                      "
+                      class="text-sm text-[#0C82B9] w-full cursor-pointer"
+                    >
+                      {{ row.name }}
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+        </div>
+        <!-- Categories Section -->
+        <div
+          class="gap-4 mt-8 xl:grid xl:grid-cols-2 xs:flex h-fit xs:flex-col-reverse"
+        >
+          <div class="flex max-[600px]:px-5 xs:justify-center xl:justify-start">
+            <h1 class="mt-5 text-2xl font-semibold">
+              {{ selectedBussinessUnit?.code }}
+              {{ selectedBussinessUnit?.name }}
+            </h1>
+          </div>
+          <div
+            class="flex justify-end min-[600px]:px-10 max-[600px]:px-5 items-center"
+          >
+            <div
+              class="relative flex flex-wrap w-full mt-4 mb-4 mr-3 bg-gray-100 rounded-full h-fit"
+            >
+              <button
+                class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+                type="button"
+                id="button-addon1"
+              >
+                <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+              </button>
+              <input
+                type="text"
+                class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                placeholder="Search Category"
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+                (keyup)="searchByField($event)"
+              />
+            </div>
+            <div class="px-4 py-3 mt-3 bg-gray-100 rounded-full w-36 h-fit">
+              <select
+                class="w-full bg-transparent rounded-full"
+                (change)="onChangeSortStatus($event)"
+              >
+                <option hidden [selected]="sortStatus == 0">Sort By</option>
+                <option disabled selected *ngIf="sortStatus == 0">
+                  Sort By
+                </option>
+                <option *ngIf="sortStatus != 0" value="0">Reset</option>
+                <option value="1">Trendings</option>
+                <option value="2">Latest</option>
+                <option value="3">Oldest</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="isContentLoading">
+          <div
+            class="flex items-center justify-center min-h-screen font-semibold"
+          >
+            <app-loading></app-loading>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isContentLoading">
+          <ng-container
+            *ngIf="webDirectoryData.length > 0; else emptyWebDirectoryData"
+          >
+            <div class="flex flex-col justify-between min-h-screen">
+              <div class="mt-8 max-lg:px-5 lg:pr-8">
+                <div
+                  class="content-center w-full mb-8 rounded-lg shadow-xl h-fit"
+                  *ngFor="let row of webDirectoryData"
+                >
+                  <div
+                    class="flex justify-start bg-neutral-50 rounded-xl"
+                    style="overflow-wrap: anywhere"
+                  >
+                    <img
+                      [src]="row.path"
+                      [alt]="row.title"
+                      class="min-[600px]:w-60 min-[600px]:h-60 max-[600px]:w-52 max-[600px]:h-52 rounded-lg mr-4 object-cover object-center"
+                    />
+                    <div class="w-full mt-4">
+                      <div class="mb-3 w-fit h-fit">
+                        <ng-container *ngIf="row.status">
+                          <p
+                            class="bg-new-primary min-[600px]:text-sm max-[600px]:text-xs text-white px-3 py-1 rounded-full"
+                          >
+                            <fa-icon [icon]="faBookOpen" class="mr-1"></fa-icon>
+                            Public
+                          </p>
+                        </ng-container>
+                        <ng-container *ngIf="!row.status">
+                          <p
+                            class="bg-danger min-[600px]:text-sm max-[600px]:text-xs text-white px-3 py-1 rounded-full"
+                          >
+                            <fa-icon [icon]="faBookOpen" class="mr-1"></fa-icon>
+                            Private
+                          </p>
+                        </ng-container>
+                      </div>
+                      <h1
+                        class="min-[600px]:text-4xl min-[600px]:hidden max-[600px]:text-2xl font-semibold h-fit mb-2"
+                      >
+                        {{
+                          row.title.length > 10
+                            ? row.title.substr(0, 10) + ".."
+                            : row.title
+                        }}
+                      </h1>
+                      <h1
+                        class="min-[600px]:text-4xl max-[600px]:hidden max-[600px]:text-2xl font-semibold h-fit mb-2"
+                      >
+                        {{
+                          row.title.length > 25
+                            ? row.title.substr(0, 25) + ".."
+                            : row.title
+                        }}
+                      </h1>
+                      <p class="mb-3 text-sm text-black">
+                        {{ row.description }}
+                      </p>
+                      <p class="mb-3 text-sm italic text-soft-green">
+                        {{ row.link }}
+                      </p>
+                    </div>
+                    <div class="mt-4 w-fit">
+                      <div class="flex justify-end">
+                        <div>
+                          <div class="relative" data-te-dropdown-ref>
+                            <button
+                              class="flex items-center whitespace-nowrap rounded bg-transparent px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white"
+                              type="button"
+                              id="dropdownMenuButton1"
+                              data-te-dropdown-toggle-ref
+                              aria-expanded="false"
+                              data-te-ripple-init
+                              data-te-ripple-color="light"
+                            >
+                              <fa-icon
+                                [icon]="faBars"
+                                class="text-base text-black"
+                              ></fa-icon>
+                            </button>
+                            <ul
+                              class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                              aria-labelledby="dropdownMenuButton1"
+                              data-te-dropdown-menu-ref
+                            >
+                              <li>
+                                <a
+                                  class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                  (click)="goToWebDirectoryLink(row.link)"
+                                  data-te-dropdown-item-ref
+                                  >View Link</a
+                                >
+                              </li>
+                              <li>
+                                <a
+                                  class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                  (click)="onGoToEditDirectory(row.uuid)"
+                                  data-te-dropdown-item-ref
+                                  >Edit</a
+                                >
+                              </li>
+                              <li *ngIf="row.status === true">
+                                <a
+                                  class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                  (click)="
+                                    onChangeDirectoryStatus(false, row.uuid)
+                                  "
+                                  data-te-dropdown-item-ref
+                                  >Private</a
+                                >
+                              </li>
+                              <li *ngIf="row.status === false">
+                                <a
+                                  class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                  (click)="
+                                    onChangeDirectoryStatus(true, row.uuid)
+                                  "
+                                  data-te-dropdown-item-ref
+                                  >Public</a
+                                >
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Table Pagination -->
+              <div
+                class="items-center gap-4 mt-5 lg:flex lg:justify-start max-lg:justify-center max-lg:mt-4"
+                *ngIf="paginator && !isContentLoading"
+              >
+                <h1
+                  class="flex items-center my-2 lg:mr-5 lg:justify-start max-lg:justify-center"
+                >
+                  Total : {{ paginator.totalData }}
+                </h1>
+                <div
+                  class="flex items-center mx-10 my-2 lg:justify-start max-lg:justify-center"
+                >
+                  <span class="text-sm">Show</span>
+                  <select
+                    *ngIf="paginator"
+                    [(ngModel)]="paginator.pageSize"
+                    (ngModelChange)="changePageSize()"
+                    class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+                  >
+                    <option
+                      *ngFor="let size of paginator?.pageOption"
+                      [ngValue]="size"
+                    >
+                      {{ size }} data
+                    </option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-center mx-3 my-2">
+                  <button
+                    type="button"
+                    (click)="changePageNumber(false)"
+                    [disabled]="paginator.pageNumber == 1"
+                    [class]="
+                      paginator.pageNumber == 1 ? 'bg-gray-200' : 'bg-gray-50'
+                    "
+                    class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300"
+                  >
+                    Previous
+                  </button>
+                  <!-- <button
+                      class="ml-2 text-gray-400"
+                      (click)="goToPageNumberByPageClick(i + 1)"
+                      *ngFor="let page of pages; let i = index"
+                    >
+                      {{ i + 1 }}
+                    </button> -->
+                  <button
+                    type="button"
+                    (click)="changePageNumber(true)"
+                    [disabled]="paginator.pageNumber == paginator.totalPage"
+                    [class]="
+                      paginator.pageNumber == paginator.totalPage
+                        ? 'bg-gray-200'
+                        : 'bg-gray-50'
+                    "
+                    class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300 ml-2"
+                  >
+                    Next
+                  </button>
+                </div>
+                <div class="flex items-center mx-3 my-2 max-lg:justify-center">
+                  <h1 class="w-fit">Go to Page</h1>
+                  <select
+                    *ngIf="paginator"
+                    [(ngModel)]="paginator.pageNumber"
+                    (ngModelChange)="goToPageNumberByPageSelect($event)"
+                    class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+                  >
+                    <option
+                      *ngFor="let page of pages; let i = index"
+                      [ngValue]="i + 1"
+                    >
+                      {{ i + 1 }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <!-- Table Pagination -->
+            </div>
+          </ng-container>
+          <ng-template #emptyWebDirectoryData>
+            <div
+              class="flex items-center justify-center h-screen font-semibold"
+            >
+              <h2>No Web Directory available.</h2>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<img
+  class="absolute left-0 top-1/3 -z-20"
+  src="../../../../assets/image/home-page/gradient/227.png"
+  alt=""
+/>
+
+<img
+  class="absolute right-0 top-1/3 -z-10"
+  src="../../../../assets/image/home-page/gradient/228.png"
+  alt=""
+/>
+
+<img
+  class="absolute top-0 right-0 -z-20"
+  src="../../../../assets/image/home-page/gradient/229.png"
+  alt=""
+/>

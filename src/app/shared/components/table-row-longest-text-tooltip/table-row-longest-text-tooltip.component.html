@@ -1,0 +1,22 @@
+<div
+  class="relative cursor-pointer"
+  (mouseenter)="showToolTip = true; columnHover = true"
+  (mouseleave)="showToolTip = false; columnHover = false"
+>
+  <div class="flex flex-row justify-center">
+    <div [innerHTML]="name.substring(0, substringLength)"></div>
+    ...
+  </div>
+  <ng-container *ngIf="showToolTip && columnHover">
+    <div
+      class="absolute z-10 p-1 mt-1 whitespace-normal bg-gray-100 border border-gray-700 rounded-lg shadow-2xl"
+      style="
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        overflow-wrap: anywhere;
+      "
+      [innerHTML]="name"
+    ></div>
+  </ng-container>
+</div>

@@ -1,0 +1,110 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX LEVEL</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">{{ title.title }}</h1>
+      <div class="flex justify-start mt-3">
+        <h1 class="text-gray-400">{{ title.title }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bg-white shadow rounded-lg mt-5">
+  <form [formGroup]="mform">
+    <div>
+      <div class="grid grid-cols-2 gap-1">
+        <div class="flex justify-start h-fit w-fit p-5">
+          <form [formGroup]="mform">
+            <div class="relative flex w-full flex-wrap items-stretch bg-white rounded-lg border border-1">
+              <button
+                class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+                type="button" id="button-addon1">
+                <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+              </button>
+              <input type="text" formControlName="search"
+                class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+            </div>
+          </form>
+        </div>
+        <div class="flex justify-end place-items-center p-5">
+          <button
+            class="px-2 border border-1 hover:bg-success hover:text-white border-success py-2 mx-2 rounded-lg text-success h-fit">
+            <fa-icon [icon]="faPrint"></fa-icon> Export To Excel</button>
+          <!-- Button trigger vertically centered modal-->
+        </div>
+      </div>
+      <div class="flex flex-col overflow-x-auto">
+        <div class="p-5">
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-sm font-light">
+              <thead class="border-b font-medium border-gray-500 bg-gray-100 text-gray-600 w-full">
+                <tr class="w-full">
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">No</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Name</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Unit</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Title</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Email</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Point Total</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Level Point</th>
+                </tr>
+              </thead>
+              <tbody class="w-full">
+                <tr class="border-b dark:border-neutral-500 w-full" *ngFor="let data of dataPoint; index as i">
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ i+1 }}.</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{data.personalName }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{data.personalUnit }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{data.title }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{data.personalEmail }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{data.totalPoint }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ data.levelPoint }}</td>
+                </tr>
+                <tr *ngIf="!dataPoint">
+                  <td class="min-w-full text-center py-3 text-gray-500" colspan="14"><fa-icon
+                      [icon]="faSadTear"></fa-icon>
+                    Sorry, data is empty.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="flex justify-start w-full">
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation example">
+              <ul class="list-style-none flex mt-5 place-self-center">
+                <li class="mr-3 place-self-center">
+                  <p>Total : {{ totalData }}</p>
+                </li>
+                <li class="mr-3 place-self-center">
+                  <select class="border boder-regal-blue rounded py-1 px-2 place-self-center" formControlName="limit">
+                    <option [value]="10">10</option>
+                    <option [value]="20">20</option>
+                    <option [value]="30">30</option>
+                    <option [value]="40">40</option>
+                  </select>
+                </li>
+                <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+                  <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                    class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                </li>
+                <!-- <li *ngFor="let numPage of pageData" class="place-self-center">
+                  <a class="relative block rounded bg-transparent px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100  dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                    href="#!">{{ numPage }}</a>
+                </li> -->
+                <li class="place-self-center text-white rounded px-2 py-1">
+                  <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                    class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                </li>
+                <li class="ml-3 flex flex-cols">
+                  <p class="place-self-center mr-3">Go to</p>
+                  <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                    formControlName="page">
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

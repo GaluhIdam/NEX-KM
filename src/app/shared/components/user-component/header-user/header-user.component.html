@@ -1,0 +1,1115 @@
+<nav
+  class="relative flex flex-wrap items-center justify-between w-full py-6 text-neutral-200 lg:flex-wrap lg:justify-start"
+  data-te-navbar-ref
+>
+  <div class="flex flex-wrap items-center justify-between w-full px-10">
+    <button
+      class="block border-0 bg-transparent py-2 px-2.5 text-neutral-200 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 lg:hidden"
+      type="button"
+      data-te-collapse-init
+      data-te-target="#navbarSupportedContent4"
+      aria-controls="navbarSupportedContent4"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="[&>svg]:w-7">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="h-7 w-7"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+    <a class="pr-2 text-xl font-semibold" routerLink="/user">
+      <img class="w-24" [src]="logo_nex" alt="logo-nex" />
+    </a>
+    <div
+      class="justify-end !visible hidden flex-grow basis-[100%] items-center lg:!flex lg:basis-auto"
+      id="navbarSupportedContent4"
+      data-te-collapse-item
+    >
+      <!-- Left links -->
+      <ul
+        class="flex flex-col justify-end px-5 pl-0 lg:flex-row"
+        data-te-navbar-nav-ref
+      >
+        <li class="lg:px-5 max-[600px]:mt-2">
+          <a
+            class="text-primary hover:font-semibold"
+            routerLinkActive="active"
+            routerLink="user/nex-learning"
+            >NEX Learning</a
+          >
+        </li>
+        <li class="lg:px-5 max-[600px]:mt-2">
+          <a
+            class="text-primary hover:font-semibold"
+            routerLinkActive="active"
+            routerLink="user/nex-library"
+            >NEX Library</a
+          >
+        </li>
+        <li class="lg:px-5 max-[600px]:mt-2">
+          <a
+            class="text-primary hover:font-semibold"
+            routerLinkActive="active"
+            routerLink="user/nex-talks"
+            >NEX Talk</a
+          >
+        </li>
+        <li class="lg:px-5 max-[600px]:mt-2">
+          <a
+            class="text-primary hover:font-semibold"
+            routerLinkActive="active"
+            routerLink="user/nex-community"
+            >NEX Community</a
+          >
+        </li>
+        <li class="lg:px-5 max-[600px]:mt-2">
+          <a
+            class="text-primary hover:font-semibold"
+            routerLinkActive="active"
+            routerLink="user/nex-level"
+            >NEX Miles</a
+          >
+        </li>
+        <li class="lg:px-5 max-[600px]:mt-2">
+          <a
+            class="text-primary hover:font-semibold"
+            routerLinkActive="active"
+            routerLink="user/home-page/about-nex"
+            >About NEX</a
+          >
+        </li>
+      </ul>
+      <!-- Left links -->
+    </div>
+    <!-- Collapsible wrapper -->
+    <!-- Right elements -->
+    <div class="relative flex items-center max-[600px]:mt-3">
+      <div class="relative" data-te-dropdown-ref>
+        <a
+          class="flex items-center hidden-arrow mr-7 opacity-60 hover:opacity-80 focus:opacity-80"
+          href="#"
+          id="dropdownMenuButton1"
+          role="button"
+          data-te-dropdown-toggle-ref
+          aria-expanded="false"
+          (click)="toggleNotificationTotal()"
+        >
+          <span class="[&>svg]:w-8">
+            <fa-icon [icon]="faBell" class="text-primary"></fa-icon>
+          </span>
+          <span
+            class="absolute -mt-2.5 ml-2 rounded-full bg-red-700 py-0 px-1.5 text-xs"
+            *ngIf="showNotificationTotal"
+            >{{ notificationTotal }}</span
+          >
+        </a>
+        <ul
+          class="notification-list absolute left-auto right-0 z-[1000] float-left m-0 hidden list-none overflow-y-auto rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg [&[data-te-dropdown-show]]:block mt-5"
+          aria-labelledby="dropdownMenuButton1"
+          data-te-dropdown-menu-ref
+        >
+          <div class="grid grid-cols-2">
+            <p class="px-5 mt-5 font-semibold text-purple-dark">
+              Notifications
+            </p>
+            <p
+              class="px-3 mt-5 font-semibold cursor-pointer text-regal-blue"
+              (click)="dashboardPage()"
+            >
+              See More
+            </p>
+          </div>
+          <li>
+            <ng-container
+              *ngIf="notificationList && notificationList.length > 0"
+            >
+              <div
+                class="block px-4 py-2 max-w-min whitespace-nowrap"
+                *ngFor="let data of notificationList"
+              >
+                <div class="flex justify-center space-x-2 w-60">
+                  <div
+                    *ngIf="data.isRead === false"
+                    class="px-6 py-5 mb-4 text-base whitespace-pre-line rounded-lg bg-success-100 hover:bg-success-50 cursor-pointer text-success-700"
+                  >
+                    <h2>
+                      <fa-icon
+                        [icon]="faBell"
+                        class="text-regal-blue"
+                      ></fa-icon>
+                      {{ data.title }}
+                    </h2>
+                    <p class="text-sm">{{ data.description }}</p>
+                    <div
+                      class="cursor-pointer"
+                      (click)="readSelectedNotification(data.uuid, data.contentType, data.contentUuid)">
+                      <p class="text-sm text-end">
+                        <button>
+                          <fa-icon [icon]="faBook" class="text-regal-blue">
+                          </fa-icon>
+                        </button>
+                        Read
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="data.isRead === true"
+                    class="px-6 py-5 mb-4 text-base whitespace-pre-line bg-gray-100 rounded-lg text-success-700"
+                  >
+                    <h2>
+                      <fa-icon
+                        [icon]="faBell"
+                        class="text-regal-blue"
+                      ></fa-icon>
+                      {{ data.title }}
+                    </h2>
+                    <p class="text-sm">{{ data.description }}</p>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </li>
+          <li>
+            <ng-container
+              *ngIf="!notificationList"
+            >
+              <div class="block px-4 py-2 max-w-min whitespace-nowrap">
+                <div class="flex justify-center space-x-2 w-60">
+                  <div
+                    class="px-6 py-5 mb-4 text-base whitespace-pre-line rounded-lg bg-success-100 text-success-700"
+                  >
+                    <h2>
+                      <fa-icon
+                        [icon]="faBell"
+                        class="text-regal-blue"
+                      ></fa-icon>
+                      Not notification yet
+                    </h2>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </li>
+        </ul>
+      </div>
+      <div class="relative" data-te-dropdown-ref>
+        <a
+          class="flex items-center transition duration-150 ease-in-out hidden-arrow whitespace-nowrap motion-reduce:transition-none"
+          href="#"
+          id="dropdownMenuButton2"
+          role="button"
+          data-te-dropdown-toggle-ref
+          aria-expanded="false"
+        >
+          <img
+            [src]="photo"
+            class="w-12 h-12 rounded-full"
+            alt="avatar"
+            loading="lazy"
+          />
+        </a>
+        <ul
+          class="absolute left-auto right-0 z-[1000] float-left m-0 mt-1 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+          aria-labelledby="dropdownMenuButton2"
+          data-te-dropdown-menu-ref
+        >
+          <li>
+            <button
+              class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+              (click)="dashboardPage()"
+              data-te-dropdown-item-ref
+            >
+              Dashboard
+            </button>
+          </li>
+          <ng-container *ngIf="rolesUser.length > 1">
+            <li>
+              <button
+                class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                (click)="changeRole()"
+                data-te-dropdown-item-ref
+              >
+                Change Role
+              </button>
+            </li>
+          </ng-container>
+          <li>
+            <button
+              class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+              (click)="logout()"
+              data-te-dropdown-item-ref
+            >
+              Log Out
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Right elements -->
+  </div>
+</nav>
+
+<!--Welcome centered modal-->
+<div
+  data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="staticBackdropWelcome"
+  data-te-backdrop="static"
+  data-te-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="relative flex flex-col w-full text-current bg-white border-none rounded-md shadow-lg outline-none pointer-events-auto bg-clip-padding dark:bg-neutral-600"
+    >
+      <!--Modal body-->
+      <div class="relative">
+        <img
+          src="../../../../../assets/image/welcome.jpg"
+          class="object-cover w-full rounded-md h-44"
+          alt="welcome.jpg"
+        />
+        <div class="flex flex-col justify-center px-5 my-10 h-fit">
+          <div>
+            <h1 class="mb-3 text-2xl font-semibold text-center text-primary">
+              Welcome to NEX Knowledge Management
+            </h1>
+            <h1 class="mb-3 text-3xl font-semibold text-center">
+              Hello {{ capitalizeWords(user.personalName) }} !
+            </h1>
+            <p class="text-center text-gray-500">
+              Lets get your team working, no matter their location, we can
+              streamline their process, create team bonds and watch productivity
+              soar
+            </p>
+          </div>
+          <span data-te-modal-dismiss class="place-self-center">
+            <button
+              type="button"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-toggle="modal"
+              data-te-target="#staticBackdropStepProfile"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              class="px-3 py-1 mt-5 text-center text-white rounded place-self-center bg-primary hover:bg-primary"
+            >
+              Let's go !
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Nofitification -->
+<div
+  data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100 dark:border-opacity-50"
+      >
+        <!--Modal title-->
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+          id="exampleModalLabel"
+        >
+          <fa-icon [icon]="faBell" class="mr-1 text-primary"></fa-icon>
+          Notification
+        </h5>
+        <!--Close button-->
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!--Modal body-->
+      <div class="relative flex-auto p-4" data-te-modal-body-ref>
+        <div
+          *ngFor="let data of notificationList"
+          class="px-6 py-5 my-2 text-sm rounded-lg bg-danger-100 text-danger-700"
+          role="alert"
+        >
+          <p class="text-base font-semibold">{{ data.title }}</p>
+          {{ data.description }}
+        </div>
+        <p class="text-center text-gray-400" *ngIf="!notificationList">
+          No Notification
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step Modal Profile -->
+<div
+  data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="staticBackdropStepProfile"
+  data-te-backdrop="static"
+  data-te-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="relative flex flex-col w-full text-current bg-white border-none rounded-md shadow-lg outline-none pointer-events-auto bg-clip-padding dark:bg-neutral-600"
+    >
+      <!--Modal body-->
+      <div class="relative">
+        <!-- Form Pertama -->
+        <div class="flex flex-col justify-center px-5 my-10 h-fit">
+          <div>
+            <h1 class="mb-0 text-center text-gray-400">Step 1</h1>
+            <h1 class="mb-4 text-2xl font-semibold text-center text-primary">
+              Select your profile !
+            </h1>
+            <form [formGroup]="profileForm" class="w-full">
+              <div class="flex flex-col justify-center rounded-full">
+                <ng-container *ngIf="selectedPhotoFile === null">
+                  <div
+                    class="object-center border rounded-full cursor-pointer w-36 h-36 place-self-center border-gray"
+                    (dragover)="onPhotoDragOver($event)"
+                    (dragleave)="onPhotoDragLeave($event)"
+                    (drop)="onPhotoDrop($event)"
+                    (click)="triggerPhotoFileInputClick()"
+                  >
+                    <div
+                      class="flex flex-col items-center justify-center w-full h-full text-xs"
+                    >
+                      <label>
+                        <span class="text-xs text-red-500">Optional</span>
+                      </label>
+                      <p>Upload profile image</p>
+                      <div>image file up to 1 MB</div>
+                    </div>
+
+                    <div class="hidden p-2 border-2">
+                      <input
+                        #photoFileInput
+                        id="image"
+                        accept=".png, .jpg, .jpeg"
+                        type="file"
+                        (change)="onPhotoUploaded($event)"
+                      />
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="selectedPhotoFile !== null">
+                  <div class="relative flex justify-center">
+                    <img
+                      [src]="previewPhotoImage"
+                      class="object-center border-2 rounded-full w-36 h-36 place-self-center border-primary"
+                    />
+                    <button
+                      type="button"
+                      (click)="onRemovePhoto()"
+                      class="box-content absolute top-0 text-white bg-red-500 border-none rounded-full right-44 hover:no-underline hover:bg-danger focus:opacity-100 focus:shadow-none focus:outline-none"
+                      aria-label="Close"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div *ngIf="!isUserPhotoValid">
+                    <small class="flex justify-center text-red-800">
+                      The size of the user photo cannot exceed 1 MB
+                    </small>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="mt-4">
+                <label
+                  for="username"
+                  class="flex items-center gap-1 mb-1 text-gray-500 font-base"
+                  >Username
+                  <span class="text-xs text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  formControlName="username"
+                  class="w-full border border-gray mb-5 h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                  placeholder="Select your username"
+                  aria-label="Example text with button addon"
+                  aria-describedby="button-addon1"
+                />
+              </div>
+            </form>
+          </div>
+          <span data-te-modal-dismiss class="place-self-center">
+            <button
+              type="button"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-toggle="modal"
+              [disabled]="profileForm.invalid || !isUserPhotoValid"
+              data-te-target="#staticBackdropStepInterest"
+              class="px-3 py-1 mt-5 text-center text-white rounded place-self-center bg-primary hover:bg-primary disabled:bg-gray-400"
+            >
+              Next
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step Modal Interest -->
+<div
+  data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="staticBackdropStepInterest"
+  data-te-backdrop="static"
+  data-te-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="relative flex flex-col w-full text-current bg-white border-none rounded-md shadow-lg outline-none pointer-events-auto bg-clip-padding dark:bg-neutral-600"
+    >
+      <!--Modal body-->
+      <div class="relative">
+        <!-- Form Pertama -->
+        <div class="flex flex-col justify-center px-5 my-10 h-fit">
+          <div>
+            <h1 class="mb-0 text-center text-gray-400">Step 1</h1>
+            <h1 class="mb-4 text-2xl font-semibold text-center text-primary">
+              Select your interest !
+            </h1>
+            <form [formGroup]="mform" class="w-full">
+              <input
+                type="text"
+                formControlName="search"
+                class="w-full border border-gray mb-5 h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                placeholder="Search, please select interest at least 3 item!"
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+              />
+            </form>
+            <div class="flex flex-wrap justify-center">
+              <div
+                [ngClass]="{ 'bg-success': isCheckedInterest(data) }"
+                class="relative px-3 py-1 mx-1 my-1 text-white bg-gray-400 rounded-full"
+                *ngFor="let data of dataInterest; index as i"
+              >
+                <input
+                  type="checkbox"
+                  [id]="data.name"
+                  [value]="data.id"
+                  hidden
+                  (change)="
+                    !isCheckedInterest(data) ? selectInterest(data) : null
+                  "
+                />
+                <label
+                  [for]="data.name"
+                  [ngClass]="
+                    !isCheckedInterest(data)
+                      ? 'select-none hover:cursor-pointer'
+                      : 'select-none'
+                  "
+                  >{{ data.name }}</label
+                >
+
+                <!--Cancel button-->
+                <ng-container *ngIf="isCheckedInterest(data)">
+                  <button
+                    type="button"
+                    (click)="selectInterest(data)"
+                    class="box-content absolute text-white bg-red-500 border-none rounded-full -right-1 -top-1 hover:no-underline hover:bg-danger focus:opacity-100 focus:shadow-none focus:outline-none"
+                    aria-label="Close"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </ng-container>
+              </div>
+              <h1 class="text-sm text-gray-400" *ngIf="!dataInterest">
+                Sorry, data is empty. Please contact administrator!
+              </h1>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="place-self-center text-primary"
+            *ngIf="!dataInterest && progressWaitInterest == false"
+            (click)="getDataInterest(page, limit, search, sortBy)"
+          >
+            refresh
+          </button>
+          <div
+            *ngIf="progressWaitInterest == true"
+            class="place-self-center inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          >
+            <span
+              class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+              >Loading...</span
+            >
+          </div>
+          <span data-te-modal-dismiss class="place-self-center">
+            <button
+              type="button"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-toggle="modal"
+              data-te-target="#staticBackdropStepProfile"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              class="px-3 py-1 mt-5 text-center text-white rounded place-self-center bg-danger hover:bg-red-600"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              [disabled]="interestUser.length < 3"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-toggle="modal"
+              data-te-target="#staticBackdropStepSkill"
+              class="px-3 py-1 mt-5 ml-2 text-center text-white rounded place-self-center bg-primary hover:bg-primary disabled:bg-gray-400"
+            >
+              Next
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step Modal Skill -->
+<div
+  data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="staticBackdropStepSkill"
+  data-te-backdrop="static"
+  data-te-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="relative flex flex-col w-full text-current bg-white border-none rounded-md shadow-lg outline-none pointer-events-auto bg-clip-padding dark:bg-neutral-600"
+    >
+      <!--Modal body-->
+      <div class="relative">
+        <!-- Form Pertama -->
+        <div class="flex flex-col justify-center px-5 my-10 h-fit">
+          <div>
+            <h1 class="mb-0 text-center text-gray-400">Step 2</h1>
+            <h1 class="mb-4 text-2xl font-semibold text-center text-primary">
+              Select your skill !
+            </h1>
+            <form [formGroup]="mformSkill" class="w-full">
+              <input
+                type="text"
+                formControlName="search"
+                class="w-full border border-gray mb-5 h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                placeholder="Search, please select interest at least 3 item!"
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+              />
+            </form>
+            <div class="flex flex-wrap justify-center">
+              <div
+                [ngClass]="{ 'bg-success': isCheckedSkill(data) }"
+                class="relative px-3 py-1 mx-1 my-1 text-white bg-gray-400 rounded-full"
+                *ngFor="let data of dataSkill; index as i"
+              >
+                <input
+                  type="checkbox"
+                  [id]="data.name"
+                  [value]="data.id"
+                  hidden
+                  (change)="!isCheckedSkill(data) ? selectSkill(data) : null"
+                />
+                <label
+                  [for]="data.name"
+                  [ngClass]="
+                    !isCheckedSkill(data)
+                      ? 'select-none hover:cursor-pointer'
+                      : 'select-none'
+                  "
+                  >{{ data.name }}</label
+                >
+
+                <!--Cancel button-->
+                <ng-container *ngIf="isCheckedSkill(data)">
+                  <button
+                    type="button"
+                    (click)="selectSkill(data)"
+                    class="box-content absolute text-white bg-red-500 border-none rounded-full -right-1 -top-1 hover:no-underline hover:bg-danger focus:opacity-100 focus:shadow-none focus:outline-none"
+                    aria-label="Close"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-4 h-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </ng-container>
+              </div>
+              <h1 class="text-sm text-gray-400" *ngIf="!dataSkill">
+                Sorry, data is empty. Please contact administrator!
+              </h1>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="text-primary"
+            *ngIf="!dataSkill && progressWaitSkill == false"
+            (click)="getDataSkill(page, limit, search, sortBy)"
+          >
+            refresh
+          </button>
+          <div
+            *ngIf="progressWaitSkill == true"
+            class="place-self-center inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          >
+            <span
+              class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+              >Loading...</span
+            >
+          </div>
+          <span data-te-modal-dismiss class="place-self-center">
+            <button
+              type="button"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-toggle="modal"
+              data-te-target="#staticBackdropStepInterest"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              class="px-3 py-1 mt-5 text-center text-white rounded place-self-center bg-danger hover:bg-red-600"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              [disabled]="skillUser.length < 3"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-toggle="modal"
+              data-te-target="#staticBackdropStepSosMed"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              class="px-3 py-1 mt-5 ml-2 text-center text-white rounded place-self-center bg-primary hover:bg-primary disabled:bg-gray-400"
+            >
+              Next
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step Modal Media Sosial -->
+<div
+  data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="staticBackdropStepSosMed"
+  data-te-backdrop="static"
+  data-te-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="relative flex flex-col w-full text-current bg-white border-none rounded-md shadow-lg outline-none pointer-events-auto bg-clip-padding dark:bg-neutral-600"
+    >
+      <!--Modal body-->
+      <div class="relative">
+        <!-- Form Pertama -->
+        <div class="flex flex-col justify-center px-5 my-10 h-fit">
+          <div>
+            <h1 class="mb-0 text-center text-gray-400">Step 3</h1>
+            <h1 class="mb-4 text-2xl font-semibold text-center text-primary">
+              Let people know your social media !
+            </h1>
+            <form [formGroup]="sosmedForm" class="w-full">
+              <div class="flex flex-col mb-4">
+                <label
+                  for="title"
+                  class="flex items-center gap-1 mb-1 text-gray-500 font-base"
+                  >Instagram
+                  <span class="text-xs text-red-500">Optional</span>
+                </label>
+                <div
+                  [ngClass]="{
+                    'border border-rose-500 rounded':
+                      sosmedForm.get('instagram')?.touched &&
+                      sosmedForm.get('instagram')?.invalid
+                  }"
+                >
+                  <input
+                    type="text"
+                    formControlName="instagram"
+                    class="w-full px-2 py-1 border border-gray-300 rounded"
+                    placeholder="e.g ryan.demashift"
+                    id="exampleInput90"
+                  />
+                </div>
+                <p
+                  class="mt-1 text-xs italic text-rose-500"
+                  *ngIf="
+                    sosmedForm.get('instagram')?.touched &&
+                    sosmedForm.get('instagram')?.invalid
+                  "
+                >
+                  * Can't use special character!
+                </p>
+              </div>
+              <div class="flex flex-col mb-4">
+                <label
+                  for="title"
+                  class="flex items-center gap-1 mb-1 text-gray-500 font-base"
+                  >LinkedIn
+                  <span class="text-xs text-red-500">Optional</span></label
+                >
+                <div
+                  [ngClass]="{
+                    'border border-rose-500 rounded':
+                      sosmedForm.get('linkedIn')?.touched &&
+                      sosmedForm.get('linkedIn')?.invalid
+                  }"
+                >
+                  <input
+                    type="text"
+                    formControlName="linkedIn"
+                    class="w-full px-2 py-1 border border-gray-300 rounded"
+                    placeholder="e.g ryan.demashift"
+                    id="exampleInput90"
+                  />
+                </div>
+                <p
+                  class="mt-1 text-xs italic text-rose-500"
+                  *ngIf="
+                    sosmedForm.get('linkedIn')?.touched &&
+                    sosmedForm.get('linkedIn')?.invalid
+                  "
+                >
+                  * Can't use special character!
+                </p>
+              </div>
+              <div class="flex flex-col mb-4">
+                <label
+                  for="title"
+                  class="flex items-center gap-1 mb-1 text-gray-500 font-base"
+                  >Facebook
+                  <span class="text-xs text-red-500">Optional</span></label
+                >
+                <div
+                  [ngClass]="{
+                    'border border-rose-500 rounded':
+                      sosmedForm.get('facebook')?.touched &&
+                      sosmedForm.get('facebook')?.invalid
+                  }"
+                >
+                  <input
+                    type="text"
+                    formControlName="facebook"
+                    class="w-full px-2 py-1 border border-gray-300 rounded"
+                    placeholder="e.g ryan.demashift"
+                    id="exampleInput90"
+                  />
+                </div>
+                <p
+                  class="mt-1 text-xs italic text-rose-500"
+                  *ngIf="
+                    sosmedForm.get('facebook')?.touched &&
+                    sosmedForm.get('facebook')?.invalid
+                  "
+                >
+                  * Can't use special character!
+                </p>
+              </div>
+            </form>
+          </div>
+          <span data-te-modal-dismiss class="place-self-center">
+            <button
+              type="button"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-toggle="modal"
+              data-te-target="#staticBackdropStepSkill"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              class="px-3 py-1 mt-5 text-center text-white rounded place-self-center bg-danger hover:bg-red-600"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-toggle="modal"
+              data-te-target="#staticBackdropStepPreview"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              [disabled]="sosmedForm.invalid"
+              class="px-3 py-1 mt-5 ml-2 text-center text-white rounded place-self-center bg-primary hover:bg-primary disabled:bg-gray-400"
+            >
+              Next
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Step Modal Preview -->
+<div
+  data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="staticBackdropStepPreview"
+  data-te-backdrop="static"
+  data-te-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="relative flex flex-col w-full text-current bg-white border-none rounded-md shadow-lg outline-none pointer-events-auto bg-clip-padding dark:bg-neutral-600"
+    >
+      <!--Modal body-->
+      <div class="relative">
+        <!-- Form Pertama -->
+        <div class="flex flex-col justify-start px-5 my-10 h-fit">
+          <div>
+            <h1 class="mb-0 text-center text-gray-400">Verification</h1>
+            <h1 class="mb-4 text-2xl font-semibold text-center text-primary">
+              Your Profile Information
+            </h1>
+            <div class="flex flex-col justify-center px-5">
+              <img
+                [src]="
+                  profileForm.get('photo')?.value
+                    ? previewPhotoImage
+                    : '../../../../../assets/image/empty-profile-image.jpeg'
+                "
+                [alt]="user.personalName"
+                class="w-20 h-20 rounded-full place-self-center"
+              />
+              <div class="grid grid-cols-2 gap-1 mt-3">
+                <div>
+                  <h1 class="mt-1 text-xs text-gray-500">Full Name:</h1>
+                  <h1 class="text-sm">
+                    {{ capitalizeWords(user.personalName) }}
+                  </h1>
+                </div>
+                <div>
+                  <h1 class="mt-1 text-xs text-gray-500">Personal Number:</h1>
+                  <h1 class="text-sm">{{ user.personalNumber }}</h1>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-1">
+                <div>
+                  <h1 class="mt-1 text-xs text-gray-500">Username:</h1>
+                  <h1 class="text-sm">
+                    {{ profileForm.get("username")?.value ?? "-" }}
+                  </h1>
+                </div>
+                <div>
+                  <h1 class="mt-1 text-xs text-gray-500">Unit:</h1>
+                  <h1 class="text-sm">{{ user.personalUnit }}</h1>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-1">
+                <div class="col-span-2">
+                  <h1 class="mt-1 text-xs text-gray-500">Email:</h1>
+                  <h1 class="text-sm">{{ user.personalEmail }}</h1>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-1 mt-2">
+                <div>
+                  <h1 class="mt-1 text-xs text-left text-gray-500">
+                    Interests :
+                  </h1>
+                  <div class="flex flex-wrap justify-start my-1 h-fit">
+                    <span
+                      *ngFor="let int of interestUser"
+                      class="w-fit inline-block whitespace-nowrap mr-1 mb-1 rounded-full bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-left align-baseline text-sm font-bold leading-none text-primary-700"
+                    >
+                      {{ int.name }}
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <h1 class="mt-1 text-xs text-left text-gray-500">Skills :</h1>
+                  <div class="flex flex-wrap justify-start my-1 h-fit">
+                    <span
+                      *ngFor="let int of skillUser"
+                      class="w-fit inline-block whitespace-nowrap mr-1 mb-1 rounded-full bg-primary-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-left align-baseline text-sm font-bold leading-none text-primary-700"
+                    >
+                      {{ int.name }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-1">
+                <div>
+                  <h1 class="mt-1 text-xs text-gray-500">Instagram:</h1>
+                  <h1 class="text-sm">
+                    {{
+                      sosmedForm.get("instagram")?.value == "" || null
+                        ? "-"
+                        : sosmedForm.get("instagram")?.value
+                    }}
+                  </h1>
+                </div>
+                <div>
+                  <h1 class="mt-1 text-xs text-gray-500">Linked In:</h1>
+                  <h1 class="text-sm">
+                    {{
+                      sosmedForm.get("linkedIn")?.value == "" || null
+                        ? "-"
+                        : sosmedForm.get("linkedIn")?.value
+                    }}
+                  </h1>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-1">
+                <div>
+                  <h1 class="mt-1 text-xs text-gray-500">Facebook:</h1>
+                  <h1 class="text-sm">
+                    {{
+                      sosmedForm.get("facebook")?.value == "" || null
+                        ? "-"
+                        : sosmedForm.get("facebook")?.value
+                    }}
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span data-te-modal-dismiss class="place-self-center">
+            <button
+              type="button"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-toggle="modal"
+              data-te-target="#staticBackdropStepSosMed"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              class="px-3 py-1 mt-5 text-center text-white rounded place-self-center bg-danger hover:bg-red-600"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              (click)="submitDataUser()"
+              class="px-3 py-1 mt-5 ml-2 text-center text-white rounded place-self-center bg-primary hover:bg-primary"
+            >
+              Submit
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

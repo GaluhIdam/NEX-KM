@@ -1,0 +1,14 @@
+<button type="button" *ngIf="Approve" class="mx-1 w-fit border text-success border-1 border-success px-2 py-1 rounded-lg"
+data-te-toggle="modal" [attr.data-te-target]="'#exampleModalCenterApprove'+uuid" data-te-ripple-init data-te-ripple-color="light">
+  <fa-icon [icon]="faCircleCheck"></fa-icon>
+</button>
+<button type="button" *ngIf="Editor" class="mx-1 w-fit border text-orange border-1 border-orange px-2 py-1 rounded-lg"
+  data-te-toggle="modal" [attr.data-te-target]="'#exampleModalCenterEditor'+uuid" data-te-ripple-init data-te-ripple-color="light"
+  data-te-ripple-color="light">
+  <fa-icon [icon]="faStar"></fa-icon>
+</button>
+<button type="button" *ngIf="Ban" class="mx-1 w-fit border text-danger border-1 border-danger px-2 py-1 rounded-lg"
+  data-te-toggle="modal" [attr.data-te-target]="'#exampleModalCenterBan'+uuid" data-te-ripple-init data-te-ripple-color="light"
+  data-te-ripple-color="light">
+  <fa-icon [icon]="faBan"></fa-icon>
+</button>

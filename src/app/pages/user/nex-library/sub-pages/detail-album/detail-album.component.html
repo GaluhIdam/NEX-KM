@@ -1,0 +1,90 @@
+<div class="mt-8">
+  <div class="flex grid-cols-2 gap-4 flex-cols">
+    <div class="w-full min-[600px]:mx-24 max-[600px]:mx-16">
+      <div>
+        <div class="grid grid-cols-1 gap-4">
+          <div
+            class="flex min-[600px]:justify-start max-[600px]:justify-center"
+          >
+            <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+            <fa-icon [icon]="faArrowRight" class="mr-3 text-gray-400"></fa-icon>
+            <a routerLink="/user/nex-library" class="mr-3 text-gray-400"
+              >Nex Library</a
+            >
+            <fa-icon [icon]="faArrowRight" class="mr-3 text-gray-400"></fa-icon>
+            <a routerLink="/user/nex-library/album" class="mr-3 text-gray-400"
+              >Album</a
+            >
+            <fa-icon [icon]="faArrowRight" class="mr-3 text-gray-400"></fa-icon>
+            <p class="mr-3 font-bold text-black">Photo Gallery</p>
+          </div>
+        </div>
+        <ng-container *ngIf="isContentLoading">
+          <div
+            class="flex items-center justify-center min-h-screen font-semibold"
+          >
+            <app-loading></app-loading>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isContentLoading">
+          <ng-container *ngIf="isError">
+            <app-service-error></app-service-error>
+          </ng-container>
+          <ng-container *ngIf="!isError">
+            <img
+              class="w-full px-5 mt-5 min-[600px]:h-96 max-[600px]:h-52 object-cover object-center"
+              [src]="albumData?.path"
+              alt=""
+              srcset=""
+            />
+            <div class="px-5" style="overflow-wrap: anywhere">
+              <p class="mt-5 text-lg text-gray-400">
+                {{ formattedDate(albumData?.createdAt ?? "") }}
+              </p>
+              <h1 class="mt-5 text-5xl font-semibold">
+                {{ albumData?.title }}
+              </h1>
+              <p class="mt-5">
+                {{ albumData?.description }}
+              </p>
+              <h1 class="mt-5 text-3xl font-semibold">
+                <fa-icon class="text-soft-green" [icon]="faImage"></fa-icon>
+                Gallery
+              </h1>
+              <ng-container *ngIf="albumData">
+                <div
+                  class="grid gap-4 mt-5 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 sm:px-0 xs:px-16"
+                >
+                  <ng-container
+                    *ngIf="
+                      albumData.galleryAlbum.length > 0;
+                      else emptyGalleryAlbum
+                    "
+                  >
+                    <ng-container
+                      *ngFor="let gallery of albumData.galleryAlbum"
+                    >
+                      <img
+                        class="object-cover object-center w-full h-48 rounded-lg"
+                        [src]="gallery.path"
+                        alt=""
+                        srcset=""
+                      />
+                    </ng-container>
+                  </ng-container>
+                  <ng-template #emptyGalleryAlbum>
+                    <div
+                      class="flex items-center justify-center font-semibold h-60"
+                    >
+                      <h2>No photo gallery available.</h2>
+                    </div>
+                  </ng-template>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

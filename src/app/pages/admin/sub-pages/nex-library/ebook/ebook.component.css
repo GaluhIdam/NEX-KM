@@ -1,0 +1,12 @@
+.ng-select.custom-ng-select {
+  .ng-select-container {
+    height: 42px;
+    border: 1px solid #28a745;
+    .ng-value-container {
+      color: #28a745;
+      .ng-placeholder {
+        color: #28a745;
+      }
+    }
+  }
+}

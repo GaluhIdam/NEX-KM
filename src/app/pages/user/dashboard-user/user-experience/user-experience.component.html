@@ -1,0 +1,412 @@
+<div class="mb-8">
+  <div class="w-full">
+    <div class="grid lg:grid-cols-2 hp:grid-cols-1">
+      <div class="max-[600px]:ml-5">
+        <h1 class="min-[600px]:text-3xl text-xl" style="font-weight: 800;">Sharing Experience</h1>
+        <p class="font-semibold mb-5 text-success">List All Your Experience</p>
+      </div>
+      <div class="py-4 text-end lg:mx-4 hp:mx-auto">
+        <button type="button" (click)="callModal(null, null, true)"
+          class="px-3 py-2 bg-primary hover:bg-primary-700 text-white rounded-lg" data-te-toggle="modal"
+          data-te-target="#exampleModalCenter" data-te-ripple-init data-te-ripple-color="light">
+          <fa-icon [icon]="faPlus"></fa-icon> Add Sharing Experience
+        </button>
+      </div>
+    </div>
+    <div class="my-5">
+      <ng-container *ngIf="dataSharing.length === 0">
+        <div class="flex items-center justify-center min-h-screen font-semibold">
+          <h2>No data available.</h2>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="dataSharing.length > 0">
+        <!-- Profile Name Picture -->
+        <div class="flex min-h-screen gap-0">
+          <div class="flex flex-col justify-between flex-1">
+            <ng-container *ngIf="isLoading">
+              <div class="flex items-center justify-center h-full font-semibold">
+                <app-loading></app-loading>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!isLoading">
+              <ol class="mx-12 border-l-2 border-gray-300 border-solid">
+                <!--First item-->
+                <li>
+                  <div class="flex-start md:flex" *ngFor="let sharing of dataSharing; let i = index">
+                    <div
+                      class="-ml-[10px] flex h-[25px] w-[25px] items-center justify-center rounded-full bg-info-100 text-button-success">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                        <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3
+                      3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zm13.5 9a1.5 1.5
+                      0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5z"
+                          clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                    <div class="block max-w-full mb-10 ml-6 rounded-lg">
+                      <div class="grid mb-4 lg:grid-cols-3">
+                        <div class="col-span-1">
+                          <p class="font-semibold text-md">
+                            {{ sharing.title }}
+                          </p>
+                        </div>
+                        <div class="absolute col-span-2 text-end right-16">
+                          <button id="dropdownFeeds" role="button" data-te-dropdown-toggle-ref aria-expanded="false">
+                            <fa-icon [icon]="faEllipsis" class="text-xl text-gray-500">
+                            </fa-icon>
+                          </button>
+                          <ul
+                            class="absolute left-auto m-0 mt-1 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                            aria-labelledby="dropdownFeeds" data-te-dropdown-menu-ref>
+                            <li>
+                              <button type="button" data-te-toggle="modal" data-te-target="#exampleModalCenter"
+                                data-te-ripple-init data-te-ripple-color="light" (click)="
+                                    callModal(sharing.id, sharing.uuid, false)
+                                  "
+                                class="block w-full px-4 py-2 text-sm font-normal text-left bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30">
+                                Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button type="button" (click)="deleteDataSharing(sharing.uuid)" data-te-toggle="modal"
+                                data-te-target="#exampleDeleteSharing" data-te-ripple-init data-te-ripple-color="light"
+                                class="block w-full px-4 py-2 text-sm font-normal text-left bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                                data-te-dropdown-item-ref>
+                                Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <p class="mt-2 text-sm italic text-gray-400">
+                        {{ sharing.place }}, {{ formattedDate(sharing.date) }}
+                      </p>
+                      <ng-container *ngIf="
+                            sharing.city !== '' ||
+                            sharing.state !== '' ||
+                            sharing.country !== ''
+                          ">
+                        <p class="text-sm italic text-gray-400">
+                          {{ sharing.city }}
+                          {{
+                          sharing.state !== ""
+                          ? sharing.city !== ""
+                          ? ", " + dataSharingState[i].name
+                          : dataSharingState[i].name
+                          : ""
+                          }}
+                          {{
+                          sharing.country !== ""
+                          ? sharing.state !== ""
+                          ? ", " +
+                          dataSharingCountry[i].name +
+                          " " +
+                          dataSharingCountry[i].emoji
+                          : dataSharingCountry[i].name +
+                          " " +
+                          dataSharingCountry[i].emoji
+                          : ""
+                          }}
+                        </p>
+                      </ng-container>
+
+                      <p class="mt-2">{{ sharing.description }}</p>
+                      <span *ngIf="sharing.approvalStatus === true"
+                        class="inline-block whitespace-nowrap rounded-full mt-3 p-2 bg-button-success text-center align-baseline text-[0.75em] font-bold leading-none text-white">
+                        <fa-icon [icon]="faCheck" class="text-white">
+                        </fa-icon>
+                        Approved
+                      </span>
+                      <span *ngIf="sharing.approvalStatus === null"
+                        class="inline-block whitespace-nowrap rounded-full mt-3 p-2 bg-new-primary text-center align-baseline text-[0.75em] font-bold leading-none text-white">
+                        <fa-icon [icon]="faClock" class="text-white">
+                        </fa-icon>
+                        Waiting Approval
+                      </span>
+                      <span *ngIf="sharing.approvalStatus === false"
+                        class="inline-block whitespace-nowrap rounded-full mt-3 p-2 bg-danger text-center align-baseline text-[0.75em] font-bold leading-none text-white">
+                        <fa-icon [icon]="faTimes" class="text-white">
+                        </fa-icon>
+                        Reject
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </ol>
+            </ng-container>
+
+            <form [formGroup]="mform">
+              <div class="flex justify-end w-full mt-4 -ml-16">
+                <!-- Pagination -->
+                <nav aria-label="Page navigation example">
+                  <ul class="flex mt-5 list-style-none place-self-center">
+                    <li class="mr-3 place-self-center">
+                      <p>Total : {{ totalData }}</p>
+                    </li>
+                    <li class="mr-1 place-self-center">
+                      <select class="px-2 py-1 border rounded boder-regal-blue place-self-center"
+                        formControlName="limit">
+                        <option [value]="5">5</option>
+                        <option [value]="10">10</option>
+                        <option [value]="30">30</option>
+                        <option [value]="50">50</option>
+                        <option [value]="100">100</option>
+                      </select>
+                    </li>
+                    <li class="mr-3 place-self-center">
+                      <p>Data</p>
+                    </li>
+                    <li class="px-2 py-1 text-white rounded place-self-center">
+                      <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()" [class]="
+                            this.mform.get('page')?.value > 1
+                              ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                              : 'place-self-center text-gray-500'
+                          "></fa-icon>
+                    </li>
+                    <li *ngFor="let numPage of pageData" class="place-self-center">
+                      <div [class]="
+                            numPage === this.mform.get('page')?.value
+                              ? 'relative block rounded px-3 py-1.5 text-base text-white transition-all duration-300 font-semibold bg-regal-blue'
+                              : 'cursor-pointer relative block rounded px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white'
+                          " (click)="changePage(numPage)">
+                        {{ numPage }}
+                      </div>
+                    </li>
+                    <li class="px-2 py-1 text-white rounded place-self-center">
+                      <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()" [class]="
+                            this.mform.get('page')?.value < pageData.length
+                              ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                              : 'place-self-center text-gray-500'
+                          "></fa-icon>
+                    </li>
+                    <li class="flex ml-3 flex-cols">
+                      <p class="mr-3 place-self-center">Go to Page</p>
+                      <select class="px-4 py-1 border rounded boder-regal-blue place-self-center"
+                        formControlName="page">
+                        <option *ngFor="let num of pageData" [value]="num">
+                          {{ num }}
+                        </option>
+                      </select>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </form>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<!-- Sharing Modal -->
+<div data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-modal="true" role="dialog">
+  <div data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+    <div
+      class="relative flex flex-col w-full text-current bg-white border-none rounded-md shadow-lg outline-none pointer-events-auto bg-clip-padding dark:bg-neutral-600">
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100 dark:border-opacity-50">
+        <!--Modal title-->
+        <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+          id="exampleModalScrollableLabel">
+          {{
+          addOredit == true
+          ? "Add Sharing Experience"
+          : "Edit Sharing Experience"
+          }}
+        </h5>
+        <!--Close button-->
+        <button type="button" (click)="reset()"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!--Modal body-->
+      <form [formGroup]="submitForm" (submit)="addOredit === true ? postSharing() : updateSharing()">
+        <div class="relative p-4">
+          <!-- title -->
+          <div class="flex flex-col mb-4">
+            <label for="title" class="mb-1 text-gray-500 font-base">Title <span class="text-red-500">*</span></label>
+            <div [ngClass]="{
+                'border border-rose-500 rounded':
+                  submitForm.get('title')?.touched &&
+                  submitForm.get('title')?.invalid
+              }">
+              <input type="text" formControlName="title" class="w-full px-2 py-1 border border-gray-300 rounded"
+                id="exampleInput90" />
+            </div>
+            <p class="mt-1 text-xs italic text-rose-500" *ngIf="
+                submitForm.get('title')?.touched &&
+                submitForm.get('title')?.invalid
+              ">
+              * Title is required.
+            </p>
+          </div>
+          <!-- Country -->
+          <div class="flex flex-col mb-4">
+            <label for="country_iso" class="mb-1 text-gray-500 font-base">Country <span
+                class="text-red-500">*</span></label>
+            <div [ngClass]="{
+                'border border-rose-500 rounded':
+                  submitForm.get('country_iso')?.touched &&
+                  submitForm.get('country_iso')?.invalid
+              }">
+              <ng-select id="country_iso" formControlName="country_iso" placeholder="Select Country"
+                (change)="onChangeCountry($event)" [loading]="countriesLoading">
+                <ng-option *ngFor="let country of countries" value="{{ country.iso2 }}">
+                  {{ country.name }}
+                  <span class="p-1 text-xs rounded bg-slate-300">{{
+                    country.iso2
+                    }}</span>
+                </ng-option>
+              </ng-select>
+            </div>
+            <p class="mt-1 text-xs italic text-rose-500" *ngIf="
+                submitForm.get('country_iso')?.touched &&
+                submitForm.get('country_iso')?.invalid
+              ">
+              * Country is required.
+            </p>
+          </div>
+
+          <!-- State -->
+          <div class="flex flex-col mb-4">
+            <label for="state_iso" class="mb-1 text-gray-500 font-base">State</label>
+            <ng-select id="state_iso" formControlName="state_iso" placeholder="Select State"
+              (change)="onChangeState($event)" [loading]="statesLoading">
+              <ng-option *ngFor="let state of states" value="{{ state.iso2 }}">
+                {{ state.name }}
+                <span class="p-1 text-xs rounded bg-slate-300">{{
+                  state.iso2
+                  }}</span>
+              </ng-option>
+            </ng-select>
+          </div>
+
+          <!-- City -->
+          <div class="flex flex-col mb-4">
+            <label for="city_name" class="mb-1 text-gray-500 font-base">City</label>
+            <ng-select id="city_name" formControlName="city_name" placeholder="Select City" [loading]="citiesLoading">
+              <ng-option *ngFor="let city of cities" value="{{ city.name }}">
+                {{ city.name }}
+              </ng-option>
+            </ng-select>
+          </div>
+
+          <!-- place -->
+          <div class="flex flex-col mb-4">
+            <label for="title" class="mb-1 text-gray-500 font-base">Place <span class="text-red-500">*</span></label>
+            <div [ngClass]="{
+                'border border-rose-500 rounded':
+                  submitForm.get('place')?.touched &&
+                  submitForm.get('place')?.invalid
+              }">
+              <input type="text" formControlName="place" class="w-full px-2 py-1 border border-gray-300 rounded"
+                id="exampleInput90" />
+            </div>
+            <p class="mt-1 text-xs italic text-rose-500" *ngIf="
+                submitForm.get('place')?.touched &&
+                submitForm.get('place')?.invalid
+              ">
+              * Place is required.
+            </p>
+          </div>
+          <!-- Date -->
+          <div class="flex flex-col mb-4">
+            <label for="title" class="mb-1 text-gray-500 font-base">Date <span class="text-red-500">*</span></label>
+            <div [ngClass]="{
+                'border border-rose-500 rounded':
+                  submitForm.get('date')?.touched &&
+                  submitForm.get('date')?.invalid
+              }">
+              <input type="date" formControlName="date" class="w-full px-2 py-1 border border-gray-300 rounded"
+                id="exampleInput90" />
+            </div>
+            <p class="mt-1 text-xs italic text-rose-500" *ngIf="
+                submitForm.get('date')?.touched &&
+                submitForm.get('date')?.invalid
+              ">
+              * Date is required.
+            </p>
+          </div>
+          <!-- description -->
+          <div class="flex flex-col mb-4">
+            <label for="title" class="mb-1 text-gray-500 font-base">Description <span
+                class="text-red-500">*</span></label>
+            <div [ngClass]="{
+                'border border-rose-500 rounded':
+                  submitForm.get('description')?.touched &&
+                  submitForm.get('description')?.invalid
+              }">
+              <textarea type="text" rows="4" formControlName="description"
+                class="w-full px-2 py-1 border border-gray-300 rounded" id="exampleInput90">
+              </textarea>
+            </div>
+            <p class="mt-1 text-xs italic text-rose-500" *ngIf="
+                submitForm.get('description')?.touched &&
+                submitForm.get('description')?.invalid
+              ">
+              * Description is required.
+            </p>
+          </div>
+        </div>
+
+        <!--Modal footer-->
+        <div
+          class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100 dark:border-opacity-50">
+          <button type="button" (click)="reset()"
+            class="px-3 py-1 mr-2 text-white rounded bg-danger hover:bg-danger-600" data-te-modal-dismiss
+            data-te-ripple-init data-te-ripple-color="light">
+            Discard
+          </button>
+          <button type="submit"
+            class="px-3 py-1 text-white rounded bg-button-success hover:bg-success-600 disabled:bg-gray-300"
+            data-te-ripple-init data-te-modal-dismiss data-te-ripple-color="light" [disabled]="submitForm.invalid">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Sharing Modal -->
+<div data-te-modal-init class="fixed top-0 left-0 z-[1055] hidden h-full w-full mt-12 outline-none"
+  id="deleteSharingModal" tabindex="-1" aria-labelledby="deleteSharingModalLabel" aria-hidden="true"
+  data-te-backdrop="static" data-te-keyboard="false">
+  <div data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]">
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none">
+      <form>
+        <div class="p-6 text-center">
+          <svg aria-hidden="true" class="mx-auto mb-4 text-red-600 w-14 h-14" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="mb-5 text-lg font-normal text-gray-500">
+            Are you sure you want to delete this item? Once delete, it will no
+            longer be visible to our community.
+          </h3>
+          <button type="submit"
+            class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+            Yes, I'm sure
+          </button>
+          <button data-te-modal-dismiss type="button"
+            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">
+            No, cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

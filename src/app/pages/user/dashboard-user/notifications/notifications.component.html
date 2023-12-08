@@ -1,0 +1,159 @@
+<div class="mb-8">
+  <div class="w-full">
+    <div class="flex max-[600px]:flex-col min-[600px]:mx-5 justify-between w-full">
+      <div class="max-[600px]:ml-5">
+        <h1 class="min-[600px]:text-3xl text-xl" style="font-weight: 800;">Notification</h1>
+        <p class="font-semibold mb-5 text-success">List All Your Content</p>
+      </div>
+      <button (click)="showReadAllNotificationAlert()" type="button"
+        class="rounded-lg bg-primary max-[600px]:mx-5 px-3 py-2 text-white hover:bg-primary-700 h-fit">
+        <fa-icon [icon]="faEye" class="mr-2 text-white"></fa-icon> Read All
+      </button>
+    </div>
+    <div class="my-5 lg:ml-4 hp:mx-auto">
+      <ng-container *ngIf="notificationData.length === 0">
+        <div class="flex items-center justify-center min-h-screen font-semibold">
+          <h2>No data available.</h2>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="notificationData.length > 0">
+        <div class="flex min-h-screen gap-0">
+          <div class="flex flex-col justify-between flex-1">
+            <ng-container *ngIf="isLoading">
+              <div class="flex items-center justify-center h-full font-semibold">
+                <app-loading></app-loading>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!isLoading">
+              <ol class="mx-8">
+                <!--First item-->
+                <div class="mb-4 border-b-2 border-solid">
+                  <li>
+                    <div class="relative flex-start md:flex" *ngFor="
+                        let notification of notificationData;
+                        let i = index
+                      ">
+                      <ng-container *ngIf="!notification.isRead">
+                        <div class="absolute mt-4 -left-6">
+                          <fa-icon [icon]="faCircleDot" class="mr-4 text-soft-green">
+                          </fa-icon>
+                        </div>
+                      </ng-container>
+                      <div>
+                        <img [src]="soeSenders[i].personalImage" class="w-12 my-2 rounded-full p-auto" alt="avatar"
+                          loading="lazy" />
+                      </div>
+                      <div class="block max-w-full ml-6 rounded-lg">
+                        <div class="grid grid-cols-6 mb-4">
+                          <div class="col-span-5 text-start">
+                            <p class="font-semibold text-md">
+                              {{ soeSenders[i].personalName }}
+                            </p>
+                            <span class="font-normal text-md text-justify">
+                              {{ notification.description }}
+                              on {{ notification.title }}
+                            </span>
+                            <p class="my-2 text-sm italic text-gray-400">
+                              {{ formatDate(notification.createdAt) }}
+                            </p>
+                          </div>
+                          <div class="col-span-1 text-end">
+                            <button id="dropdownFeeds" role="button" data-te-dropdown-toggle-ref aria-expanded="false">
+                              <fa-icon [icon]="faEllipsisVertical" class="m-auto text-xl text-gray-500 p-auto">
+                              </fa-icon>
+                            </button>
+                            <ul
+                              class="absolute left-auto m-0 mt-1 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                              aria-labelledby="dropdownFeeds" data-te-dropdown-menu-ref>
+                              <li *ngIf="!notification.isRead">
+                                <button
+                                  class="block w-full px-4 py-2 text-sm font-normal text-left bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                                  data-te-dropdown-item-ref (click)="
+                                    readSelectedNotification(notification.uuid)
+                                  ">
+                                  Read
+                                </button>
+                              </li>
+                              <li>
+                                <button (click)="
+                                    deleteNotification(notification.uuid)
+                                  "
+                                  class="block w-full px-4 py-2 text-sm font-normal text-left bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                                  data-te-dropdown-item-ref>
+                                  Delete
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </div>
+              </ol>
+            </ng-container>
+
+            <form [formGroup]="mform">
+              <div class="flex justify-end w-full mt-4 -ml-16">
+                <!-- Pagination -->
+                <nav aria-label="Page navigation example">
+                  <ul class="flex mt-5 list-style-none place-self-center">
+                    <li class="mr-3 place-self-center">
+                      <p>Total : {{ totalData }}</p>
+                    </li>
+                    <li class="mr-1 place-self-center">
+                      <select class="px-2 py-1 border rounded boder-regal-blue place-self-center"
+                        formControlName="limit">
+                        <option [value]="5">5</option>
+                        <option [value]="10">10</option>
+                        <option [value]="30">30</option>
+                        <option [value]="50">50</option>
+                        <option [value]="100">100</option>
+                      </select>
+                    </li>
+                    <li class="mr-3 place-self-center">
+                      <p>Data</p>
+                    </li>
+                    <li class="px-2 py-1 text-white rounded place-self-center">
+                      <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()" [class]="
+                          this.mform.get('page')?.value > 1
+                            ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                            : 'place-self-center text-gray-500'
+                        "></fa-icon>
+                    </li>
+                    <li *ngFor="let numPage of pageData" class="place-self-center">
+                      <div [class]="
+                          numPage === this.mform.get('page')?.value
+                            ? 'relative block rounded px-3 py-1.5 text-base text-white transition-all duration-300 font-semibold bg-regal-blue'
+                            : 'cursor-pointer relative block rounded px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white'
+                        " (click)="changePage(numPage)">
+                        {{ numPage }}
+                      </div>
+                    </li>
+                    <li class="px-2 py-1 text-white rounded place-self-center">
+                      <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()" [class]="
+                          this.mform.get('page')?.value < pageData.length
+                            ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                            : 'place-self-center text-gray-500'
+                        "></fa-icon>
+                    </li>
+                    <li class="flex ml-3 flex-cols">
+                      <p class="mr-3 place-self-center">Go to Page</p>
+                      <select class="px-4 py-1 border rounded boder-regal-blue place-self-center"
+                        formControlName="page">
+                        <option *ngFor="let num of pageData" [value]="num">
+                          {{ num }}
+                        </option>
+                      </select>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </form>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

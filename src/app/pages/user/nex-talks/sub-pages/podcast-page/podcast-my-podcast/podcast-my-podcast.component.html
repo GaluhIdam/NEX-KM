@@ -1,0 +1,237 @@
+<!-- header -->
+<div class="px-20 mt-16">
+  <div class="mb-8">
+    <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+      <a class="mr-3 text-gray-400 cursor-pointer" (click)="onGoHomePage()"
+        >Home</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a (click)="onGoToNexTalkPage()" class="mr-3 text-gray-400 cursor-pointer"
+        >Nex Talk</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a routerLink="/user/nex-talks/podcast" class="mr-3 text-gray-400"
+        >Podcast</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <p class="mr-3 text-black activeLink">My Podcast</p>
+    </div>
+  </div>
+</div>
+
+<div class="px-20 mt-8 mb-10 text-center">
+  <h1 class="text-5xl font-semibold text-blue-800 font">Welcome GMF Heroes!</h1>
+  <p class="mt-4 font-semibold text-gray-500">Upload your podcast now</p>
+</div>
+
+<!-- My Podcast -->
+<section>
+  <div class="px-20">
+    <div
+      class="flex items-center justify-between mt-10 mb-5 sm:flex-row xs:flex-col"
+    >
+      <p class="text-4xl font-semibold text-blue-800">My Podcast</p>
+      <ng-container *ngIf="creatorData.length > 0">
+        <div class="flex flex-row items-center gap-2 text-center">
+          <p class="text-lg font-semibold text-blue-800">Channel Status:</p>
+
+          <ng-container [ngSwitch]="creatorData[0].approvalStatus">
+            <div
+              *ngSwitchCase="'Approved'"
+              class="p-2 text-white rounded-lg bg-success"
+            >
+              {{ creatorData[0].approvalStatus }}
+            </div>
+            <div
+              *ngSwitchCase="'Rejected'"
+              class="p-2 text-white rounded-lg bg-danger"
+            >
+              {{ creatorData[0].approvalStatus }}
+            </div>
+            <div
+              *ngSwitchCase="'Waiting Approval'"
+              class="p-2 text-white rounded-lg bg-orange"
+            >
+              {{ creatorData[0].approvalStatus }}
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <hr />
+    <!-- Body -->
+
+    <ng-container *ngIf="isLoading">
+      <div class="flex items-center justify-center h-screen font-semibold">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!isLoading">
+      <div class="grid grid-cols-4 mt-4 mb-8">
+        <div>
+          <p class="text-gray-400">Total Podcast: {{ totalPodcast }}</p>
+        </div>
+        <div class="col-span-3 text-right">
+          <button
+            type="button"
+            (click)="onClickAction('upload-podcast')"
+            class="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-base font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+          >
+            <fa-icon [icon]="faVolumeHigh" class="mr-3 text-white"></fa-icon>
+
+            Upload Podcast
+          </button>
+          <span class="ml-3 text-gray-400">Or</span>
+          <button
+            type="button"
+            (click)="onClickAction('create-series')"
+            class="ml-3 inline-block rounded border-2 border-primary px-6 pt-2 pb-[6px] text-base font-medium leading-normal text-primary transition duration-150 ease-in-out hover:border-primary-600 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-primary-600 focus:border-primary-600 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
+            data-te-ripple-init
+          >
+            <fa-icon [icon]="faPlus" class="mr-3 text-primary"></fa-icon>
+            Create New Series
+          </button>
+
+          <button
+            type="button"
+            (click)="
+              creatorData.length === 0
+                ? onCreateCreatorClick()
+                : onEditCreatorClick()
+            "
+            class="ml-3 inline-block rounded border-2 border-primary px-6 pt-2 pb-[6px] text-base font-medium leading-normal text-primary transition duration-150 ease-in-out hover:border-primary-600 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-primary-600 focus:border-primary-600 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10"
+            data-te-ripple-init
+          >
+            {{ creatorData.length === 0 ? "Create Channel" : "Edit Channel" }}
+          </button>
+        </div>
+      </div>
+
+      <ng-container *ngIf="serieData.length > 0; else emptySerieData">
+        <div class="flex flex-col justify-between h-screen">
+          <div class="grid gap-5 mt-3 lg:grid-cols-4 xs:grid-cols-2">
+            <!-- Loop here -->
+            <ng-container *ngFor="let data of serieData; let i = index">
+              <div class="block max-w-sm text-center rounded-lg cursor-pointer">
+                <div class="relative">
+                  <div class="relative">
+                    <img
+                      class="w-full h-64 shadow-lg rounded-xl"
+                      [src]="data.path"
+                      alt=""
+                      (click)="myPodcastDetail(data, data.uuid)"
+                    />
+                    <button
+                      type="button"
+                      (click)="onSelectPodcastListToPlay(data, i)"
+                      class="absolute w-10 h-10 rounded-full bottom-2 right-2 hover:shadow-xl hover:w-12 hover:h-12 bg-primary text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-primary-600 focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-8 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                    >
+                      <ng-container *ngIf="!data.isPause">
+                        <fa-icon
+                          [icon]="faPlay"
+                          class="text-base text-white"
+                        ></fa-icon>
+                      </ng-container>
+                      <ng-container *ngIf="data.isPause">
+                        <fa-icon
+                          [icon]="faPause"
+                          class="text-base text-white"
+                        ></fa-icon>
+                      </ng-container>
+                    </button>
+                  </div>
+                </div>
+                <h5
+                  class="mt-4 mb-2 text-xl font-semibold leading-tight text-neutral-800"
+                >
+                  {{ data.title }}
+                </h5>
+                <p class="mb-4 text-base text-neutral-600">
+                  {{ data.creator.name }}
+                </p>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Pagination -->
+          <div
+            class="flex items-center justify-start mt-5"
+            *ngIf="paginator && !isLoading"
+          >
+            <h1 class="mr-5">Total : {{ paginator.totalData }}</h1>
+            <div class="flex items-center justify-start mx-10">
+              <span class="text-sm">Show</span>
+              <select
+                *ngIf="paginator"
+                [(ngModel)]="paginator.pageSize"
+                (ngModelChange)="changePageSize()"
+                class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+              >
+                <option
+                  *ngFor="let size of paginator?.pageOption"
+                  [ngValue]="size"
+                >
+                  {{ size }} data
+                </option>
+              </select>
+            </div>
+            <div class="flex items-center justify-center mx-3">
+              <button
+                type="button"
+                (click)="changePageNumber(false)"
+                [disabled]="paginator.pageNumber == 1"
+                [class]="
+                  paginator.pageNumber == 1 ? 'bg-gray-200' : 'bg-gray-50'
+                "
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300"
+              >
+                Previous
+              </button>
+              <!-- <button
+                      class="ml-2 text-gray-400"
+                      (click)="goToPageNumberByPageClick(i + 1)"
+                      *ngFor="let page of pages; let i = index"
+                    >
+                      {{ i + 1 }}
+                    </button> -->
+              <button
+                type="button"
+                (click)="changePageNumber(true)"
+                [disabled]="paginator.pageNumber == paginator.totalPage"
+                [class]="
+                  paginator.pageNumber == paginator.totalPage
+                    ? 'bg-gray-200'
+                    : 'bg-gray-50'
+                "
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300 ml-2"
+              >
+                Next
+              </button>
+            </div>
+            <h1 class="w-fit">Go to Page</h1>
+            <select
+              *ngIf="paginator"
+              [(ngModel)]="paginator.pageNumber"
+              (ngModelChange)="goToPageNumberByPageSelect($event)"
+              class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+            >
+              <option
+                *ngFor="let page of pages; let i = index"
+                [ngValue]="i + 1"
+              >
+                {{ i + 1 }}
+              </option>
+            </select>
+          </div>
+          <!-- Pagination -->
+        </div>
+      </ng-container>
+      <ng-template #emptySerieData>
+        <div class="flex items-center justify-center h-screen">
+          <h2>No Podcast available.</h2>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</section>

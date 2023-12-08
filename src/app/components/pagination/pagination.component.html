@@ -1,0 +1,47 @@
+<div class="flex justify-end w-full mt-4 -ml-16">
+    <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="flex mt-5 list-style-none place-self-center">
+            <!-- <li class="mr-3 place-self-center">
+                <p>Total : {{ totalData }}</p>
+              </li>
+              <li class="mr-1 place-self-center">
+                <select class="px-2 py-1 border rounded boder-regal-blue place-self-center" formControlName="limit">
+                  <option [value]="5">5</option>
+                  <option [value]="10">10</option>
+                  <option [value]="30">30</option>
+                  <option [value]="50">50</option>
+                  <option [value]="100">100</option>
+                </select>
+              </li> -->
+            <li class="mr-3 place-self-center">
+                <p>Data</p>
+            </li>
+            <li class="px-2 py-1 text-white rounded place-self-center">
+                <fa-icon [icon]="faCircleChevronLeft" (click)="onPageChange(currentPage - 1)"
+                    [class]="currentPage > 1 ? 'cursor-pointer place-self-center hover:text-black text-regal-blue' : 'place-self-center text-gray-500'"></fa-icon>
+            </li>
+            <!-- <li *ngFor="let numPage of pageData" class="place-self-center">
+                <div [class]="
+                                    numPage === currentPage
+                                      ? 'relative block rounded px-3 py-1.5 text-base text-white transition-all duration-300 font-semibold bg-regal-blue'
+                                      : 'cursor-pointer relative block rounded px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white'
+                                  " (click)="changePage(numPage)">
+                    {{ numPage }}
+                </div>
+            </li> -->
+            <li class="px-2 py-1 text-white rounded place-self-center">
+                <fa-icon [icon]="faCircleChevronRight" (click)="onPageChange(currentPage + 1)"
+                    [class]=" currentPage === totalPages ? 'cursor-pointer place-self-center hover:text-black text-regal-blue' : 'place-self-center text-gray-500'"></fa-icon>
+            </li>
+            <!-- <li class="flex ml-3 flex-cols">
+                <p class="mr-3 place-self-center">Go to Page</p>
+                <select class="px-4 py-1 border rounded boder-regal-blue place-self-center" formControlName="page">
+                    <option *ngFor="let num of pageData" [value]="num">
+                        {{ num }}
+                    </option>
+                </select>
+            </li> -->
+        </ul>
+    </nav>
+</div>

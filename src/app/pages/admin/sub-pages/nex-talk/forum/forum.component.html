@@ -1,0 +1,942 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX TALK</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">{{ title?.title }}</h1>
+      <div class="flex justify-start mt-5">
+        <h1 class="text-gray-400">{{ title?.title }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="isStatisticLoading && !forumStatisticData">
+  <div class="flex items-center justify-center w-full h-56">
+    <app-loading></app-loading>
+  </div>
+</ng-container>
+<ng-container *ngIf="!isStatisticLoading && forumStatisticData">
+  <div class="grid grid-cols-4 gap-5 mt-5">
+    <div class="p-5 bg-white border-2 shadow border-regal-blue rounded-xl">
+      <h1 class="text-2xl">Forum Creation - All Time</h1>
+      <h1 class="mt-3 text-4xl font-semibold text-gray-700">
+        {{ forumStatisticData.totalAllCreations }}
+      </h1>
+      <p class="text-gray-400">forums have been created</p>
+    </div>
+    <div class="p-5 bg-white border-2 shadow border-regal-blue rounded-xl">
+      <h1 class="text-2xl">Forum Creation - This Month</h1>
+      <div class="flex">
+        <h1 class="mt-3 mr-4 text-4xl font-semibold text-gray-700">
+          {{ forumStatisticData.totalCreationCurrentMonth }}
+        </h1>
+        <div
+          class="flex items-center"
+          [ngClass]="{
+            'text-success':
+              forumStatisticData.isCurrentMonthGreaterThanBeforeMonth,
+            'text-danger':
+              !forumStatisticData.isCurrentMonthGreaterThanBeforeMonth
+          }"
+        >
+          <ng-container *ngIf="forumData.length > 0">
+            <fa-icon
+              [icon]="
+                forumStatisticData.isCurrentMonthGreaterThanBeforeMonth
+                  ? faArrowUp
+                  : faArrowDown
+              "
+            ></fa-icon>
+            <p class="ml-2 text-xs">
+              {{ forumStatisticData.totalCurrentMonthPersentage }}% more than
+              last month
+            </p>
+          </ng-container>
+        </div>
+      </div>
+      <p class="text-gray-400">forums have been created this month</p>
+    </div>
+    <div class="p-5 bg-white border-2 shadow border-regal-blue rounded-xl">
+      <h1 class="text-2xl">Published</h1>
+      <h1 class="mt-3 text-4xl font-semibold text-gray-700">
+        {{ forumStatisticData.totalCreationPublished }}
+      </h1>
+      <p class="text-gray-400">forums have been published</p>
+    </div>
+    <div class="p-5 bg-white border-2 shadow border-regal-blue rounded-xl">
+      <h1 class="text-2xl">Need Approval</h1>
+      <h1 class="mt-3 text-4xl font-semibold text-gray-700">
+        {{ forumStatisticData.totalCreationNeedApproval }}
+      </h1>
+      <p class="text-gray-400">forums waiting to be approved</p>
+    </div>
+  </div>
+</ng-container>
+
+<div class="mt-5 bg-white rounded-lg shadow">
+  <div>
+    <div class="grid grid-cols-2 gap-1">
+      <div class="flex justify-start p-5 h-fit w-fit">
+        <div
+          class="relative flex flex-wrap items-stretch w-full bg-white border rounded-lg border-1"
+        >
+          <button
+            class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+            type="button"
+            id="button-addon1"
+          >
+            <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+          </button>
+          <input
+            type="text"
+            class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+            placeholder="Search"
+            aria-label="Example text with button addon"
+            aria-describedby="button-addon1"
+            (keyup)="searchByField($event)"
+          />
+        </div>
+      </div>
+      <div class="flex justify-end p-5 place-items-center">
+        <button
+          class="px-2 py-2 mx-2 border rounded-lg border-1 hover:bg-success hover:text-white border-success text-success h-fit"
+        >
+          <fa-icon [icon]="faFilter"></fa-icon> Filter
+        </button>
+        <button
+          class="px-2 py-2 mx-2 border rounded-lg border-1 hover:bg-success hover:text-white border-success text-success h-fit"
+        >
+          <fa-icon [icon]="faPrint"></fa-icon> Export To Excel
+        </button>
+      </div>
+    </div>
+    <div class="flex flex-col overflow-x-auto">
+      <div class="p-5">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm font-light text-left">
+            <thead
+              class="w-full font-medium text-gray-600 bg-gray-100 border-b border-gray-500"
+            >
+              <tr class="w-full">
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  No
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Forum Title
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Category
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Overview
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Likes
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Comment
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Created By
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Unit
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Date Created
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Status
+                </th>
+                <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody class="w-full">
+              <ng-container *ngIf="isLoading">
+                <tr>
+                  <td colspan="12" class="items-center h-40 py-5">
+                    <app-loading></app-loading>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="!isLoading">
+                <tr
+                  class="w-full border-b dark:border-neutral-500"
+                  *ngFor="let forum of forumData; let i = index"
+                >
+                  <td
+                    class="px-6 py-4 font-medium text-center whitespace-nowrap"
+                  >
+                    {{ (dataRequest?.offset ?? 1) + (i + 1) }}
+                  </td>
+                  <td class="px-6 py-4 text-center whitespace-nowrap">
+                    <ng-container *ngIf="forum.title.length <= 20">
+                      {{ forum.title }}
+                    </ng-container>
+                    <ng-container *ngIf="forum.title.length > 20">
+                      <app-table-row-longest-text-tooltip
+                        [substringLength]="20"
+                        [name]="forum.title"
+                        [showToolTip]="showTooltips[i]"
+                        [columnHover]="tableColumnHovers[1]"
+                      ></app-table-row-longest-text-tooltip>
+                    </ng-container>
+                  </td>
+                  <td class="px-6 py-4 text-center whitespace-nowrap">
+                    <ng-container *ngIf="forum.talkCategory.name.length <= 20">
+                      {{ forum.talkCategory.name }}
+                    </ng-container>
+                    <ng-container *ngIf="forum.talkCategory.name.length > 20">
+                      <app-table-row-longest-text-tooltip
+                        [substringLength]="20"
+                        [name]="forum.talkCategory.name"
+                        [showToolTip]="showTooltips[i]"
+                        [columnHover]="tableColumnHovers[2]"
+                      ></app-table-row-longest-text-tooltip>
+                    </ng-container>
+                  </td>
+                  <td class="px-6 py-4 text-center whitespace-nowrap">
+                    <ng-container
+                      *ngIf="parsedForumDescriptions[i].length <= 20"
+                    >
+                      <div [innerHTML]="parsedForumDescriptions[i]"></div>
+                    </ng-container>
+                    <ng-container
+                      *ngIf="parsedForumDescriptions[i].length > 20"
+                    >
+                      <app-table-row-longest-text-tooltip
+                        [substringLength]="20"
+                        [name]="parsedForumDescriptions[i]"
+                        [showToolTip]="showTooltips[i]"
+                        [columnHover]="tableColumnHovers[3]"
+                      ></app-table-row-longest-text-tooltip>
+                    </ng-container>
+                  </td>
+                  <td class="px-6 py-4 text-center whitespace-nowrap">
+                    {{ forum.likeCount }}
+                  </td>
+                  <td class="px-6 py-4 text-center whitespace-nowrap">
+                    {{ forum.forumComment.length }}
+                  </td>
+                  <td class="px-6 py-4 text-center whitespace-nowrap">
+                    {{ forum.createdBy }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">{{ forum.unit }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    {{ formattedDate(forum.createdAt) }}
+                  </td>
+                  <td class="px-6 py-4 text-center whitespace-nowrap">
+                    <div
+                      *ngIf="forum.status === true"
+                      class="p-2 text-white rounded-lg bg-primary"
+                    >
+                      Active
+                    </div>
+                    <div
+                      *ngIf="forum.status === false"
+                      class="p-2 text-white rounded-lg bg-danger"
+                    >
+                      Not Active
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex justify-center">
+                      <button
+                        (click)="onGotoForumDetail(forum.uuid)"
+                        class="px-2 py-1 mx-1 border rounded-lg w-fit text-primary border-1 border-primary"
+                      >
+                        <fa-icon [icon]="faEye"></fa-icon>
+                      </button>
+                      <!-- <button
+                        type="button"
+                        data-te-toggle="modal"
+                        class="px-2 py-1 mx-1 border rounded-lg w-fit text-success border-1 border-success"
+                        data-te-target="#approval"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        (click)="onSelectForum(forum)"
+                      >
+                        <fa-icon [icon]="faCircleCheck"></fa-icon>
+                      </button> -->
+                      <button
+                        type="button"
+                        data-te-toggle="modal"
+                        class="px-2 py-1 mx-1 border rounded-lg w-fit text-orange border-1 border-orange"
+                        data-te-target="#selectEditorChosen"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        [hidden]="forum.editorChoice === true"
+                        (click)="onSelectForum(forum)"
+                      >
+                        <fa-icon [icon]="faStar"></fa-icon>
+                      </button>
+                      <button
+                        type="button"
+                        data-te-toggle="modal"
+                        class="px-2 py-1 mx-1 border rounded-lg w-fit text-success border-1 border-success"
+                        data-te-target="#unselectEditorChosen"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        [hidden]="forum.editorChoice === false"
+                        (click)="onSelectForum(forum)"
+                      >
+                        <fa-icon [icon]="faStar"></fa-icon>
+                      </button>
+                      <button
+                        type="button"
+                        data-te-toggle="modal"
+                        class="px-2 py-1 mx-1 border rounded-lg w-fit text-danger border-1 border-danger"
+                        data-te-target="#deactivate"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        [hidden]="forum.status === false"
+                        (click)="onSelectForum(forum)"
+                      >
+                        <fa-icon [icon]="faBan"></fa-icon>
+                      </button>
+                      <button
+                        type="button"
+                        data-te-toggle="modal"
+                        class="px-2 py-1 mx-1 border rounded-lg w-fit text-primary border-1 border-primary"
+                        data-te-target="#activate"
+                        data-te-ripple-init
+                        data-te-ripple-color="light"
+                        [hidden]="forum.status === true"
+                        (click)="onSelectForum(forum)"
+                      >
+                        <fa-icon [icon]="faRefresh"></fa-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="forumData.length === 0">
+                  <td
+                    colspan="13"
+                    class="items-center h-40 py-5 font-bold text-center text-gray-500"
+                  >
+                    No data available
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <!-- Table Pagination -->
+          <div
+            class="flex items-center justify-start mt-5"
+            *ngIf="paginator && !isLoading"
+          >
+            <h1 class="mr-5">Total : {{ paginator.totalData }}</h1>
+            <div class="flex items-center justify-start mx-10">
+              <span class="text-sm">Show</span>
+              <select
+                *ngIf="paginator"
+                [(ngModel)]="paginator.pageSize"
+                (ngModelChange)="changePageSize()"
+                class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+              >
+                <option
+                  *ngFor="let size of paginator?.pageOption"
+                  [ngValue]="size"
+                >
+                  {{ size }} data
+                </option>
+              </select>
+            </div>
+            <div class="flex items-center justify-center mx-3">
+              <button
+                type="button"
+                (click)="changePageNumber(false)"
+                [disabled]="paginator.pageNumber == 1"
+                [class]="
+                  paginator.pageNumber == 1 ? 'bg-gray-200' : 'bg-gray-50'
+                "
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300"
+              >
+                Previous
+              </button>
+              <!-- <button
+            class="ml-2 text-gray-400"
+            (click)="goToPageNumberByPageClick(i + 1)"
+            *ngFor="let page of pages; let i = index"
+          >
+            {{ i + 1 }}
+          </button> -->
+              <button
+                type="button"
+                (click)="changePageNumber(true)"
+                [disabled]="paginator.pageNumber == paginator.totalPage"
+                [class]="
+                  paginator.pageNumber == paginator.totalPage
+                    ? 'bg-gray-200'
+                    : 'bg-gray-50'
+                "
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300 ml-2"
+              >
+                Next
+              </button>
+            </div>
+            <h1 class="w-fit">Go to Page</h1>
+            <select
+              *ngIf="paginator"
+              [(ngModel)]="paginator.pageNumber"
+              (ngModelChange)="goToPageNumberByPageSelect($event)"
+              class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+            >
+              <option
+                *ngFor="let page of pages; let i = index"
+                [ngValue]="i + 1"
+              >
+                {{ i + 1 }}
+              </option>
+            </select>
+          </div>
+          <!-- Table Pagination -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Approval Cofirmation -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="approval"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          {{
+            isRejectionChoose
+              ? "Message for Rejection"
+              : "Confirm Approval or Rejection"
+          }}
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <!-- Approval or Rejection Cofirmation -->
+      <ng-container *ngIf="!isRejectionChoose">
+        <div
+          class="relative flex-auto p-4 text-center place-items-center"
+          data-te-modal-body-ref
+        >
+          <div class="flex justify-center">
+            <h1
+              class="p-2 text-4xl text-center border rounded-lg border-1 border-success w-fit text-success"
+            >
+              <fa-icon [icon]="faCircleCheck"></fa-icon>
+            </h1>
+          </div>
+          <p class="mt-5 text-center">
+            Please confirm whether you want to approve or reject this request.
+          </p>
+        </div>
+        <div
+          class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+        >
+          <button
+            type="button"
+            class="inline-block px-5 py-2 text-white bg-gray-500 rounded-lg"
+            data-te-modal-dismiss
+            data-te-ripple-init
+            data-te-ripple-color="light"
+          >
+            <fa-icon [icon]="faXmark"></fa-icon>
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-danger"
+            data-te-ripple-init
+            data-te-ripple-color="light"
+            (click)="onChooseRejection(true)"
+          >
+            <fa-icon [icon]="faBan"></fa-icon>
+            Reject
+          </button>
+          <button
+            type="button"
+            class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success"
+            data-te-ripple-init
+            data-te-modal-dismiss
+            data-te-ripple-color="light"
+            (click)="changeForumStatusApproval()"
+          >
+            <fa-icon [icon]="faCircleCheck"></fa-icon>
+            Approve
+          </button>
+        </div>
+      </ng-container>
+      <!-- Approval or Rejection Cofirmation -->
+
+      <!-- Rejection Cofirmation -->
+      <ng-container *ngIf="isRejectionChoose">
+        <form
+          [formGroup]="forumRejectionApprovalForm"
+          (ngSubmit)="onSubmitRejectionForm()"
+        >
+          <div class="relative flex-auto p-4" data-te-modal-body-ref>
+            <div>
+              <p class="mb-3 font-medium">
+                Message <span class="text-danger">*</span>
+              </p>
+              <textarea
+                name="approvalMessage"
+                formControlName="approvalMessage"
+                rows="4"
+                class="w-full px-3 py-3 bg-gray-100 rounded-lg"
+                placeholder="Input Your Description Here"
+              ></textarea>
+              <div
+                *ngIf="
+                  !approvalMessage?.valid &&
+                  (approvalMessage?.dirty || approvalMessage?.touched)
+                "
+              >
+                <small
+                  class="text-red-800"
+                  [hidden]="!approvalMessage?.errors?.['required']"
+                >
+                  Message is required
+                </small>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+          >
+            <button
+              type="button"
+              class="inline-block px-5 py-2 text-white bg-gray-500 rounded-lg"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              (click)="onChooseRejection(false)"
+            >
+              <fa-icon [icon]="faXmark"></fa-icon>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-danger disabled:bg-gray-500"
+              data-te-ripple-init
+              data-te-ripple-color="light"
+              data-te-modal-dismiss
+              [disabled]="forumRejectionApprovalForm.status === 'INVALID'"
+            >
+              <fa-icon [icon]="faBan"></fa-icon>
+              Reject
+            </button>
+          </div>
+        </form>
+      </ng-container>
+      <!-- Rejection Cofirmation -->
+    </div>
+  </div>
+</div>
+
+<!-- Select Editor Choice -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="selectEditorChosen"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          Editor Choice Confirmation
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="relative flex-auto p-4 text-center place-items-center"
+        data-te-modal-body-ref
+      >
+        <div class="flex justify-center">
+          <h1
+            class="p-2 text-4xl text-center border rounded-lg border-1 border-orange w-fit text-orange"
+          >
+            <fa-icon [icon]="faStar"></fa-icon>
+          </h1>
+        </div>
+        <p class="mt-5 text-center">
+          Are you sure you want to select this item as an Editor's Choice?
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+      >
+        <button
+          type="button"
+          class="inline-block px-5 py-2 text-white rounded-lg bg-danger"
+          data-te-modal-dismiss
+          data-te-ripple-init
+          data-te-ripple-color="light"
+        >
+          <fa-icon [icon]="faXmark"></fa-icon>
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success"
+          data-te-ripple-init
+          data-te-ripple-color="light"
+          data-te-modal-dismiss
+          (click)="changeForumEditorChoiceChange(true)"
+        >
+          <fa-icon [icon]="faCircleCheck"></fa-icon>
+          Sure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Unselect Editor Choice -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="unselectEditorChosen"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          Editor Choice Confirmation
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="relative flex-auto p-4 text-center place-items-center"
+        data-te-modal-body-ref
+      >
+        <div class="flex justify-center">
+          <h1
+            class="p-2 text-4xl text-center border rounded-lg border-1 border-success w-fit text-success"
+          >
+            <fa-icon [icon]="faStar"></fa-icon>
+          </h1>
+        </div>
+        <p class="mt-5 text-center">
+          Are you sure you want to unselect this item as an Editor's Choice?
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+      >
+        <button
+          type="button"
+          class="inline-block px-5 py-2 text-white rounded-lg bg-danger"
+          data-te-modal-dismiss
+          data-te-ripple-init
+          data-te-ripple-color="light"
+        >
+          <fa-icon [icon]="faXmark"></fa-icon>
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success"
+          data-te-ripple-init
+          data-te-modal-dismiss
+          data-te-ripple-color="light"
+          (click)="changeForumEditorChoiceChange(false)"
+        >
+          <fa-icon [icon]="faCircleCheck"></fa-icon>
+          Sure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Deactivation -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="deactivate"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          Confirm Deactivation
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="relative flex-auto p-4 text-center place-items-center"
+        data-te-modal-body-ref
+      >
+        <div class="flex justify-center">
+          <h1
+            class="p-2 text-4xl text-center border rounded-lg border-1 border-danger w-fit text-danger"
+          >
+            <fa-icon [icon]="faBan"></fa-icon>
+          </h1>
+        </div>
+        <p class="mt-5 text-center">
+          Are you sure you want to deactivate this item? Once deactivated, it
+          will no longer be visible to our community and all links to the
+          article will no longer work.
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+      >
+        <button
+          type="button"
+          class="inline-block px-5 py-2 text-white rounded-lg bg-danger"
+          data-te-modal-dismiss
+          data-te-ripple-init
+          data-te-ripple-color="light"
+        >
+          <fa-icon [icon]="faXmark"></fa-icon>
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success"
+          data-te-ripple-init
+          data-te-modal-dismiss
+          data-te-ripple-color="light"
+          (click)="changeForumStatus(false)"
+        >
+          <fa-icon [icon]="faCircleCheck"></fa-icon>
+          Sure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Activation -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="activate"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          Confirm Activation
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="relative flex-auto p-4 text-center place-items-center"
+        data-te-modal-body-ref
+      >
+        <div class="flex justify-center">
+          <h1
+            class="p-2 text-4xl text-center border rounded-lg border-1 border-primary w-fit text-primary"
+          >
+            <fa-icon [icon]="faRefresh"></fa-icon>
+          </h1>
+        </div>
+        <p class="mt-5 text-center">
+          Are you sure you want to Activate this item? Once Activated, it will
+          be visible to our community again and all links to the article will
+          work.
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+      >
+        <button
+          type="button"
+          class="inline-block px-5 py-2 text-white rounded-lg bg-danger"
+          data-te-modal-dismiss
+          data-te-ripple-init
+          data-te-ripple-color="light"
+        >
+          <fa-icon [icon]="faXmark"></fa-icon>
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success"
+          data-te-ripple-init
+          data-te-modal-dismiss
+          data-te-ripple-color="light"
+          (click)="changeForumStatus(true)"
+        >
+          <fa-icon [icon]="faCircleCheck"></fa-icon>
+          Sure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- trigger modal pop up -->
+<button data-te-toggle="modal"></button>
+<!-- trigger modal pop up -->

@@ -1,0 +1,162 @@
+<div class="col-span-2 lg:-ml-8">
+  <div class="mb-8">
+    <div
+      class="max-w-full overflow-hidden border-2 border-gray-300 border-solid lg:mx-8 hp:mx-0 bg-gray-50 rounded-3xl"
+    >
+      <div class="border-b-2 border-solid">
+        <div class="grid lg:grid-cols-2 hp:grid-cols-1">
+          <div>
+            <p class="my-5 ml-4 text-lg font-semibold">Sharing Experience</p>
+          </div>
+        </div>
+      </div>
+      <div class="my-5 lg:ml-4 hp:mx-auto">
+        <ng-container *ngIf="dataSharing.length === 0">
+          <div
+            class="flex items-center justify-center min-h-screen font-semibold"
+          >
+            <h2>No data available.</h2>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="dataSharing.length > 0">
+          <!-- Profile Name Picture -->
+          <div class="flex min-h-screen gap-0">
+            <div class="flex flex-col justify-between flex-1">
+              <ng-container *ngIf="isLoading">
+                <div
+                  class="flex items-center justify-center h-full font-semibold"
+                >
+                  <app-loading></app-loading>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!isLoading">
+                <ol class="mx-12 border-l-2 border-gray-300 border-solid">
+                  <!--First item-->
+                  <li>
+                    <div
+                      class="flex-start md:flex"
+                      *ngFor="let sharing of dataSharing"
+                    >
+                      <div
+                        class="-ml-[10px] flex h-[25px] w-[25px] items-center justify-center rounded-full bg-info-100 text-button-success"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          class="w-4 h-4"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3
+                      3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zm13.5 9a1.5 1.5
+                      0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <div class="block max-w-full mb-10 ml-6 rounded-lg">
+                        <div class="grid mb-4 lg:grid-cols-3">
+                          <div class="col-span-1">
+                            <p class="font-semibold text-md">
+                              {{ sharing.title }}
+                            </p>
+                          </div>
+                        </div>
+                        <p class="my-2 text-sm italic text-gray-400">
+                          {{ sharing.place }}
+                        </p>
+                        <p class="">{{ sharing.description }}</p>
+                      </div>
+                    </div>
+                  </li>
+                </ol>
+              </ng-container>
+
+              <form [formGroup]="mform">
+                <div class="flex justify-end w-full mt-4 -ml-16">
+                  <!-- Pagination -->
+                  <nav aria-label="Page navigation example">
+                    <ul class="flex mt-5 list-style-none place-self-center">
+                      <li class="mr-3 place-self-center">
+                        <p>Total : {{ totalData }}</p>
+                      </li>
+                      <li class="mr-1 place-self-center">
+                        <select
+                          class="px-2 py-1 border rounded boder-regal-blue place-self-center"
+                          formControlName="limit"
+                        >
+                          <option [value]="5">5</option>
+                          <option [value]="10">10</option>
+                          <option [value]="30">30</option>
+                          <option [value]="50">50</option>
+                          <option [value]="100">100</option>
+                        </select>
+                      </li>
+                      <li class="mr-3 place-self-center">
+                        <p>Data</p>
+                      </li>
+                      <li
+                        class="px-2 py-1 text-white rounded place-self-center"
+                      >
+                        <fa-icon
+                          [icon]="faCircleChevronLeft"
+                          (click)="prevPage()"
+                          [class]="
+                            this.mform.get('page')?.value > 1
+                              ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                              : 'place-self-center text-gray-500'
+                          "
+                        ></fa-icon>
+                      </li>
+                      <li
+                        *ngFor="let numPage of pageData"
+                        class="place-self-center"
+                      >
+                        <div
+                          [class]="
+                            numPage === this.mform.get('page')?.value
+                              ? 'relative block rounded px-3 py-1.5 text-base text-white transition-all duration-300 font-semibold bg-regal-blue'
+                              : 'cursor-pointer relative block rounded px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white'
+                          "
+                          (click)="changePage(numPage)"
+                        >
+                          {{ numPage }}
+                        </div>
+                      </li>
+                      <li
+                        class="px-2 py-1 text-white rounded place-self-center"
+                      >
+                        <fa-icon
+                          [icon]="faCircleChevronRight"
+                          (click)="nextPage()"
+                          [class]="
+                            this.mform.get('page')?.value < pageData.length
+                              ? 'cursor-pointer place-self-center hover:text-black text-regal-blue'
+                              : 'place-self-center text-gray-500'
+                          "
+                        ></fa-icon>
+                      </li>
+                      <li class="flex ml-3 flex-cols">
+                        <p class="mr-3 place-self-center">Go to Page</p>
+                        <select
+                          class="px-4 py-1 border rounded boder-regal-blue place-self-center"
+                          formControlName="page"
+                        >
+                          <option *ngFor="let num of pageData" [value]="num">
+                            {{ num }}
+                          </option>
+                        </select>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </form>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

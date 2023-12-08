@@ -1,0 +1,98 @@
+<form [formGroup]="mform">
+  <div class="md:px-20 px-5 mt-10">
+
+    <!-- Tab Nav and Button -->
+    <div class="mb-5 md:my-10 mt-5 max-[600px]:hidden">
+      <div class="grid min-[600px]:grid-cols-2 max-[600px]:grid-rows-2 gap-4 flex">
+        <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+          <a class="text-gray-400 mr-3 hover:text-black" routerLink="/">Home</a>
+          <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+          <a routerLink="/user/nex-learning" class="text-gray-400 mr-3 hover:text-black">Nex Learning</a>
+          <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+          <p class="font-bold r-3 activeLink">Inspirational Story</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tab Nav and Button -->
+    <p class="md:text-4xl text-3xl font-semibold text-primary">Inspirational Story</p>
+    <div class="grid lg:grid-cols-2 xs:grid-cols-1 flex justify-between">
+      <div>
+        <p class="text-xl mt-4 font-semibold">Explore</p>
+        <p class="text-base text-gray-400">What are you gonna watch today ?</p>
+      </div>
+      <div class="mb-3 mt-2">
+        <div class="relative mb-4 flex w-full flex-wrap items-stretch rounded-lg">
+          <input type="search" formControlName="search"
+            class="relative m-0 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+            placeholder="Search" aria-label="Search" aria-describedby="button-addon1" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Loop Here -->
+  <div class="grid lg:grid-cols-2 gap-2">
+    <div class="flex flex-col mt-5 place-self-center rounded-lg w-full min-[600px]:px-20"
+      *ngFor="let row of inspiStory">
+      <div class="max-[600px]:w-full min-[600px]:w-full">
+        <div class="w-full" mat-card-image plyr [plyrPoster]="row.cover"
+          [plyrOptions]="{ autoplay: false, controls: ['play', 'mute', 'progress'], clickToPlay: true }"
+          [plyrTitle]="'Custom video'" [plyrPlaysInline]="true" [plyrCrossOrigin]="false" [plyrSources]="[{
+                                  src: row.path,
+                        type: 'video/mp4',
+                        size: 576,
+                        provider: 'html5'
+                          }]" (plyrInit)="player = $event" (plyrPlay)="played($event)"></div>
+      </div>
+      <div class="flex flex-col md:ml-5 mt-3 mb-5 content-center max-[600px]:px-5">
+        <div class="flex flex-row mt-2">
+          <img [src]="photo" class="mr-3 rounded-full" style="width: 45px; height: 45px;">
+          <div class="flex flex-col">
+            <strong class="md:text-xl text-sm tracking-tight hover:text-primary cursor-pointer min-[600px]:hidden"
+              (click)="viewStory(row.uuid)">{{ trimString(row.title, 82) }}</strong>
+            <strong class="md:text-xl text-sm tracking-tight hover:text-primary cursor-pointer max-[600px]:hidden"
+              (click)="viewStory(row.uuid)">{{ trimString(row.title, 95) }}</strong>
+            <span class="text-[13px] mr-2 font-medium mb-1">{{ row.uploadBy }}</span>
+            <div class="flex flex-row content-center">
+              <span class="text-[11px] rounded place-self-center mr-1 bg-primary px-2 py-[1px] text-white">{{
+                row.unit}}</span>
+              <span class="text-xs place-self-center">{{ row._count!.watchStory }} views • {{
+                formatDateNotDays(row.updatedAt!)}} </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!inspiStory">
+    <h1 class="text-center text-gray-400 py-5">Sorry, data is empty</h1>
+  </div>
+
+  <!-- Pagination -->
+  <nav aria-label="Page navigation example">
+    <ul class="list-style-none flex px-5 md:px-20 mt-10 place-self-center">
+      <li class="mr-3 place-self-center">
+        <p>Total : {{ totalData }}</p>
+      </li>
+      <li class="mr-3 place-self-center">
+        <select class="border boder-primary rounded py-1 px-2 place-self-center" formControlName="limit">
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+          <option [value]="50">50</option>
+          <option [value]="100">100</option>
+        </select>
+      </li>
+      <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+        <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+          class="place-self-center hover:text-black text-primary cursor-pointer"></fa-icon>
+      </li>
+      <li class="ml-3 flex flex-cols">
+        <input type="number" [value]="page" class="border boder-primary rounded py-1 px-2 w-16"
+          formControlName="page">
+      </li>
+      <li class="place-self-center text-white rounded px-2 py-1">
+        <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+          class="place-self-center hover:text-black text-primary cursor-pointer"></fa-icon>
+      </li>
+    </ul>
+  </nav>
+</form>

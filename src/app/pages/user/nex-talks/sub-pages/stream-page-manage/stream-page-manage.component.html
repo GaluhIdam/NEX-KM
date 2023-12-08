@@ -1,0 +1,78 @@
+<div class="w-11/12 mx-auto mt-8">
+  <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+    <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <a routerLink="/user/nex-talks" class="mr-3 text-gray-400">Nex Talk</a>
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <a routerLink="/user/nex-talks/stream" class="mr-3 text-gray-400">Stream</a>
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <p class="mr-3 text-black activeLink">{{ selectedStreamCategory.name }}</p>
+  </div>
+
+  <div class="flex gap-4 min-[600px]:flex-row max-[600px]:flex-col">
+    <!-- Categories Section -->
+    <div class="min-[600px]:w-96 max-[600px]:w-full">
+      <div>
+        <p
+          class="mt-4 text-3xl font-semibold text-blue-800 max-[600px]:text-center"
+        >
+          {{ selectedStreamCategory.name }}
+        </p>
+        <p class="text-lg text-gray-400 max-[600px]:text-center">
+          What are you gonna watch today?
+        </p>
+      </div>
+      <div class="mr-5 w-60">
+        <div class="flex justify-start mt-5">
+          <ul class="w-96">
+            <li class="w-full py-2" *ngFor="let row of streamCategory">
+              <div
+                class="flex flex-row items-center justify-start p-2 rounded-2xl"
+                [class.bg-soft-green]="selectedStreamCategory === row"
+              >
+                <fa-icon
+                  [icon]="
+                    row.name === 'Editor Choice'
+                      ? faThumbsUp
+                      : row.name === 'Trending'
+                      ? faStar
+                      : faCirclePlay
+                  "
+                  class="mr-3 text-gray-400"
+                  [class.text-white]="selectedStreamCategory === row"
+                ></fa-icon>
+                <div
+                  (click)="onChangeStreamCategory(row)"
+                  [class.text-white]="selectedStreamCategory === row"
+                  [class.font-semibold]="selectedStreamCategory === row"
+                  class="text-gray-400"
+                >
+                  {{ row.name }}
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Categories Section -->
+
+    <!-- Editor Choice Section -->
+    <div class="w-full" *ngIf="selectedStreamCategory.name === 'Editor Choice'">
+      <app-stream-editor-choises></app-stream-editor-choises>
+    </div>
+    <!-- Editor Choice Section -->
+
+    <!-- Trending Section -->
+    <div class="w-full" *ngIf="selectedStreamCategory.name === 'Trending'">
+      <app-stream-trending></app-stream-trending>
+    </div>
+    <!-- Trending Section -->
+
+    <!-- My Video Section -->
+    <div class="w-full" *ngIf="selectedStreamCategory.name === 'My Video'">
+      <app-stream-user></app-stream-user>
+    </div>
+    <!-- My Video Section -->
+  </div>
+</div>

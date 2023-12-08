@@ -1,0 +1,167 @@
+<section class="relative flex items-start justify-start px-5 bg-gray-100">
+  <app-header-admin></app-header-admin>
+  <!-- Sidenav -->
+  <div class="!pl-[260px] text-center w-full" id="content">
+    <div class="">
+      <!-- Toggler -->
+      <div class="px-5 mt-5 text-start">
+        <div class="flex justify-between">
+          <button
+            class="mt-3 mb-5 inline-block rounded bg-blue-600 px-4 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
+            data-te-sidenav-toggle-ref
+            data-te-target="#sidenav-2"
+            aria-controls="#sidenav-2"
+            aria-haspopup="true"
+          >
+            <span class="block [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-white">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </button>
+          <div class="flex justify-end place-items-center">
+            <div class="relative flex items-center max-[600px]:mt-3">
+              <div class="relative" data-te-dropdown-ref>
+                <a
+                  class="flex items-center hidden-arrow mr-7 opacity-60 hover:opacity-80 focus:opacity-80"
+                  href="#"
+                  id="dropdownMenuButton1"
+                  role="button"
+                  data-te-dropdown-toggle-ref
+                  aria-expanded="false"
+                  (click)="toggleNotificationTotal()"
+                >
+                  <span class="[&>svg]:w-8">
+                    <fa-icon [icon]="faBell" class="text-primary"></fa-icon>
+                  </span>
+                  <span
+                    class="absolute -mt-2.5 ml-2 rounded-full bg-red-700 py-0 px-1.5 text-xs"
+                    *ngIf="showNotificationTotal"
+                    >{{ notificationTotal }}</span
+                  >
+                </a>
+                <ul
+                  class="notification-list absolute left-0 right-auto z-[1000] float-left m-0 hidden list-none overflow-y-auto rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg [&[data-te-dropdown-show]]:block mt-5"
+                  aria-labelledby="dropdownMenuButton1"
+                  data-te-dropdown-menu-ref
+                >
+                  <div class="grid grid-cols-2">
+                    <p class="px-5 mt-5 font-semibold text-purple-dark">
+                      Notifications
+                    </p>
+                  </div>
+                  <li>
+                    <ng-container
+                      *ngIf="notificationList && notificationList.length > 0"
+                    >
+                      <div
+                        class="block px-4 py-2 max-w-min whitespace-nowrap"
+                        *ngFor="let data of notificationList"
+                      >
+                        <div class="flex justify-center space-x-2 w-60">
+                          <div
+                            class="px-6 py-5 mb-4 text-base whitespace-pre-line rounded-lg bg-success-100 hover:bg-success-50 text-success-700"
+                          >
+                            <h2>
+                              <fa-icon
+                                [icon]="faBell"
+                                class="text-regal-blue"
+                              ></fa-icon>
+                              {{ data.title }}
+                            </h2>
+                            <p class="text-sm">{{ data.description }}</p>
+                            <div
+                              class="cursor-pointer"
+                            >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </li>
+                  <ng-container
+                    *ngIf="!notificationList"
+                  >
+                    <div class="block px-4 py-2 max-w-min whitespace-nowrap">
+                      <div class="flex justify-center space-x-2 w-60">
+                        <div
+                          class="px-6 py-5 mb-4 text-base whitespace-pre-line rounded-lg bg-success-100 text-success-700"
+                        >
+                          <h2>
+                            <fa-icon
+                              [icon]="faBell"
+                              class="text-regal-blue"
+                            ></fa-icon>
+                            Not notification yet
+                          </h2>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ul>
+              </div>
+            </div>
+            <fa-icon
+              [icon]="faGear"
+              class="mx-3 text-2xl text-gray-400"
+            ></fa-icon>
+            <div class="relative" data-te-dropdown-ref>
+              <button
+                type="button"
+                class="flex items-center transition duration-150 ease-in-out hidden-arrow whitespace-nowrap motion-reduce:transition-none"
+                id="dropdownMenuButton2"
+                data-te-dropdown-toggle-ref
+                aria-expanded="false"
+              >
+                <img
+                  [src]="photo"
+                  class="w-10 mx-3 rounded-full h-fit"
+                  alt="avatar"
+                  loading="lazy"
+                />
+              </button>
+              <ul
+                class="absolute left-auto right-0 z-[1000] float-left m-0 mt-1 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                aria-labelledby="dropdownMenuButton2"
+                data-te-dropdown-menu-ref
+              >
+                <ng-container *ngIf="rolesUser.length > 1">
+                  <li>
+                    <button
+                      class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                      (click)="changeRole()"
+                      data-te-dropdown-item-ref
+                    >
+                      Change Role
+                    </button>
+                  </li>
+                </ng-container>
+                <li>
+                  <button
+                    class="block w-full px-4 py-2 text-sm font-normal bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                    (click)="logout()"
+                    data-te-dropdown-item-ref
+                  >
+                    Log Out
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTENT -->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</section>

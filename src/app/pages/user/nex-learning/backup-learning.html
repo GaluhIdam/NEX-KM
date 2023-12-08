@@ -1,0 +1,309 @@
+<div *ngIf="load">
+  <app-loading></app-loading>
+</div>
+
+<!-- Search & Trend Section -->
+<div *ngIf="!load">
+  <div class="bg-library bg-center flex justify-center py-20">
+    <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+      <div class="min-[600px]:w-[34rem] place-self-center">
+        <h1 class="text-white font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl">Explore New
+          Experience of
+          Collaboration</h1>
+      </div>
+      <form [formGroup]="mform" class="flex justify-center w-full">
+        <div class="place-self-center min-[600px]:w-[800px] max-[600px]:w-[366px]" data-te-dropdown-ref>
+          <input type="text" formControlName="search" placeholder="Search something here..."
+            [class.rounded-t-lg]="showSearch === true"
+            (keydown.enter)="showResultBySearchEngine(mform.get('search')?.value, mform.get('page')?.value, limit)"
+            [class.rounded-lg]="showSearch === false || mform.get('search')?.value.length == 0"
+            class="focus:outline-none px-10 py-3 border border-0 w-full" (focus)="onInputFocus()"
+            (blur)="onInputBlur()">
+
+          <ul data-te-dropdown-show data-popper-placement="bottom-start"
+            *ngIf="showSearch === true && mform.get('search')?.value.length > 0"
+            class="absolute text-left bg-white [&[data-te-dropdown-show]]:block h-fit shadow-lg min-[600px]:w-[800px] max-[600px]:w-[366px] rounded-b-lg p-3"
+            aria-labelledby="dropdownMenuButton1" data-te-dropdown-menu-ref>
+            <!-- Dropdown content -->
+            <div class="grid min-[600px]:grid-cols-2 max-[600px]:grid-rows-2 gap-1 h-fit">
+              <div class="mx-1">
+                <p class="text-gray-400 text-xs font-light px-4 py-2" *ngIf="showSearch === true">Suggestion :
+                </p>
+                <li *ngFor="let data of suggestionSearch">
+                  <a class="block w-full whitespace-nowrap rounded-lg bg-transparent px-4 py-2 text-sm font-normal hover:bg-gray-200 cursor-pointer"
+                    (click)="setValueSearch(data.search)" data-te-dropdown-item-ref><fa-icon [icon]="faSearch"
+                      class="text-gray-300 mr-2"></fa-icon>
+                    <span
+                      [innerHtml]="highlightMatchingCharacters(trimString(data.search, 40), mform.get('search')?.value)"></span>
+                  </a>
+                </li>
+                <p *ngIf="suggestionSearch.length === 0" class="text-gray-300 text-sm text-sm px-4">No suggestion</p>
+              </div>
+              <div class="mx-1">
+                <p class="text-gray-400 text-xs font-light px-4 py-2" *ngIf="suggestionSearch.length > 0">Based on your
+                  interests :</p>
+                <li *ngFor="let data of searchByInterest">
+                  <a class="block w-full whitespace-nowrap rounded-lg bg-transparent px-4 py-2 text-sm font-normal hover:bg-gray-200 cursor-pointer"
+                    (click)="routingContent(data.uuid, data.path)" data-te-dropdown-item-ref>
+                    <div class="flex flex-row w-[280px]">
+                      <img [src]="data.path" [alt]="data.path" class="rounded-lg w-16 mr-2">
+                      <p class="whitespace-pre-line text-clip overflow-hidden">{{ trimString(data.title, 53) }}</p>
+                    </div>
+                  </a>
+                </li>
+                <p *ngIf="searchByInterest.length === 0" class="text-gray-300 text-sm px-4">No content</p>
+              </div>
+            </div>
+          </ul>
+        </div>
+
+      </form>
+      <h1 class="text-white">TRENDING SEARCH</h1>
+      <div>
+        <ul class="flex list-none flex-wrap pl-0 md:flex-row" role="tablist" data-te-nav-ref>
+          <li class="mx-2 mb-2" *ngFor="let data of trendingSearch">
+            <button type="button" (click)="trendingClick(data.search)"
+              class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+              {{ data.search }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Search & Trend Section -->
+
+  <!-- Welcome -->
+  <div class="mt-10 mb-10 text-center py-5" *ngIf="mform.get('search')?.value === ''">
+    <h1 class="font-semibold md:text-2xl whitespace-nowrap">Hello, {{personalName}}</h1>
+    <h2 class="font-semibold md:text-xl mb-2">Welcome to NEX Learning</h2>
+  </div>
+
+  <!-- Welcome -->
+
+  <div *ngIf="mform.get('search')?.value === ''"
+    style="background-image: url('../../../../assets/image/library/gradient/252.png'); background-position: right; background-repeat: no-repeat; background-size: 300px 500px;">
+    <!-- Article Title-->
+    <div class="md:h-16 h-8 mb-5">
+      <div class="w-min-full">
+        <p class="md:text-2xl text-base text-primary font-semibold float-left md:ml-20 ml-5">Articles</p>
+        <a routerLink="article"
+          class="md:text-base text-xs text-primary font-semibold cursor-pointer hover:text-blue-600 float-right md:mr-20 mr-5">
+          See All
+        </a>
+      </div>
+    </div>
+    <!-- Article Title-->
+
+
+    <!-- Article -->
+    <div class="md:px-20 px-5">
+      <div class="md:grid md:grid-cols-3 md:gap-3 grid grid-rows-1">
+        <div class="md:col-span-2 md:mr-5 mb-5" *ngFor="let first of articles">
+          <img class="rounded-xl w-min-full h-auto mb-3" [src]="first.path" [alt]="first.image" />
+          <a (click)="viewArticle(first.uuid!)"
+            class="mt-3 font-bold md:text-2xl text-xl cursor-pointer hover:text-primary">{{ trimString(first.title!,
+            150)
+            }}</a>
+          <p class="font-bold md:text-sm text-sm">{{ first.uploadBy }}</p>
+          <div class="mt-3 text-justify text-sm" [ngxSummernoteView]="trimString(first.content!, 500)"></div>
+        </div>
+        <div class="md:col-span-1">
+          <div class="col mb-10" *ngFor="let first of articles1">
+            <img class="rounded-xl w-min-full h-auto" [src]="first.path" [alt]="first.image" />
+            <h1 (click)="viewArticle(first.uuid!)"
+              class="mt-3 font-bold md:text-xl text-xl cursor-pointer hover:text-primary break-all">{{
+              trimString(first.title!, 75) }}</h1>
+            <p class="md:text-sm text-sm">{{ first.uploadBy }}</p>
+          </div>
+          <div class="col" *ngFor="let first of articles2">
+            <img class="rounded-xl w-min-full h-auto" [src]="first.path" [alt]="first.image" />
+            <h1 (click)="viewArticle(first.uuid!)"
+              class="mt-3 font-bold md:text-xl text-xl cursor-pointer hover:text-primary break-all">{{
+              trimString(first.title!, 75) }}</h1>
+            <p class="md:text-sm text-sm">{{ first.uploadBy }}</p>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!articles">
+        <h1 class="text-center text-gray-400">Sorry, data is empty</h1>
+      </div>
+    </div>
+    <!-- Article -->
+
+    <!-- Inspirational Story Title -->
+    <div class="md:h-16 h-8 mt-20">
+      <div class="w-min-full">
+        <p class="md:text-2xl text-base text-primary font-semibold float-left md:ml-20 ml-5">Inspirational Story</p>
+
+        <a routerLink="inspirational-story"
+          class="md:text-base text-xs text-primary font-semibold cursor-pointer hover:text-blue-600 float-right md:mr-20 mr-5">
+          See All
+        </a>
+      </div>
+    </div>
+    <!-- Inspirational Story Title -->
+
+
+
+    <!-- Inspirational Story -->
+    <div class="md:px-20 px-5">
+      <owl-carousel-o [options]="customOptionsOne">
+        <ng-template carouselSlide *ngFor="let data of inspiStory">
+          <div class="slide mb-10 shadow-lg rounded-lg p-3">
+            <div mat-card-image plyr [plyrPoster]="data.cover"
+              [plyrOptions]="{ autoplay: false, controls: [ 'play' , 'mute', 'progress'], clickToPlay: true }"
+              [plyrTitle]="'Custom video'" [plyrPlaysInline]="true" [plyrCrossOrigin]="false" [plyrSources]="[{
+                        src: data.path,
+              type: 'video/mp4',
+              size: 576,
+              provider: 'html5'
+                }]" (plyrInit)="player = $event" (plyrPlay)="played($event, data.uuid, data.id)"></div>
+            <div class="mt-3">
+              <div class="flex">
+                <img [src]="urlAvatar+data.personalNumber" class="mr-3 rounded-full" style="width: 45px; height: 45px;">
+                <div class="flex flex-col">
+                  <a [routerLink]="'/user/nex-learning/story-view/'+data.uuid"
+                    class="font-semibold hover:text-primary md:text-sm text-sm break-all">{{ trimString(data.title, 60)
+                    }}</a>
+                  <span class="text-xs">{{ data.uploadBy }}</span>
+                  <span class="text-xs">{{data.view}} views • {{ formatDateNotDays(data.createdAt) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </owl-carousel-o>
+      <div *ngIf="!inspiStory">
+        <h1 class="text-center text-gray-400">Sorry, data is empty</h1>
+      </div>
+    </div>
+    <!-- Inspirational Story -->
+
+
+    <!-- Retirement Story Title -->
+    <div class="md:h-16 h-8 mt-10 mb-4">
+      <div class="w-min-full">
+        <p class="md:text-2xl text-base text-primary font-semibold float-left md:ml-20 ml-5">Retirement Story</p>
+        <a routerLink="retirement-story"
+          class="md:text-base text-xs text-primary font-semibold cursor-pointer hover:text-blue-600 float-right md:mr-20 mr-5">
+          See All
+        </a>
+      </div>
+    </div>
+    <!-- Retirement Story Title -->
+
+    <!-- Retirement Story -->
+    <div class="md:px-20 px-5">
+      <owl-carousel-o [options]="customOptionsOne">
+        <ng-template carouselSlide *ngFor="let data of retirStory">
+          <div class="slide mb-10 shadow-lg rounded-lg p-3">
+            <div mat-card-image plyr [plyrPoster]="data.cover"
+              [plyrOptions]="{ autoplay: false, controls: [ 'play' , 'mute', 'progress'], clickToPlay: true }"
+              [plyrTitle]="'Custom video'" [plyrPlaysInline]="true" [plyrCrossOrigin]="false" [plyrSources]="[{
+                                src: data.path,
+                      type: 'video/mp4',
+                      size: 576,
+                      provider: 'html5'
+                        }]" (plyrInit)="player = $event" (plyrPlay)="played($event, data.uuid, data.id)"></div>
+            <div class="mt-3">
+              <div class="flex">
+                <img [src]="urlAvatar+data.personalNumber" class="mr-3 rounded-full" style="width: 45px; height: 45px;">
+                <div class="flex flex-col">
+                  <a [routerLink]="'/user/nex-learning/story-view/'+data.uuid"
+                    class="font-semibold hover:text-primary md:text-sm text-sm break-all">{{ trimString(data.title, 60)
+                    }}</a>
+                  <span class="text-xs">{{ data.uploadBy }}</span>
+                  <span class="text-xs">{{data.view}} views • {{ formatDateNotDays(data.createdAt) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </owl-carousel-o>
+      <div *ngIf="!retirStory">
+        <h1 class="text-center text-gray-400">Sorry, data is empty</h1>
+      </div>
+    </div>
+    <!-- Retirement Story -->
+
+
+
+    <!-- Best Practice Title -->
+    <div class="md:h-16 h-8 mt-10 mb-4">
+      <div class="w-min-full">
+        <p class="md:text-2xl text-base text-primary font-semibold float-left md:ml-20 ml-5">Best Practice</p>
+
+        <a routerLink="best-practice"
+          class="md:text-base text-xs text-primary font-semibold cursor-pointer hover:text-blue-600 float-right md:mr-20 mr-5">
+          See All
+        </a>
+      </div>
+    </div>
+    <!-- Best Practice Title -->
+
+    <!-- Best Practice -->
+    <div class="md:px-20 px-5">
+      <owl-carousel-o [options]="customOptionsOne">
+        <ng-template carouselSlide *ngFor="let data of articlesRecent">
+          <div class="slide mb-10 shadow-lg p-3 rounded-lg">
+            <img [src]="data.path" [alt]="data.image" class="object-cover w-36 h-96 rounded-lg">
+            <div class="mt-3">
+              <div class="flex">
+                <img [src]="urlAvatar+data.personalNumber" class="mr-3 rounded-full" style="width: 45px; height: 45px;">
+                <div class="flex flex-col">
+                  <a [routerLink]="'/user/nex-learning/best-practice/'+data.uuid"
+                    class="font-semibold hover:text-primary text-sm break-all">{{ trimString(data.title, 60) }}</a>
+                  <span class="text-sm">{{ data.uploadBy }}</span>
+                  <span class="text-xs">{{ formatDateNotDays(data.createdAt) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </owl-carousel-o>
+      <div *ngIf="!articlesRecent">
+        <h1 class="text-center text-gray-400">Sorry, data is empty</h1>
+      </div>
+    </div>
+    <!-- Best Practice -->
+  </div>
+  <div *ngIf="mform.get('search')?.value !== ''" class="flex flex-col min-[800px]:mx-20 max-[800px]:mx-10">
+    <p class="font-light text-gray-400 text-sm my-10" *ngIf="resultBySearch">About {{ totalData }} search
+      results ({{
+      trimNumber(timeTaken, 5) + '
+      milliseconds'}})</p>
+    <div class="flex flex-row mb-10" *ngFor="let data of resultBySearch">
+      <img class="object-cover w-36 w-16 max-[800px]:hidden mr-5 rounded" [src]="data.path" alt="image">
+      <div class="flex flex-col">
+        <div>
+          <div class="flex flex-row">
+            <div class="flex flex-col">
+              <h1 class="text-xs font-light">{{ data.personalNumber }}</h1>
+              <p class="text-xs font-light">{{ data.unit }}</p>
+            </div>
+          </div>
+          <div class="mt-1">
+            <a (click)="routingContent(data.uuid, data.path)"
+              class="cursor-pointer font-semibold text-lg font-normal text-primary hover:text-primary-700 hover:underline hover:underline-offset-2">{{
+              trimString(data.title, 50) }}</a>
+            <p class="text-xs max-[800px]:hidden" [innerHTML]="trimString(data.description, 350)"></p>
+            <p class="text-xs min-[800px]:hidden" [innerHTML]="trimString(data.description, 150)"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p *ngIf="!resultBySearch || resultBySearch.length === 0" class="text-gray-400 text-sm text-center">Content not
+      found!</p>
+
+    <!-- Pagination -->
+    <button type="button" *ngIf="resultBySearch.length != totalData" class="text-primary text-sm hover:text-primary-700"
+      (click)="showMore()">Show more</button>
+  </div>
+
+</div>
+<img class="absolute left-0 top-2/3 -z-20" src="../../../../assets/image/home-page/gradient/227.png" alt="" />
+
+<img class="absolute right-0 top-3/4 -z-10" src="../../../../assets/image/home-page/gradient/228.png" alt="" />
+
+<img class="absolute right-0 top-1/2 -z-20" src="../../../../assets/image/home-page/gradient/229.png" alt="" />

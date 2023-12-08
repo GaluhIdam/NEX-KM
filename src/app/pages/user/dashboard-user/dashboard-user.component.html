@@ -1,0 +1,564 @@
+<!-- Jumbotron Search -->
+<div class="bg-library bg-center flex justify-center py-20">
+  <div class="grid grid-rows-2 gap-4 max-[600px]:px-3" *ngIf="statusPage === true">
+    <div class="min-[600px]:w-[34rem] place-self-center">
+      <h1 class="text-white font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl">Explore New
+        Experience of
+        Collaboration</h1>
+    </div>
+    <form [formGroup]="mform" class="flex justify-center w-full">
+      <div class="place-self-center min-[600px]:w-[800px] max-[600px]:w-[366px]" data-te-dropdown-ref>
+        <input type="text" formControlName="search" placeholder="Search something here..."
+          [class.rounded-t-lg]="showSearch === true"
+          (keydown.enter)="showResultBySearchEngine(mform.get('search')?.value, mform.get('page')?.value, limit)"
+          [class.rounded-lg]="showSearch === false || mform.get('search')?.value.length == 0"
+          class="focus:outline-none px-10 py-3 border border-0 w-full" (focus)="onInputFocus()" (blur)="onInputBlur()">
+
+        <ul data-te-dropdown-show data-popper-placement="bottom-start"
+          *ngIf="showSearch === true && mform.get('search')?.value.length > 0"
+          class="absolute text-left bg-white [&[data-te-dropdown-show]]:block h-fit shadow-lg min-[600px]:w-[800px] max-[600px]:w-[366px] rounded-b-lg p-3"
+          aria-labelledby="dropdownMenuButton1" data-te-dropdown-menu-ref>
+          <!-- Dropdown content -->
+          <!--Tabs navigation-->
+          <ul class="flex list-none flex-row flex-wrap border-b-0 pl-0" role="tablist" data-te-nav-ref>
+            <li role="presentation">
+              <a href="#tabs-home"
+                class="block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                data-te-toggle="pill" data-te-target="#tabs-home" data-te-nav-active role="tab"
+                aria-controls="tabs-home" aria-selected="true">Accounts</a>
+            </li>
+            <!-- <li role="presentation">
+              <a href="#tabs-profile"
+                class="block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                data-te-toggle="pill" data-te-target="#tabs-profile" role="tab" aria-controls="tabs-profile"
+                aria-selected="false">Content</a>
+            </li> -->
+          </ul>
+
+          <!--Tabs content-->
+          <div class="">
+            <div class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+              id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab" data-te-tab-active>
+              <div class="my-2" *ngFor="let fyp of userList">
+                <a (click)="navigateToUser(fyp.personalNumber)"
+                  class="flex flex-row justify-start p-5 hover:bg-gray-200 cursor-pointer">
+                  <img class="rounded-full w-12 h-11 mr-3" [src]="fyp.userPhoto" [alt]="urlAvatar+fyp.personalNumber">
+                  <div class="flex flex-row justify-between content-center w-full">
+                    <div class="flex flex-col content-center">
+                      <h1 routerLink="" class="font-bold">{{ fyp.personalName }}</h1>
+                      <p class="lg:text-sm text-xs">{{ fyp.personalUnit }}</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <h1 class="text-center text-gray-400 my-5" *ngIf="!userList">Account not found!</h1>
+            </div>
+            <!-- <div class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+              id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
+              <div class="mx-1">
+                <p class="text-gray-400 text-xs font-light px-4 py-2" *ngIf="showSearch === true">Suggestion :
+                </p>
+                <li *ngFor="let data of suggestionSearch">
+                  <a class="block w-full whitespace-nowrap rounded-lg bg-transparent px-4 py-2 text-sm font-normal hover:bg-gray-200 cursor-pointer"
+                    (click)="setValueSearch(data.search)" data-te-dropdown-item-ref><fa-icon [icon]="faSearch"
+                      class="text-gray-300 mr-2"></fa-icon>
+                    <span
+                      [innerHtml]="highlightMatchingCharacters(trimString(data.search, 40), mform.get('search')?.value)"></span>
+                  </a>
+                </li>
+                <p *ngIf="suggestionSearch.length === 0" class="text-gray-300 text-sm text-sm px-4">No suggestion</p>
+              </div>
+              <p class="py-3">Coming Soon!</p>
+            </div> -->
+          </div>
+        </ul>
+      </div>
+
+    </form>
+    <!-- <h1 class="text-white">TRENDING SEARCH</h1>
+    <div>
+      <ul class="flex list-none flex-wrap pl-0 md:flex-row" role="tablist" data-te-nav-ref>
+        <li class="mx-2 mb-2" *ngFor="let data of trendingSearch">
+          <button type="button" (click)="trendingClick(data.search)"
+            class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+            {{ data.search }}
+          </button>
+        </li>
+      </ul>
+    </div> -->
+  </div>
+  <button routerLink="/user/dashboard-user/" class="px-3 py-1 bg-primary text-white text-lg rounded-lg"
+    *ngIf="statusPage === false">Back
+    to Dashboard</button>
+</div>
+<!-- Search & Trend Section -->
+<!-- End of Jumbotron Search -->
+
+<div class="flex min-[600px]:flex-row max-[600px]:flex-col min-[600px]:mx-12 my-10 min-[600px]:mx-10">
+  <!-- Left (User Profile) -->
+  <div class="bg-gray-100 shadow w-full rounded-xl h-fit shadow-lg min-[600px]:w-[450px] py-5">
+    <div class="mx-6 my-6">
+      <ng-container *ngIf="isUserLoading || isNexLevelLoading">
+        <div class="py-96 h-96">
+          <app-loading></app-loading>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="!isUserLoading && !isNexLevelLoading">
+        <!-- Profile Name Picture -->
+        <div class="flex gap-0">
+          <div class="flex-none">
+            <img [src]="user?.userPhoto ?? photoDefault" class="w-16 h-16 rounded-full" alt="avatar" loading="lazy" />
+          </div>
+          <div class="flex-1 mt-2 ml-4">
+            <div class="flex items-center">
+              <p class="text-xl font-semibold text-blue-600">
+                {{ user?.userName ?? user?.personalName ?? "-" }}
+              </p>
+              <img src="../../../../assets/image/verified.png" class="w-4 ml-2" alt="" />
+            </div>
+            <p class="text-sm">
+              {{ user?.personalUnit ?? "-" }} - {{ user?.personalTitle }}
+            </p>
+          </div>
+        </div>
+        <!-- End of Profile Name Picture -->
+
+        <!-- Count Social Media -->
+        <div class="flex flex-row justify-between px-5 mt-5  text-center">
+          <div>
+            <div class="text-xs font-semibold text-gray-400 uppercase">
+              Posts
+            </div>
+            <div class="text-xl font-bold text-lime-500">{{ totalFeeds }}</div>
+          </div>
+          <div>
+            <div class="text-xs font-semibold text-gray-400 uppercase">
+              Followers
+            </div>
+            <div class="text-xl font-bold text-lime-500">
+              <button type="button" [disabled]="totalFollower == 0" class="" data-te-toggle="modal"
+                data-te-target="#ModalFollower" data-te-ripple-init data-te-ripple-color="light">
+                {{ totalFollower }}
+              </button>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs font-semibold text-gray-400 uppercase">
+              Following
+            </div>
+            <div class="text-xl font-bold text-lime-500">
+              <button type="button" [disabled]="totalFollowing == 0" class="" data-te-toggle="modal"
+                data-te-target="#ModalFollowing" data-te-ripple-init data-te-ripple-color="light">
+                {{ totalFollowing }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- End of Count Social Media -->
+
+        <div class="flex flex-row">
+          <button type="button" (click)="followeUnFollow(keycloakService.getUsername(), personalNumberView)"
+            *ngIf="statusPage == false && isFollower(personalNumberView) == false && personalNumberView != keycloakService.getUsername()"
+            class="shadow px-3 mx-2 py-1 bg-primary text-white rounded-lg w-full mt-4 hover:bg-primary-700"><fa-icon
+              [icon]="faUserPlus" class="mr-2"></fa-icon>Follow</button>
+          <button type="button" (click)="followeUnFollow(keycloakService.getUsername(), personalNumberView)"
+            *ngIf="statusPage == false && isFollower(personalNumberView) == true && personalNumberView != keycloakService.getUsername()"
+            class="shadow px-3 mx-2 py-1 bg-danger text-white rounded-lg w-full mt-4 hover:bg-danger-700"><fa-icon
+              [icon]="faUserMinus" class="mr-2"></fa-icon>Unfollow</button>
+        </div>
+
+        <!-- Level -->
+        <div class="mt-5">
+          <!-- <p class="mb-3 text-sm font-semibold">Miles</p> -->
+          <div class="w-full">
+            <div>
+              <p class="text-lg mb-2 text-gray-700"><fa-icon [icon]="faPlane" class="mr-2"></fa-icon>Mile</p>
+              <div class="">
+                <p class="text-gray-500 mb-0">{{ nameLevel }}</p>
+                <h1 class="text-3xl text-success font-bold mb-1">{{ userLevelPoint }} Point</h1>
+              </div>
+              <!-- your.component.html -->
+
+              <div class="mb-3" *ngFor="let mile of dataMiles">
+                <div *ngIf="userLevelPoint >= mile.minPoint && userLevelPoint <= mile.maxPoint && mile.status == true"
+                  (mouseenter)="startFlying()" (mouseleave)="stopFlying()">
+                  <img [src]="mile.path" [alt]="mile.path" class="flippable-image" [class.flying]="isFlying">
+                </div>
+              </div>
+
+              <div
+                class="second-feature overflow-hidden min-[600px]:h-2 max-[600px]:h-2 mx-auto text-xs flex rounded bg-gray-400">
+                <div class="relative w-full">
+                  <div [style.width]="totalPoint+'%'"
+                    class="absolute cursor-pointer top-0 left-0 z-20 h-full text-white justify-center bg-redeem-bar"
+                    data-te-toggle="tooltip" title="{{ dataPoint.totalPoint }}">
+                  </div>
+                  <div [style.width]="remainingPointByPersen+'%'"
+                    class="absolute cursor-pointer top-0 right-0 z-10 h-full text-white justify-center bg-gray-400"
+                    data-te-toggle="tooltip" title="{{ remainingPoint }}" style="height: 20px;">
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs font-light mt-1">Progress {{ totalPoint.toFixed(2) +'%' }}</p>
+            </div>
+          </div>
+        </div>
+        <!-- End of Level -->
+
+        <!-- Interest -->
+        <div class="mt-8">
+          <p class="text-lg mb-2 text-gray-700"><fa-icon [icon]="faHeart" class="mr-2"></fa-icon>Interest</p>
+          <div class="flex flex-wrap">
+            <span class="whitespace-nowrap px-4 mb-2 py-1 bg-success text-white rounded-full mr-2"
+              *ngFor="let data of user!.interestUser">{{
+              data.interestList.name }}</span>
+          </div>
+        </div>
+        <!-- End of Interest -->
+
+        <!-- Skill -->
+        <div class="mt-8">
+          <p class="text-lg mb-2 text-gray-700"><fa-icon [icon]="faPenRuler" class="mr-2"></fa-icon>Skill</p>
+          <div class="flex flex-wrap">
+            <span class="whitespace-nowrap px-4 mb-2 py-1 bg-primary text-white rounded-full mr-2"
+              *ngFor="let data of user!.skillUser">{{
+              data.skillList.name }}</span>
+          </div>
+        </div>
+        <!-- End of Skill -->
+
+        <!-- Community -->
+        <div class="mt-8" *ngIf="communityUser.length > 0">
+          <p class="text-lg mb-2 text-gray-700"><fa-icon [icon]="faUserGroup" class="mr-2"></fa-icon>Community</p>
+
+          <div class="">
+            <!-- Loop Here -->
+            <owl-carousel-o [options]="customOptionsTwo">
+              <ng-template carouselSlide *ngFor="let comunity of communityUser">
+
+                <div
+                  class="mb-5 p-3 h-40 text-center cursor-pointer w-28 rounded-xl hover:shadow-md bg-white shadow-lg">
+                  <img [src]="comunity.communityMembersCommunities.icon" class="w-24 mb-2"
+                    [alt]="comunity.communityMembersCommunities.icon" />
+                  <h5 class="text-xs font-bold leading-tight">
+                    {{ comunity.communityMembersCommunities.name }}
+                  </h5>
+                </div>
+
+              </ng-template>
+            </owl-carousel-o>
+          </div>
+        </div>
+        <!-- End of Community -->
+
+        <!-- Social media -->
+        <div class="mt-5">
+          <p class="text-lg mb-2 text-gray-700"><fa-icon [icon]="faLink" class="mr-2"></fa-icon>Social Media</p>
+
+          <div class="flex flex-wrap">
+            <!-- Linkedin -->
+            <ng-container *ngIf="user?.linkedIn !== 'null'">
+              <button type="button" data-te-ripple-init data-te-ripple-color="light"
+                (click)="user ? onGotoLinkedinPage(user.linkedIn) : null"
+                class="mb-2 inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                style="background-color: #0077b5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
+                </svg>
+              </button>
+            </ng-container>
+
+            <!-- Instagram -->
+            <ng-container *ngIf="user?.instagram !== 'null'">
+              <button type="button" data-te-ripple-init data-te-ripple-color="light"
+                (click)="user ? onGotoInstagramPage(user.instagram) : null"
+                class="mb-2 mx-3 inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                style="background-color: #c13584">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+              </button>
+            </ng-container>
+
+            <!-- Facebook -->
+            <ng-container *ngIf="user?.facebook !== 'null'">
+              <button type="button" data-te-ripple-init data-te-ripple-color="light"
+                (click)="user ? onGotoFacebookPage(user.facebook) : null"
+                class="mb-2 inline-block rounded px-6 py-2.5 text-xs font-medium uppercase leading-normal text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                style="background-color: #1877f2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                </svg>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+        <!-- End of Social media -->
+        <button type="button" data-te-toggle="modal" data-te-target="#editProfileModal"
+          class="mt-10 block lg:w-96 hp:w-46 rounded bg-success px-6 pt-2.5 pb-2 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)]">
+          <fa-icon [icon]="faPenToSquare" class="mr-2 text-white"></fa-icon>
+          Edit Profile
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="min-[600px]:col-span-2 py-5 min-[600px]:ml-10 w-full" *ngIf="statusPage == true">
+    <!--Tabs navigation-->
+    <ul class="mb-5 flex list-noneflex-row max-[600px]:hidden" role="tablist" data-te-nav-ref>
+
+      <li role="presentation">
+        <button (click)="navTab('FYP')" class="px-3 py-1 text-primary" [class.text-white]="nav === 'FYP'"
+          [class.bg-success]="nav === 'FYP'" [class.rounded-lg]="nav === 'FYP'" data-te-toggle="pill"
+          data-te-target="#tabs-home" [attr.data-te-nav-active]="nav === 'FYP'" role="tab" aria-controls="tabs-home"
+          aria-selected="true">
+          <fa-icon [icon]="faHouseUser" class="mr-2"></fa-icon>For Your Page
+        </button>
+      </li>
+
+      <li role="presentation">
+        <button (click)="navTab('FEEDS')" class="px-3 py-1 text-primary" [class.text-white]="nav === 'FEEDS'"
+          [class.bg-success]="nav === 'FEEDS'" [class.rounded-lg]="nav === 'FEEDS'" data-te-toggle="pill"
+          data-te-target="#tabs-profile" [attr.data-te-nav-active]="nav === 'FEEDS'" role="tab"
+          aria-controls="tabs-profile" aria-selected="false">
+          <fa-icon [icon]="faBorderAll" class="mr-2"></fa-icon>My Feeds
+        </button>
+      </li>
+
+      <li role="presentation">
+        <button (click)="navTab('SHAEXP')" class="px-3 py-1 text-primary" [class.text-white]="nav === 'SHAEXP'"
+          [class.bg-success]="nav === 'SHAEXP'" [class.rounded-lg]="nav === 'SHAEXP'" data-te-toggle="pill"
+          data-te-target="#tabs-messages" role="tab" aria-controls="tabs-messages" aria-selected="false">
+          <fa-icon [icon]="faBullhorn" class="mr-2"></fa-icon>Sharing Experience
+        </button>
+      </li>
+
+      <li role="presentation" *ngIf="communityUser.length > 0">
+        <button (click)="navTab('COMMUNITY')" class="px-3 py-1 text-primary" [class.text-white]="nav === 'COMMUNITY'"
+          [class.bg-success]="nav === 'COMMUNITY'" [class.rounded-lg]="nav === 'COMMUNITY'" data-te-toggle="pill"
+          data-te-target="#tabs-community" role="tab" aria-controls="tabs-community" aria-selected="false">
+          <fa-icon [icon]="faUserGroup" class="mr-2"></fa-icon>Community
+        </button>
+      </li>
+
+      <li role="presentation">
+        <button (click)="navTab('NOTIFICATION')" class="px-3 py-1 text-primary"
+          [class.text-white]="nav === 'NOTIFICATION'" [class.bg-success]="nav === 'NOTIFICATION'"
+          [class.rounded-lg]="nav === 'NOTIFICATION'" data-te-toggle="pill" data-te-target="#tabs-notification"
+          role="tab" aria-controls="tabs-notification" aria-selected="false">
+          <fa-icon [icon]="faBell" class="mr-2"></fa-icon>Notification
+        </button>
+      </li>
+
+
+    </ul>
+    <ul class="mb-5 flex list-none flex-row justify-center min-[600px]:hidden mt-10" role="tablist" data-te-nav-ref>
+      <li role="presentation">
+        <button class="px-3 py-2 text-primary" (click)="navTab('FYP')" [class.text-white]="nav === 'FYP'"
+          [class.bg-success]="nav === 'FYP'" [class.rounded-lg]="nav === 'FYP'" data-te-toggle="pill"
+          [attr.data-te-nav-active]="nav === 'FYP'" role="tab" aria-controls="FYP" aria-selected="true">
+          <fa-icon [icon]="faHouseUser" class="mx-2 text-lg"></fa-icon>
+        </button>
+      </li>
+
+      <li role="presentation">
+        <button class="px-3 py-2 text-primary" (click)="navTab('FEEDS')" [class.text-white]="nav === 'FEEDS'"
+          [class.bg-success]="nav === 'FEEDS'" [class.rounded-lg]="nav === 'FEEDS'" data-te-toggle="pill"
+          data-te-target="#FEEDS" [attr.data-te-nav-active]="nav === 'FEEDS'" role="tab" aria-controls="FEEDS"
+          aria-selected="false">
+          <fa-icon [icon]="faBorderAll" class="mx-2 text-lg"></fa-icon>
+        </button>
+      </li>
+
+      <li role="presentation">
+        <button class="px-3 py-2 text-primary" (click)="navTab('SHAEXP')" [class.text-white]="nav === 'SHAEXP'"
+          [class.bg-success]="nav === 'SHAEXP'" [class.rounded-lg]="nav === 'SHAEXP'" data-te-toggle="pill"
+          data-te-target="#SHAEXP" [attr.data-te-nav-active]="nav === 'SHAEXP'" role="tab" aria-controls="SHAEXP"
+          aria-selected="false">
+          <fa-icon [icon]="faBullhorn" class="mx-2 text-lg"></fa-icon>
+        </button>
+      </li>
+
+      <li role="presentation" *ngIf="communityUser.length > 0">
+        <button class="px-3 py-2 text-primary" (click)="navTab('COMMUNITY')" [class.text-white]="nav === 'COMMUNITY'"
+          [class.bg-success]="nav === 'COMMUNITY'" [class.rounded-lg]="nav === 'COMMUNITY'" data-te-toggle="pill"
+          data-te-target="#COMMUNITY" [attr.data-te-nav-active]="nav === 'COMMUNITY'" role="tab"
+          aria-controls="COMMUNITY" aria-selected="false">
+          <fa-icon [icon]="faUserGroup" class="mx-2 text-lg"></fa-icon>
+        </button>
+      </li>
+
+      <li role="presentation">
+        <button class="px-3 py-2 text-primary" (click)="navTab('NOTIFICATION')"
+          [class.text-white]="nav === 'NOTIFICATION'" [class.bg-success]="nav === 'NOTIFICATION'"
+          [class.rounded-lg]="nav === 'NOTIFICATION'" data-te-toggle="pill" data-te-target="#NOTIFICATION"
+          [attr.data-te-nav-active]="nav === 'NOTIFICATION'" role="tab" aria-controls="NOTIFICATION"
+          aria-selected="false">
+          <fa-icon [icon]="faBell" class="mr-2"></fa-icon>
+        </button>
+      </li>
+    </ul>
+
+
+    <!--Tabs content-->
+    <div class="mb-6">
+
+      <div *ngIf="nav === 'FYP'"
+        class="opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block">
+        <div class="my-10 w-full">
+          <div class="max-[600px]:ml-5">
+            <h1 class="min-[600px]:text-3xl text-xl" style="font-weight: 800;">For Your Page</h1>
+            <p class="font-semibold mb-5 text-success">This content is showed based on your interests and the
+              accounts you follow !</p>
+          </div>
+
+          <div *ngFor="let fyp of fypData" class=" min-[600px]:shadow-lg mb-5 rounded-xl bg-white">
+            <div class="flex flex-row justify-start p-5">
+              <img class="rounded-full w-12 h-11 mr-3" [src]="urlAvatar+fyp.personalNumber"
+                [alt]="urlAvatar+fyp.personalNumber">
+              <div class="flex flex-row justify-between content-center w-full">
+                <div class="flex flex-col content-center">
+                  <h1 routerLink="" class="font-bold hover:text-success cursor-pointer">{{ fyp.personalName }}</h1>
+                  <p class="lg:text-sm text-xs">{{ formatDate(fyp.createdAt) }}</p>
+                </div>
+
+                <button type="button" (click)="followeUnFollow(keycloakService.getUsername(), fyp.personalNumber)"
+                  *ngIf="isFollowing(fyp.personalNumber) == false && fyp.personalNumber != keycloakService.getUsername()"
+                  class="shadow px-3 mt-2 h-fit py-1 bg-primary lg:text-sm text-xs text-white rounded-lg hover:bg-primary-700"><fa-icon
+                    [icon]="faUserPlus" class="mr-2 max-[600px]:hidden"></fa-icon>Follow</button>
+
+                <button type="button" (click)="followeUnFollow(keycloakService.getUsername(), fyp.personalNumber)"
+                  *ngIf="isFollowing(fyp.personalNumber) == true && fyp.personalNumber != keycloakService.getUsername()"
+                  class="shadow px-3 mt-2 h-fit py-1 bg-secondary lg:text-sm text-xs text-white rounded-lg hover:bg-secondary-700"><fa-icon
+                    [icon]="faUserMinus" class="mr-2 max-[600px]:hidden"></fa-icon>Unfollow</button>
+
+              </div>
+            </div>
+
+            <img class="h-80 w-full object-cover"
+              *ngIf="fyp.category == 'article' || fyp.category == 'best-practice' || fyp.category == 'community'"
+              [src]="fyp.path" [alt]="fyp.path">
+
+            <div mat-card-image plyr [plyrPoster]="fyp.cover!" *ngIf="fyp.category == 'story'"
+              [plyrOptions]="{ autoplay: false, controls: [ 'play' , 'mute', 'progress'], clickToPlay: true }"
+              [plyrTitle]="'Custom video'" [plyrPlaysInline]="true" [plyrCrossOrigin]="false" [plyrSources]="[{
+                                    src: fyp.path,
+                          type: 'video/mp4',
+                          size: 576,
+                          provider: 'html5'
+                            }]" (plyrInit)="player = $event"
+              (plyrPlay)="played(fyp.uuid, fyp.idContent, fyp.category)">
+            </div>
+
+            <div [routerLink]="fyp.link+fyp.uuid" class="p-5 hover:text-success cursor-pointer">
+              <h1 class="text-lg font-bold">{{ fyp.title }}</h1>
+              <p class="text-sm" [innerHTML]="(fyp.description | slice:0:230)+ '...'"></p>
+              <p class="text-xs text-gray-400 mt-2"
+                *ngIf="fyp.personalNumber != keycloakService.getUsername() && isFollowing(fyp.personalNumber) == false">
+                - Based
+                on your interest</p>
+              <p class="text-xs text-gray-400 mt-2" *ngIf="fyp.personalNumber == keycloakService.getUsername()">- Your
+                Post</p>
+              <p class="text-xs text-gray-400 mt-2"
+                *ngIf="fyp.personalNumber != keycloakService.getUsername() && isFollowing(fyp.personalNumber) == true">-
+                Based on who you follow</p>
+            </div>
+
+          </div>
+          <h1 *ngIf="fypData.length == 0" class="text-center font-bold mt-5">Content Not Available</h1>
+        </div>
+      </div>
+
+      <div *ngIf="nav === 'FEEDS'"
+        class="opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block">
+        <div class="my-10">
+          <app-feeds></app-feeds>
+        </div>
+      </div>
+
+      <div *ngIf="nav === 'SHAEXP'"
+        class="opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block">
+        <div class="my-10">
+          <app-user-experience></app-user-experience>
+        </div>
+      </div>
+
+      <div *ngIf="nav === 'COMMUNITY'"
+        class="opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block">
+        <div class="my-10">
+          <div class="my-10 w-full">
+            <div class="max-[600px]:ml-5">
+              <h1 class="min-[600px]:text-3xl text-xl" style="font-weight: 800;">Activity Community</h1>
+              <p class="font-semibold mb-5 text-success">This content is showed activity based on your community</p>
+            </div>
+            <div class="grid lg:grid-cols-2 grid-cols-1 gap-4">
+              <div *ngFor="let row of activityCommunity"
+                class="block rounded-lg bg-white shadow-sm border border-gray-300">
+                <img class="object-cover h-56 w-full rounded-t-lg" [src]="row.path" alt="image" />
+                <div class="p-6 bg-gray-100">
+                  <p class="text-xs text-gray-400 font-medium">{{ formatDateNotDays(row.createdAt) }}</p>
+                  <h5 class="mt-3 text-lg font-bold text-success leading-tight text-neutral-800 dark:text-neutral-50">
+                    {{ trimString(row.title, 20) }}
+                  </h5>
+                  <p class="mt-2 mb-4 text-sm text-neutral-600 dark:text-neutral-200">
+                    {{ trimString(row.description, 140) }}
+                  </p>
+                  <div class="flex flex-row justify-between">
+                    <p class="font-bold">{{ row.communityActivitiesCommunities.name }}</p>
+                    <a [routerLink]="'/user/nex-community/activity-detail/'+row.communityActivitiesCommunities.uuid+'/'+row.uuid"
+                      class="inline-block mt-2 mr-2 rounded bg-primary px-4 pb-2 pt-2.5 text-xs text-white hover:text-primary hover:bg-white hover:border hover:border-primary shadow"
+                      data-te-ripple-init data-te-ripple-color="light">
+                      <fa-icon [icon]="faEye" class="mr-1"></fa-icon> View Activity
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="nav === 'NOTIFICATION'"
+        class="opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block">
+        <div class="my-10">
+          <app-notifications></app-notifications>
+        </div>
+      </div>
+
+    </div>
+    <img class="absolute top-0 left-0 -z-20" src="../../../../assets/image/home-page/gradient/227.png" alt="" />
+
+    <img class="absolute top-0 right-0 -z-10" src="../../../../assets/image/home-page/gradient/228.png" alt="" />
+
+    <img class="absolute top-0 right-0 -z-20" src="../../../../assets/image/home-page/gradient/229.png" alt="" />
+  </div>
+
+
+
+  <!-- <nav class="fixed bottom-0 flex w-[96%] flex-wrap items-center justify-between min-[600px]:h-36 max-[600px]:h-14">
+    <div class="flex w-full flex-wrap items-center justify-end px-2">
+      <button type="button" (click)="sideBarX()"
+        class="text-white bg-success px-4 py-2 ml-auto rounded-lg shadow-lg"><fa-icon [icon]="faComment" class="mr-1"></fa-icon>NEX Chat</button>
+    </div>
+  </nav> -->
+
+  <!-- Sidenav -->
+  <!-- <nav id="sidenav-7" *ngIf="sideBar == true"
+    class="fixed right-0 top-0 z-[1035] h-screen w-60 translate-x-full overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] data-[te-sidenav-hidden='false']:-translate-x-0 dark:bg-zinc-800 p-3"
+    data-te-sidenav-init data-te-sidenav-hidden="false" data-te-sidenav-right="true">
+    <h1 class="font-bold text-success text-lg"><fa-icon [icon]="faComments" class="mr-1"></fa-icon> NEX Chat</h1>
+    <nav class="fixed bottom-0 flex w-full flex-wrap items-center justify-between">
+      <div class="flex w-full flex-wrap items-center justify-between">
+        <div class="ml-2">
+          <button type="button" (click)="sideBarX()"
+            class="text-white bg-secondary px-4 py-1 text-sm ml-auto rounded-lg shadow-lg min-[600px]:mb-14 mb-3">Close</button>
+        </div>
+      </div>
+    </nav>
+  </nav> -->
+  <!-- Sidenav -->

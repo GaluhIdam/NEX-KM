@@ -1,0 +1,67 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX LIBRARY</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">{{ title?.title }}</h1>
+      <div class="flex justify-start mt-5">
+        <h1 class="text-gray-400">{{ title?.title }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mt-5 bg-white rounded-lg shadow">
+  <ul
+    class="flex flex-col flex-wrap pl-0 mb-0 list-none border-b-0 md:flex-row"
+    role="tablist"
+    data-te-nav-ref
+  >
+    <li role="presentation">
+      <a
+        href="#tabs-home"
+        class="my-2 block border-x-0 border-t-0 border-b-2 border-transparent px-7 pt-4 pb-3.5 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-soft-green data-[te-nav-active]:text-soft-green dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-soft-green-400 dark:data-[te-nav-active]:text-soft-green-400"
+        data-te-toggle="pill"
+        data-te-target="#tabs-home"
+        data-te-nav-active
+        role="tab"
+        aria-controls="tabs-home"
+        aria-selected="true"
+        >Ebook</a
+      >
+    </li>
+    <li role="presentation">
+      <a
+        href="#tabs-profile"
+        class="focus:border-transparen my-2 block border-x-0 border-t-0 border-b-2 border-transparent px-7 pt-4 pb-3.5 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-soft-green data-[te-nav-active]:text-soft-green dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-soft-green-400 dark:data-[te-nav-active]:text-soft-green-400"
+        data-te-toggle="pill"
+        data-te-target="#tabs-profile"
+        role="tab"
+        aria-controls="tabs-profile"
+        aria-selected="false"
+        >Photo Gallery</a
+      >
+    </li>
+  </ul>
+  <div class="p-1 mb-6">
+    <div
+      class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+      id="tabs-home"
+      role="tabpanel"
+      aria-labelledby="tabs-home-tab"
+      data-te-tab-active
+    >
+      <app-ebook-category
+        [personalNumber]="personalNumber"
+      ></app-ebook-category>
+    </div>
+    <div
+      class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+      id="tabs-profile"
+      role="tabpanel"
+      aria-labelledby="tabs-profile-tab"
+    >
+      <app-photo-gallery-category
+        [personalNumber]="personalNumber"
+      ></app-photo-gallery-category>
+    </div>
+  </div>
+</div>

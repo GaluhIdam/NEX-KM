@@ -1,0 +1,272 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX LEVEL</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">{{ title.title }}</h1>
+      <div class="flex justify-start mt-3">
+        <h1 class="text-gray-400">{{ title.title }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bg-white shadow rounded-lg mt-5">
+  <form [formGroup]="mform">
+    <div>
+      <div class="grid grid-cols-2 gap-1">
+        <div class="flex justify-start h-fit w-fit p-5">
+          <form [formGroup]="mform">
+            <div class="relative flex w-full flex-wrap items-stretch bg-white rounded-lg border border-1">
+              <button
+                class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+                type="button" id="button-addon1">
+                <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+              </button>
+              <input type="text" formControlName="search"
+                class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+            </div>
+          </form>
+        </div>
+        <div class="flex justify-end place-items-center p-5">
+          <button
+            class="px-2 border border-1 hover:bg-success hover:text-white border-success py-2 mx-2 rounded-lg text-success h-fit">
+            <fa-icon [icon]="faPrint"></fa-icon> Export To Excel</button>
+          <!-- Button trigger vertically centered modal-->
+          <!-- <button type="button"
+            class="px-2 border border-1 hover:bg-success hover:text-white cursor-pointer border-success py-2 mx-2 rounded-lg text-success h-fit"
+            data-te-toggle="modal" data-te-target="#exampleModalCenter" data-te-ripple-init
+            data-te-ripple-color="light">
+            <fa-icon [icon]="faPlus"></fa-icon> Add Sharing
+          </button> -->
+        </div>
+      </div>
+      <div class="flex flex-col overflow-x-auto">
+        <div class="p-5">
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-sm font-light">
+              <thead class="border-b font-medium border-gray-500 bg-gray-100 text-gray-600 w-full">
+                <tr class="w-full">
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">No</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Name</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Unit</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Title</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Description</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Date</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Status</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody class="w-full">
+                <tr class="border-b dark:border-neutral-500 w-full" *ngFor="let data of sharingData; index as i">
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ i+1 }}.</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium">
+                    <div class="flex flex-row mt-2">
+                      <img [src]="'https://talentlead.gmf-aeroasia.co.id/images/avatar/'+data.personalNumber+'.jpg'"
+                        class="mr-3 rounded-full" style="width: 35px; height: 35px;">
+                      <div class="flex flex-col">
+                        <span class="text-sm">{{
+                          data.personalName }}</span>
+                        <span class="text-xs text-gray-400">{{ data.personalEmail }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ data.personalUnit }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ data.title }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ trimString(data.description, 20)
+                    }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">{{ formatDateNotDays(data.createdAt)
+                    }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center" *ngIf="data.approvalStatus === null">
+                    <span class="bg-warning text-white px-2 py-1 rounded-lg">Waiting Approval</span>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center" *ngIf="data.approvalStatus === true">
+                    <span class="bg-success text-white px-2 py-1 rounded-lg">Approved</span>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center" *ngIf="data.approvalStatus === false">
+                    <span class="bg-danger text-white px-2 py-1 rounded-lg">Rejected</span>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 font-medium text-center">
+                    <button type="button" (click)="getByUuid(data.uuid)"
+                      class="text-success border border-success hover:bg-success hover:text-white px-2 py-1 rounded mx-1"
+                      data-te-toggle="modal" data-te-target="#exampleModalCenter" data-te-ripple-init
+                      data-te-ripple-color="light"><fa-icon [icon]="faEye"></fa-icon></button>
+                  </td>
+                </tr>
+                <tr *ngIf="!sharingData">
+                  <td class="min-w-full text-center py-3 text-gray-500" colspan="14"><fa-icon
+                      [icon]="faSadTear"></fa-icon>
+                    Sorry, data is empty.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="flex justify-start w-full">
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation example">
+              <ul class="list-style-none flex mt-5 place-self-center">
+                <li class="mr-3 place-self-center">
+                  <p>Total : {{ totalData }}</p>
+                </li>
+                <li class="mr-3 place-self-center">
+                  <select class="border boder-regal-blue rounded py-1 px-2 place-self-center" formControlName="limit">
+                    <option [value]="10">10</option>
+                    <option [value]="20">20</option>
+                    <option [value]="50">50</option>
+                    <option [value]="100">100</option>
+                  </select>
+                </li>
+                <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+                  <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                    class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                </li>
+                <li *ngFor="let numPage of pageData" class="place-self-center">
+                  <a class="relative block rounded bg-transparent px-3 py-1.5 text-base text-neutral-600 transition-all duration-300 hover:bg-neutral-100  dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
+                    href="#!">{{ numPage }}</a>
+                </li>
+                <li class="place-self-center text-white rounded px-2 py-1">
+                  <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                    class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                </li>
+                <li class="ml-3 flex flex-cols">
+                  <p class="place-self-center mr-3">Go to</p>
+                  <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                    formControlName="page">
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-modal="true" role="dialog">
+  <div data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+    <div
+      class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600">
+      <div
+        class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+        <!--Modal title-->
+        <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+          id="exampleModalScrollableLabel">
+          View Sharing Experience
+        </h5>
+        <!--Close button-->
+        <button type="button" (click)="resetFrom()"
+          class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!--Modal body-->
+      <form [formGroup]="submitForm">
+        <div class="relative p-4">
+          <!-- Personal Number Input -->
+          <div class="mb-4 flex flex-col">
+            <label for="title" class="font-base text-gray-500 mb-1">Employee <span class="text-red-500">*</span></label>
+            <div
+              [ngClass]="{'border border-rose-500 rounded': submitForm.get('personalNumber')?.touched && submitForm.get('personalNumber')?.invalid }">
+              <input type="text" formControlName="personalNumber"
+                class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+            </div>
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="submitForm.get('personalNumber')?.touched && submitForm.get('personalNumber')?.invalid">
+              * Employee is required.
+            </p>
+          </div>
+          <!-- Personal Number Input -->
+
+          <!-- Title Input -->
+          <div class="mb-4 flex flex-col">
+            <label for="title" class="font-base text-gray-500 mb-1">Title <span class="text-red-500">*</span></label>
+            <div
+              [ngClass]="{'border border-rose-500 rounded': submitForm.get('title')?.touched && submitForm.get('title')?.invalid }">
+              <input type="text" formControlName="title" class="w-full px-2 py-1 rounded border border-gray-300"
+                id="exampleInput90" />
+            </div>
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="submitForm.get('title')?.touched && submitForm.get('title')?.invalid">
+              * Title is required.
+            </p>
+          </div>
+          <!-- Title Input -->
+
+          <!-- Place Input -->
+          <div class="mb-4 flex flex-col">
+            <label for="title" class="font-base text-gray-500 mb-1">Place <span class="text-red-500">*</span></label>
+            <div
+              [ngClass]="{'border border-rose-500 rounded': submitForm.get('place')?.touched && submitForm.get('place')?.invalid }">
+              <input type="text" formControlName="place" class="w-full px-2 py-1 rounded border border-gray-300"
+                id="exampleInput90" />
+            </div>
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="submitForm.get('place')?.touched && submitForm.get('place')?.invalid">
+              * Place is required.
+            </p>
+          </div>
+          <!-- Place Input -->
+
+          <!-- Description Input -->
+          <div class="mb-4 flex flex-col">
+            <label for="title" class="font-base text-gray-500 mb-1">Description <span
+                class="text-red-500">*</span></label>
+            <div
+              [ngClass]="{'border border-rose-500 rounded': submitForm.get('description')?.touched && submitForm.get('description')?.invalid }">
+              <textarea class="w-full rounded border border-gray-300 px-2 py-1" name="description"
+                formControlName="description" rows="5"></textarea>
+            </div>
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="submitForm.get('description')?.touched && submitForm.get('description')?.invalid">
+              * Place is required.
+            </p>
+          </div>
+          <!-- Description Input -->
+
+          <!-- eventDate Input -->
+          <div class="mb-4 flex flex-col">
+            <label for="title" class="font-base text-gray-500 mb-1">Event Date <span
+                class="text-red-500">*</span></label>
+            <div
+              [ngClass]="{'border border-rose-500 rounded': submitForm.get('eventDate')?.touched && submitForm.get('eventDate')?.invalid }">
+              <input type="date" formControlName="eventDate" class="w-full px-2 py-1 rounded border border-gray-300"
+                id="exampleInput90" />
+            </div>
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="submitForm.get('eventDate')?.touched && submitForm.get('eventDate')?.invalid">
+              * Event Date is required.
+            </p>
+          </div>
+          <!-- eventDate Input -->
+        </div>
+
+        <!--Modal footer-->
+        <div
+          class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+          <button type="button" (click)="resetFrom()"
+            class="bg-secondary mr-2 rounded text-white px-3 py-1 hover:bg-gray-600" data-te-modal-dismiss
+            data-te-ripple-init data-te-ripple-color="light">
+            Cancel
+          </button>
+          <button *ngIf="status === null || status === true" type="button"
+            class="bg-danger mr-2 rounded text-white px-3 py-1 hover:bg-danger-600" data-te-modal-dismiss
+            data-te-ripple-init data-te-ripple-color="light" (click)="approveReject(false)">
+            Reject
+          </button>
+          <button *ngIf="status === null || status === false" type="button"
+            class="bg-success rounded text-white px-3 py-1 hover:bg-success-600" data-te-ripple-init
+            data-te-modal-dismiss data-te-ripple-color="light" (click)="approveReject(true)">
+            Approve
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

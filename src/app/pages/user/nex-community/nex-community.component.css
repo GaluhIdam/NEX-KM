@@ -1,0 +1,13 @@
+/* Initially, set the element to be visible for screens wider than 600px */
+@media (min-width: 601px) {
+  .element-to-hide {
+    display: block; /* or any other appropriate display property */
+  }
+}
+
+/* Hide the element for screens 600px or narrower */
+@media (max-width: 600px) {
+  .element-to-hide {
+    display: none;
+  }
+}

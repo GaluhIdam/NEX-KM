@@ -1,0 +1,576 @@
+<div class="grid min-[600px]:grid-cols-1 max-[600px]:grid-cols-1 gap-4 min-[600px]:px-20 max-[600px]:px-7 min-[600px]:pt-10 max-[600px]:pt-5">
+  <!-- Left -->
+  <div class="col-span-2">
+    <h1 class="font-semibold min-[600px]:text-5xl max-[600px]:text-2xl">
+      Hello, {{userName}}
+    </h1>
+    <h2 class="min-[600px]:text-3xl max-[600px]:text-base font-medium mb-10">
+      Welcome to your NEX Miles account
+    </h2>
+    <div *ngIf="!dataMiles">
+      <p class="text-center mt-20 text-gray-400">
+        Miles not available, please contact administrator!
+      </p>
+    </div>
+    <div class="block w-full rounded-3xl bg-white shadow-xl border-solid border-2" *ngIf="dataMiles">
+      <div class="grid min-[600px]:grid-col-span-3 max-[600px]:grid-cols-1">
+        <div class="first-feature min-[600px]:p-8 max-[600px]:p-6">
+          <h1 class="min-[600px]:text-4xl max-[600px]:text-lg font-bold text-redeem-bar">
+            Your Point
+          </h1>
+          <h1 class="min-[600px]:text-4xl max-[600px]:text-lg font-bold text-regal-blue">
+            {{ dataPoint.point }}
+          </h1>
+          <h6 class="min-[600px]:text-xl max-[600px]:text-sm font-medium text-[#A3A3A3]">
+            total point {{dataPoint.totalPoint }}
+          </h6>
+        </div>
+      </div>
+      <img
+        class="rounded-t-lg min-[600px]:w-3/4 max-[600px]: w-2/3 min-[600px]:h-full max-[600px]:h-full min-[600px]:mx-auto
+        max-[600px]:mx-auto cursor-pointer min-[600px]:px-4 min-[600px]:py-4 "
+        [src]="imageLevel"
+        [alt]="imageLevel" />
+      <div class="mx-6 min-[600px]:-my-4 max-[600px]:my-2">
+        <h1 class="w-5/6 mx-auto min-[600px]:text-3xl max-[600px]:text-sm font-bold  text-redeem-bar">
+          {{nameLevel }}
+        </h1>
+      </div>
+      <div class="min-[600px]:p-6 max-[600px]:p-4">
+        <div class="second-feature overflow-hidden min-[600px]:h-2 max-[600px]:h-2 min-[600px]:w-5/6 max-[600px]:w-5/6 mx-auto mb-4 text-xs flex rounded bg-gray-400">
+          <div class="relative w-full">
+            <div
+              [style]="'width:'+point+'%'"
+              class="absolute cursor-pointer top-0 left-0 z-20 h-full text-white justify-center bg-redeem-bar"
+              data-te-toggle="tooltip"
+              title="{{ dataPoint.point }}">
+            </div>
+            <div
+              [style]="'width:'+totalPoint+'%'"
+              class="absolute cursor-pointer top-0 left-0 z-10 h-full text-white justify-center bg-blue-500"
+              data-te-toggle="tooltip"
+              title="{{ dataPoint.totalPoint }}">
+            </div>
+            <div
+              [style]="'width:'+remainingPointByPersen+'%'"
+              class="absolute cursor-pointer top-0 right-0 z-10 h-full text-white justify-center bg-gray-400"
+              data-te-toggle="tooltip"
+              title="{{ remainingPointByDesimal }}"
+              style="height: 20px;">
+            </div>
+          </div>
+        </div>
+        <h2
+          class="min-[600px]:text-2xl max-[600px]:text-sm min-[600px]:mt-10 max-[600px]: mt-5 font-bold min-[600px]:p-3 max-[600px]:p-3">
+          Raise your NEX level to further miles, you are only {{ remainingPointByDesimal }} points
+          less!
+        </h2>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- slider -->
+<!-- Card -->
+<div class="col-span-2 max-[600px]:mt-5 min-[600px]:px-20 max-[600px]:px-7 min-[600px]:pt-10 max-[600px]:pt-5">
+  <h1 class="font-semibold min-[600px]:text-4xl max-[600px]:text-xl mb-10">
+    Miles
+  </h1>
+  <owl-carousel-o [options]="customOptionsOne">
+    <ng-template carouselSlide *ngFor="let row of dataMiles">
+      <div class="group" *ngIf="row.status === true">
+        <div
+          class="second-feature min-w-md rounded-3xl shadow-xl border-solid border-2"
+          [ngClass]="{'bg-redeem-bar': row.minPoint <= userLevelPoint && row.maxPoint > userLevelPoint,
+          'bg-white': row.minPoint >= userLevelPoint && row.maxPoint < userLevelPoint}">
+          <div class="grid min-[600px]:grid-cols-3 max-[600px]:grid-cols-1">
+            <div class="min-[600px]:p-8 max-[600px]:p-7">
+              <h1
+                class=" min-w-max min-[600px]:text-3xl max-[600px]:text-lg font-bold"
+                [ngClass]="{'text-white': row.minPoint <= userLevelPoint && row.maxPoint > userLevelPoint,
+                'text-redeem-bar': !(row.minPoint <= userLevelPoint && row.maxPoint > userLevelPoint)}">
+                {{ row.name }}
+              </h1>
+            </div>
+          </div>
+          <div class="min-[600px]:h-20 max-[600px]: h-14 max-w-full">
+            <img
+              class="object-contain h-full w-full rounded-t-lg min-[600px]:px-5 max-[600px]:px-2 mb-6"
+              [src]="row.path"
+              alt="" />
+          </div>
+          <ng-container *ngIf="row.minPoint <= userLevelPoint && row.maxPoint > userLevelPoint">
+            <div class="max-w-md min-[600px]:p-8 max-[600px]: p-7 min-[600px]:h-full max-[600px]:h-fit min-[600px]:w-full min-[600px]: w-fit">
+              <p
+                class="min-[600px]:text-md max-[600px]:text-sm font-bold h-full w-full"
+                [ngClass]="{'text-white': row.minPoint <= userLevelPoint && row.maxPoint > userLevelPoint,
+                'text-black': !(row.minPoint <= userLevelPoint && row.maxPoint > userLevelPoint)}">
+                You are at your current level now. Keep up the good work!
+              </p>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!(row.minPoint <= userLevelPoint && row.maxPoint > userLevelPoint)">
+            <div class="max-w-md min-[600px]:p-8 max-[600px]: p-7 min-[600px]:h-full max-[600px]:h-fit min-[600px]:w-full min-[600px]: w-fit">
+              <p
+                class="min-[600px]:text-md max-[600px]:text-sm font-bold h-full w-full"
+                [ngClass]="{'text-white': row.minPoint <= userLevelPoint && row.maxPoint > userLevelPoint,
+                'text-black': !(row.minPoint <= userLevelPoint && row.maxPoint > userLevelPoint)}">
+                <ng-container *ngIf="row.maxPoint <= userLevelPoint">
+                  Congratulations, you have successfully completed this batch!
+                </ng-container>
+                <ng-container *ngIf="row.minPoint > userLevelPoint">
+                  You are {{ row.minPoint - userLevelPoint }} points away from achieving this batch. Keep up the good
+                  work!
+                </ng-container>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-template>
+  </owl-carousel-o>
+</div>
+<!-- history -->
+<p class="min-[600px]:text-4xl max-[600px]:text-xl font-semibold min-[600px]:px-20 max-[600px]:px-7 text-redeem-bar my-5">
+  History
+</p>
+<div class="bg-white rounded-3xl mt-5 min-[600px]:mx-20 max-[600px]: mx-auto shadow-xl border-solid border-2 min-[600px]: w-auto max-[600px]:w-5/6">
+  <form [formGroup]="mformHistory">
+    <div class="grid grid-cols-2 gap-1">
+      <div class="flex justify-start h-fit w-fit min-[600px]:p-5 max-[600px]:p-0">
+        <div class="relative flex flex-wrap min-[600px]:items-stretch max-[600px]:items-baseline bg-white rounded-lg border border-gray-300 min-[600px]:mt-4 max-[600px]: mt-4 min-[600px]:ml-0 max-[600px]:ml-4">
+          <button
+            class="relative z-[2] rounded-l min-[600px]:px-4 max-[600px]:px-4 min-[600px]:py-2 max-[600px]:py-0 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+            type="button"
+            id="button-addon1">
+            <fa-icon
+              [icon]="faSearch"
+              class="text-gray-500">
+            </fa-icon>
+          </button>
+          <input
+            type="text"
+            formControlName="search"
+            class="h-11 relative min-[600px]:w-fit max-[600px]: w-24 m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+            placeholder="Search"
+            aria-label="Example text with button addon"
+            aria-describedby="button-addon1" />
+        </div>
+      </div>
+      <div class="flex justify-end place-items-center p-5">
+        <input
+          type="text"
+          formControlName="year"
+          style="display: none;" />
+        <button
+          class="flex items-center whitespace-nowrap rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          type="button" id="dropdownMenuButton1"
+          data-te-dropdown-toggle-ref
+          aria-expanded="false"
+          data-te-ripple-init
+          data-te-ripple-color="light">
+          {{ selectedYear }}
+          <span class="ml-2 w-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              class="h-5 w-5">
+              <path
+                fill-rule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </button>
+        <ul
+          class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+          aria-labelledby="dropdownMenuButton1"
+          data-te-dropdown-menu-ref>
+          <li>
+            <a
+              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              data-te-dropdown-item-ref
+              (click)="setYear('2023')">
+              2023
+            </a>
+          </li>
+          <li>
+            <a
+              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              data-te-dropdown-item-ref
+              (click)="setYear('2024')">
+              2024
+            </a>
+          </li>
+          <li>
+            <a
+              class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              data-te-dropdown-item-ref
+              (click)="setYear('2025')">
+              2025
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="flex flex-col overflow-x-auto">
+      <div class="p-5">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm font-light">
+            <thead class="border-b font-medium border-gray-300 bg-gray-100 text-gray-600 w-full">
+              <tr class="w-full">
+                <th scope="col" class="px-6 py-4 whitespace-nowrap text-left font-semibold">Activity</th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap text-left font-semibold">Date</th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap text-left font-semibold">Point</th>
+                <th scope="col" class="px-6 py-4 whitespace-nowrap text-left font-semibold">Status</th>
+              </tr>
+            </thead>
+            <tbody class="w-full">
+              <tr *ngIf="!dataPointHistory">
+                <td class="min-w-full text-center py-3 text-gray-600" colspan="14">
+                  <p>
+                    Sorry, data is empty.
+                  </p>
+                </td>
+              </tr>
+              <tr class="border-b dark:border-neutral-500 w-full" *ngFor="let data of dataPointHistory; index as i">
+                <td class="whitespace-nowrap px-6 py-4 text-left  font-medium">
+                  <div class="flex-start md:flex">
+                    <div>
+                      <img
+                        [src]="'https://talentlead.gmf-aeroasia.co.id/images/avatar/'+data.personalNumber+'.jpg'"
+                        class="mr-3 rounded-full"
+                        style="width: 35px; height: 35px;">
+                    </div>
+                    <div class="min-[600px]:ml-6 max-[600px]:-ml-4 min-[600px]:py-4 max-[600px]: py-2 block max-w-full rounded-lg">
+                      <div class="text-center font-medium">
+                        <p class="min-[600px]:text-md max-[600px]:text-xs">{{ data.activity }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="whitespace-nowrap px-6 py-4 text-left font-medium min-[600px]:text-md max-[600px]:text-xs">
+                  {{ formatDate(data.createdAt) }}
+                </td>
+                <td class="whitespace-nowrap px-6 py-4 text-left font-medium min-[600px]:text-md max-[600px]:text-xs"
+                  *ngIf="data.status === true">
+                  <fa-icon [icon]="faPlus" class="text-success mr-2"></fa-icon>
+                  {{ data.point }}
+                </td>
+                <td class="whitespace-nowrap px-6 py-4 text-left font-medium min-[600px]:text-md max-[600px]:text-xs"
+                  *ngIf="data.status === null">
+                  <fa-icon [icon]="faPlus" class="text-success mr-2"></fa-icon>
+                  0
+                </td>
+                <td class="whitespace-nowrap px-6 py-4 text-left font-medium min-[600px]:text-md max-[600px]:text-xs"
+                  *ngIf="data.status === false">
+                  <fa-icon [icon]="faPlus" class="text-success mr-2"></fa-icon>
+                  0
+                </td>
+                <td class="whitespace-nowrap px-6 py-4 font-medium text-left min-[600px]:text-md max-[600px]:text-xs"
+                  *ngIf="data.status === null">
+                  <span class="bg-warning text-white px-2 py-1 rounded-lg">
+                    Waiting Approval
+                  </span>
+                </td>
+                <td
+                  class="third-feature whitespace-nowrap px-6 py-4 font-medium text-left min-[600px]:text-md max-[600px]:text-xs"
+                  *ngIf="data.status === true">
+                  <span class="bg-success text-white px-2 py-1 rounded-lg">
+                    Approved
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-6 py-4 font-medium text-left" *ngIf="data.status === false">
+                  <span class="bg-danger text-white px-2 py-1 rounded-lg" data-te-toggle="tooltip"
+                    title="your content is danger">
+                    Rejected
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex justify-start w-full">
+          <nav aria-label="Page navigation example">
+            <ul class="list-style-none min-[600px]:text-base max-[600px]: text-xs flex mt-5 place-self-center">
+              <li class="mr-3 place-self-center">
+                <p>Total : {{ totalData }}</p>
+              </li>
+              <li class="mr-3 place-self-center">
+                <select class="border boder-regal-blue rounded py-1 px-2 place-self-center" formControlName="limit">
+                  <option [value]="5">5</option>
+                  <option [value]="10">10</option>
+                  <option [value]="15">15</option>
+                  <option [value]="20">20</option>
+                </select>
+              </li>
+              <li class="place-self-center text-white rounded px-2 py-1">
+                <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                  class="place-self-center hover:text-black text-regal-blue cursor-pointer">
+                </fa-icon>
+              </li>
+              <li class="place-self-center text-white rounded px-2 py-1">
+                <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                  class="place-self-center hover:text-black text-regal-blue cursor-pointer">
+                </fa-icon>
+              </li>
+              <li class="ml-3 flex flex-cols">
+                <p class="place-self-center mr-3">Go to</p>
+                <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                  formControlName="page">
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- NEX Merchandise -->
+<h1 class="min-[600px]:text-4xl max-[600px]: text-xl font-semibold min-[600px]:px-20 max-[600px]:px-7 text-redeem-bar mt-10 mb-3">
+  NEX Merchandise
+</h1>
+<div *ngIf="!dataMerchandise">
+  <p class="text-center my-20 text-gray-400">
+    Merchandise not available, please contact administrator!
+  </p>
+</div>
+<div class="block bg-jumbroton min-[600px]:p-20 max-[600px]: p-7  min-[600px]:py-10 max-[600px]:py-5"
+  *ngIf="recentMerchandise && recentMerchandise.imageMerchandise.length > 0">
+  <div class="grid min-[600px]:grid-cols-2 max-[600px]:grid-cols-1">
+    <!-- Left -->
+    <div class="mr-10">
+      <h1 class="min-[600px]:text-4xl max-[600px]:text-base font-semibold  text-blue-400 mb-2">
+        New Merchandise
+      </h1>
+      <h1 class="min-[600px]:text-4xl max-[600px]:text-base font-semibold text-black mb-2">
+        {{ recentMerchandise.title }}
+      </h1>
+      <p class="mb-2 text-justify font-semibold max-[600px]:text-xs min-[600px]:mr-20 max-[600px]:-mr-10">
+        {{recentMerchandise.description}}
+      </p>
+      <button *ngIf="dataPoint.point >= recentMerchandise.point"
+        type="button"
+        (click)="redeemProduct(recentMerchandise.id)"
+        class="inline-block rounded bg-primary min-[600px]:px-6 min-[600px]:pt-2.5 min-[600px]:pb-2 min-[600px]:text-base
+        max-[600px]: text-sm max-[600]: px-4 max-[600px]: pt-1 max-[600px]: pb-1 font-medium leading-normal text-white
+        shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600
+        hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600
+        focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0
+        active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+        data-te-ripple-init data-te-ripple-color="light">
+        Redeem Now
+        <fa-icon [icon]="faChevronRight" class="text-white ml-2"></fa-icon>
+      </button>
+      <button *ngIf="dataPoint.point < recentMerchandise.point"
+        disabled
+        type="button"
+        class="cursor-pointer inline-block rounded bg-gray-400
+        min-[600px]:px-6 min-[600px]:pt-2.5 min-[600px]:pb-2 min-[600px]:text-base max-[600px]: text-xs max-[600]: px-4
+        max-[600px]: pt-1 max-[600px]: pb-1 font-medium leading-normal
+        text-white shadow-md transition duration-150 ease-in-out">
+        Increase Your Point Now
+        <fa-icon [icon]="faChevronRight" class="text-white ml-2"></fa-icon>
+      </button>
+      <p
+        class="min-[600px]:text-5xl max-[600px]:text-md font-semibold text-blue-400 min-[600px]:mt-10 max-[600px]: mt-5">
+        {{ recentMerchandise.point }} POINT
+      </p>
+    </div>
+    <!-- Right -->
+    <div class="flex xs:flex-wrap xs:justify-center">
+      <img
+        [src]="recentMerchandise.imageMerchandise.length > 0 ? recentMerchandise.imageMerchandise[0].path : null"
+        class="object-cover min-[600px]: h-80 object-center w-full rounded-lg
+        shadow-none transition-shadow duration-300 ease-in-out"
+        alt=""
+      />
+    </div>
+  </div>
+</div>
+<div class="" style="
+    background-image: url('../../../../assets/image/library/gradient/227.png');
+    background-position: left;
+    background-repeat: no-repeat;
+  ">
+  <div class="" style="
+    background-image: url('../../../../assets/image/library/gradient/252.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    ">
+    <div class="" style="
+      background-image: url('../../../../assets/image/library/gradient/227.png');
+      background-position: left;
+      background-repeat: no-repeat;
+      ">
+      <!-- Top Merchandise -->
+      <div class="grid min-[600px]:grid-cols-2 max-[600px]:grid-cols-2 min-[600px]:px-20 max-[600px]:px-7 my-5 py-5">
+        <div>
+          <p class="min-[600px]:text-4xl max-[600px]:text-lg font-semibold text-redeem-bar">Top Merchandise</p>
+        </div>
+        <div class="text-right">
+          <a
+            routerLink="merchandise"
+            class="font-semibold min-[600px]:text-lg max-[600px]:text-md cursor-pointer text-blue-400 hover:text-blue-500">
+            Explore More
+          </a>
+        </div>
+      </div>
+      <div *ngIf="!dataMerchandise">
+        <p class="text-center my-20 text-gray-400">Merchandise not available, please contact administrator!</p>
+      </div>
+      <div *ngIf="dataMerchandise"
+        class="grid min-[600px]:grid-cols-5 max-[600px]:grid-cols-1 gap-10 min-[600px]:px-20 max-[600px]:px-10">
+        <div *ngFor="let merchandise of dataMerchandise; let i = index" class="col-span-1 gap-4">
+          <div class="block min-[600px]:max-w-sm max-[600px]: max-w-xs rounded-lg bg-transparent shadow-sm">
+            <div class="text-end">
+              <fa-icon
+                class="fa-2xl absolute z-10 p-2 min-[600px]:-ml-14 max-[600px]:-ml-24"
+                [icon]="faStar"
+                [ngClass]="{'text-[#FFEB3B]': merchandise.isPinned === true, 'hidden' : merchandise.isPinned !== true}">
+              </fa-icon>
+            </div>
+            <img
+              class="cursor-pointer rounded-2xl bg-gray-50 shadow-xl bg-opacity-40 min-[600px]:w-full max-[600px]: w-3/4 min-[600px]:h-full max-[600px]:h-3/4 max-[600px]: mx-auto p-6"
+              [src]=merchandise.imageMerchandise[0].path alt="merchandise_image"
+              [routerLink]="['/user/nex-level/merchandise/', merchandise.uuid]" />
+            <div class="min-[600px]:p-3 max-[600px]: px-14 max-[600px]: py-6">
+              <h5 class="min-h-[60px] min-[600px]:text-xl max-[600px]:text-md font-bold text-black mb-2">
+                {{ merchandise.title }}
+              </h5>
+              <h3 class="min-[600px]:text-sm max-[600px]:text-xs font-semibold mb-2">
+                {{ merchandise.point }} Point
+              </h3>
+              <td
+                class="min-[600px]:text-sm max-[600px]:text-xs font-semibold mb-4"
+                style="height: 50px; overflow: hidden;">
+                <ng-container>
+                  {{ trimString(merchandise.description, 40) }}
+                </ng-container>
+              </td>
+              <h2 class="mb-4 text-neutral-600 min-[600px]:text-xs max-[600px]:text-xs font-semibold">
+                {{ merchandise._count.merchandiseRedeem }} Pcs redeemed
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Redeemed -->
+      <p
+        class="min-[600px]:text-4xl max-[600px]:text-lg font-semibold text-redeem-bar my-5 min-[600px]:px-20 max-[600px]:px-7">
+        Redeemed
+      </p>
+      <div class="flex justify-start text-end h-fit w-fit min-[600px]:px-5 max-[600px]: px-16 min-[600px]:py-5 max-[600px]: py-5">
+        <form [formGroup]="mformRedeem">
+          <div class="relative flex w-fit flex-wrap min-[600px]:items-stretch max-[600px]:items-baseline bg-white rounded-lg border border-1 min-[600px]:ml-14">
+            <button
+              class="relative z-[2] rounded-l min-[600px]:px-4 max-[600px]:px-3 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+              type="button"
+              id="button-addon1">
+              <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+            </button>
+            <input
+              type="text"
+              formControlName="searchRedeem"
+              class="h-11 relative min-[600px]:my-0 min-[600px]:mx-0 max-[600px]:-my-0 max-[600px]: mx-4 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding min-[600px]:px-3 max-[600px]: px-0 min-[600px]:py-[0.25rem] max-[600px]: -py-4 text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+              placeholder="Search"
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1" />
+          </div>
+        </form>
+      </div>
+      <form [formGroup]="mformRedeem">
+        <div *ngIf="dataRedeem"
+          class="grid min-[600px]:grid-cols-5 max-[600px]:grid-cols-1 gap-10 lg:px-20 xs:px-10 md:px-10 sm:px-10">
+          <div *ngFor="let merchandise of dataRedeem; let i = index" class="col-span-1 gap-4 h-fit">
+            <div class="fourth-feature block min-[600px]:max-w-sm max-[600px]: max-w-xs rounded-lg bg-transparent shadow-sm">
+              <div class="text-end">
+                <fa-icon
+                  class="fa-2xl absolute z-10 p-2 min-[600px]:-ml-14 max-[600px]:-ml-24"
+                  [icon]="faStar"
+                  [ngClass]="{'text-[#FFEB3B]': merchandise.merchandiseRedeem.isPinned === true, 'hidden' : merchandise.merchandiseRedeem.isPinned !== true}">
+                </fa-icon>
+              </div>
+              <img
+                class="rounded-2xl bg-jumbroton shadow-xl bg-opacity-40 min-[600px]:w-full max-[600px]: w-3/4 min-[600px]:h-full max-[600px]:h-3/4 max-[600px]: mx-auto p-6"
+                [src]=merchandise.merchandiseRedeem.imageMerchandise[0].path alt="merchandise_image" />
+              <div class="min-[600px]:p-3 max-[600px]: px-14 max-[600px]: py-6">
+                <h5 class="min-h-[60px] min-[600px]:text-xl max-[600px]:text-md font-bold text-black mb-2">
+                  {{merchandise.merchandiseRedeem.title }}
+                </h5>
+                <h3 class="min-[600px]:text-sm max-[600px]:text-xs font-semibold mb-2">
+                  {{ merchandise.merchandiseRedeem.point }} Point
+                </h3>
+                <td
+                  class="min-[600px]:text-sm max-[600px]:text-xs font-semibold mb-4"
+                  style="height: 50px; overflow: hidden;">
+                  <ng-container>
+                    {{ trimString(merchandise.merchandiseRedeem.description, 45) }}
+                  </ng-container>
+                </td>
+                <button
+                  type="button" *ngIf="merchandise.status === null"
+                  class="rounded-full bg-warning shadow text-white px-5 py-1 w-full"
+                  disabled
+                >
+                  Waiting Approval
+                </button>
+                <button type="button" *ngIf="merchandise.status === true"
+                  class="rounded-full bg-[#0C82B9] shadow text-white px-5 py-1 w-full" disabled>
+                  Redeemed
+                </button>
+                <button
+                  type="button" *ngIf="merchandise.status === false"
+                  class="rounded-full bg-button-red shadow text-white px-5 py-1 w-full"
+                  disabled
+                >
+                  Rejected
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!dataRedeem">
+          <p class="text-center my-20 text-gray-400">Sorry, data is empty!</p>
+        </div>
+        <div class="flex justify-end w-full min-[600px]:-ml-16 mt-4 max-[600px]: -ml-6 ">
+          <!-- Pagination -->
+          <nav aria-label="Page navigation example">
+            <ul class="list-style-none min-[600px]:text-base max-[600px]: text-sm flex mt-5 place-self-center">
+              <li class="mr-3 place-self-center">
+                <p>Total : {{ totalDataRedeem }}</p>
+              </li>
+              <li class="mr-3 place-self-center">
+                <select
+                  class="border boder-regal-blue rounded py-1 px-2 place-self-center"
+                  formControlName="limitRedeem">
+                  <option [value]="5">5</option>
+                  <option [value]="10">10</option>
+                  <option [value]="15">15</option>
+                  <option [value]="20">20</option>
+                </select>
+              </li>
+              <li class="place-self-center text-white rounded px-2 py-1">
+                <fa-icon [icon]="faCircleChevronLeft" (click)="prevPageRedeem()"
+                  class="place-self-center hover:text-black text-regal-blue cursor-pointer">
+                </fa-icon>
+              </li>
+              <li class="place-self-center text-white rounded px-2 py-1">
+                <fa-icon [icon]="faCircleChevronRight" (click)="nextPageRedeem()"
+                  class="place-self-center hover:text-black text-regal-blue cursor-pointer">
+                </fa-icon>
+              </li>
+              <li class="ml-3 flex flex-cols">
+                <p class="place-self-center mr-3">Go to</p>
+                <input type="number" [value]="pageRedeem" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                  formControlName="pageRedeem">
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </form>
+    </div>
+  </div>
+  <img class="absolute top-0 left-0 -z-20" src="../../../../assets/image/home-page/gradient/227.png" alt="" />
+  <img class="absolute top-0 right-0 -z-10" src="../../../../assets/image/home-page/gradient/228.png" alt="" />
+  <img class="absolute top-0 right-0 -z-20" src="../../../../assets/image/home-page/gradient/229.png" alt="" />

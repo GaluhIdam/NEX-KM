@@ -1,0 +1,726 @@
+<!-- Search & Trend Section -->
+<div class="flex justify-center py-20 bg-center bg-library">
+  <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+    <div class="min-[600px]:w-[32rem] place-self-center">
+      <h1
+        class="text-white font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl"
+      >
+        Explore New Experience of Collaboration
+      </h1>
+    </div>
+    <div
+      class="relative mb-4 flex min-[600px]:w-[800px] flex-wrap items-stretch bg-white rounded-full mt-4"
+    >
+      <button
+        class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+        type="button"
+        id="button-addon1"
+      >
+        <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+      </button>
+      <input
+        type="text"
+        class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+        placeholder="Search"
+        aria-label="Example text with button addon"
+        aria-describedby="button-addon1"
+      />
+    </div>
+    <h1 class="text-white">TRENDING SEARCH</h1>
+    <div>
+      <ul
+        class="flex flex-wrap pl-0 list-none md:flex-row"
+        role="tablist"
+        data-te-nav-ref
+      >
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Travelling
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Interior Design
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Music
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Dancing
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Book Recommendation -->
+<div class="mb-8">
+  <div class="grid grid-rows-2 gap-0">
+    <h1 class="px-2 mt-16 text-4xl font-bold text-center">
+      Anything interesting to share?
+    </h1>
+    <div>
+      <p class="text-center h-fit mt-3 max-[600px]:text-sm px-2">
+        Become a part of our community and contribute to the platform by
+        uploading your own content.
+      </p>
+      <div class="flex justify-center">
+        <button
+          data-te-ripple-init
+          data-te-ripple-color="light"
+          (click)="onGoToPublishEbookPage()"
+          class="w-fit inline-block mx-2 mt-8 rounded bg-new-primary px-6 py-3 font-medium max-[600px]:text-xs uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-new-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-new-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-new-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+        >
+          <fa-icon [icon]="faBookOpen" class="mr-2 text-white"></fa-icon>
+          Publish EBook
+        </button>
+        <button
+          data-te-ripple-init
+          data-te-ripple-color="light"
+          (click)="onGoToPublishAlbumPage()"
+          class="w-fit inline-block mx-2 mt-8 rounded bg-new-primary px-6 py-3 font-medium max-[600px]:text-xs uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-new-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-new-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-new-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+        >
+          <fa-icon [icon]="faImage" class="mr-2 text-white"></fa-icon> Publish
+          Album
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-1 px-20 max-[600px]:px-8 mt-10">
+    <div
+      class="flex justify-start min-[600px]:text-2xl font-semibold max-[600px]:text-sm"
+    >
+      <fa-icon [icon]="faBookBookmark" class="mr-2 text-success"></fa-icon>
+      <h1 class="whitespace-nowrap">Book Recommendations</h1>
+    </div>
+    <div
+      class="flex justify-end min-[600px]:text-1xl max-[600px]:text-sm font-semibold"
+    >
+      <a class="cursor-pointer" (click)="onGoToEbookPage()">See All</a>
+    </div>
+  </div>
+  <div class="first-feature mt-5 px-20 max-[600px]:px-8">
+    <ng-container *ngIf="isBookRecommndationLoading">
+      <div class="flex items-center justify-center h-40">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isBookRecommndationLoading">
+      <ng-container *ngIf="eBookData.length > 0; else emptyEBookData">
+        <owl-carousel-o [options]="customOptionsOne">
+          <ng-template
+            carouselSlide
+            *ngFor="let row of eBookData; let i = index"
+          >
+            <div
+              class="cursor-pointer slide xl:w-72 sm:w-56 hp:w-40"
+              style="padding: 20px; overflow-wrap: anywhere"
+              (click)="onGoToDetailBook(row.uuid)"
+              (mouseenter)="onChangeBookRecommendationHover(true, i)"
+              (mouseleave)="onChangeBookRecommendationHover(false, i)"
+            >
+              <img
+                [src]="row.pathCover"
+                class="object-cover object-center w-full rounded-xl xl:h-96 sm:h-72 hp:h-48"
+                [alt]="row.title"
+              />
+
+              <ng-container *ngIf="row.title.length > 25">
+                <div class="mt-4 overflow-hidden">
+                  <h1
+                    class="font-bold xl:text-2xl sm:text-lg hp:text-base whitespace-nowrap"
+                    [ngClass]="{
+                      'animate-marquee': isBookRecommendationHover[i]
+                    }"
+                  >
+                    <span class="mr-2">
+                      {{ row.title }}
+                    </span>
+                  </h1>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="row.title.length <= 25"
+                ><h1 class="mt-4 font-bold xl:text-2xl sm:text-lg hp:text-base">
+                  {{ row.title }}
+                </h1></ng-container
+              >
+
+              <ng-container
+                *ngIf="
+                  (screenWidth > 720 && row.author.length > 25) ||
+                  (screenWidth <= 720 && row.author.length > 15)
+                "
+              >
+                <div class="overflow-x-hidden">
+                  <p
+                    class="whitespace-nowrap xl:text-base sm:text-sm hp:text-xs"
+                    [ngClass]="{
+                      'animate-marquee2': isBookRecommendationHover[i]
+                    }"
+                  >
+                    {{ row.author }}
+                  </p>
+                </div>
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  (screenWidth > 720 && row.author.length <= 25) ||
+                  (screenWidth <= 720 && row.author.length <= 15)
+                "
+              >
+                <p class="xl:text-base sm:text-sm hp:text-xs">
+                  {{ row.author }}
+                </p></ng-container
+              >
+            </div>
+          </ng-template>
+        </owl-carousel-o>
+      </ng-container>
+      <ng-template #emptyEBookData>
+        <div
+          class="flex items-center justify-center h-40 min-[600px]:text-lg font-semibold max-[600px]:text-xs"
+        >
+          <h2>No Books available.</h2>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+  <div class="grid grid-cols-2 gap-1 max-[600px]:px-8 mt-10 px-4">
+    <div>
+      <div class="grid grid-cols-2 gap-1 px-4 mt-10">
+        <div
+          class="flex justify-start min-[600px]:text-2xl font-semibold max-[600px]:text-sm"
+        >
+          <fa-icon [icon]="faFire" class="mr-2 text-success"></fa-icon>
+          <h1 class="whitespace-nowrap">Now Trendings</h1>
+        </div>
+        <div
+          class="flex justify-end min-[600px]:text-1xl max-[600px]:hidden max-[600px]:text-sm font-semibold"
+        >
+          <a class="cursor-pointer" (click)="onGoToEbookPage()">See All</a>
+        </div>
+      </div>
+      <div class="mt-5 second-feature">
+        <ng-container *ngIf="isBookTrendingLoading">
+          <div class="flex items-center justify-center h-40">
+            <app-loading></app-loading>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isBookTrendingLoading">
+          <ng-container
+            *ngIf="eBookTrendingData.length > 0; else emptyEBookTrendingData"
+          >
+            <owl-carousel-o [options]="customOptionsTwo">
+              <ng-template
+                carouselSlide
+                *ngFor="let row of eBookTrendingData; let i = index"
+              >
+                <div
+                  class="w-40 cursor-pointer slide"
+                  style="padding: 20px; overflow-wrap: anywhere"
+                  (click)="onGoToDetailBook(row.uuid)"
+                  (mouseenter)="onChangeBookTrendingHover(true, i)"
+                  (mouseleave)="onChangeBookTrendingHover(false, i)"
+                >
+                  <img
+                    [src]="row.pathCover"
+                    class="object-cover object-center w-full h-48 rounded-xl"
+                    [alt]="row.title"
+                  />
+                  <ng-container *ngIf="row.title.length > 25">
+                    <div class="mt-4 overflow-hidden">
+                      <h1
+                        class="text-base font-bold whitespace-nowrap"
+                        [ngClass]="{
+                          'animate-marquee': isBookTrendingHover[i]
+                        }"
+                      >
+                        <span class="mr-2">
+                          {{ row.title }}
+                        </span>
+                      </h1>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="row.title.length <= 25"
+                    ><h1 class="mt-4 text-base font-bold">
+                      {{ row.title }}
+                    </h1></ng-container
+                  >
+                  <ng-container *ngIf="row.author.length > 15">
+                    <div class="overflow-x-hidden">
+                      <p
+                        class="text-xs whitespace-nowrap"
+                        [ngClass]="{
+                          'animate-marquee2': isBookTrendingHover[i]
+                        }"
+                      >
+                        {{ row.author }}
+                      </p>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="row.author.length <= 15">
+                    <p class="text-xs">
+                      {{ row.author }}
+                    </p></ng-container
+                  >
+                </div>
+              </ng-template>
+            </owl-carousel-o>
+          </ng-container>
+          <ng-template #emptyEBookTrendingData>
+            <div
+              class="flex items-center justify-center h-40 min-[600px]:text-lg font-semibold max-[600px]:text-xs"
+            >
+              <h2>No Books available.</h2>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+    <div>
+      <div class="grid grid-cols-2 gap-1 px-4 mt-10">
+        <div
+          class="flex justify-start min-[600px]:text-2xl font-semibold max-[600px]:text-sm"
+        >
+          <fa-icon [icon]="faCalendarDay" class="mr-2 text-success"></fa-icon>
+          <h1 class="whitespace-nowrap">Latest Upload</h1>
+        </div>
+        <div
+          class="flex justify-end min-[600px]:text-1xl max-[600px]:hidden max-[600px]:text-sm font-semibold"
+        >
+          <a class="cursor-pointer" (click)="onGoToEbookPage()">See All</a>
+        </div>
+      </div>
+      <div class="mt-5 third-feature">
+        <ng-container *ngIf="isBookLastUploadLoading">
+          <div class="flex items-center justify-center h-40">
+            <app-loading></app-loading>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isBookLastUploadLoading">
+          <ng-container
+            *ngIf="eBookLatestData.length > 0; else emptyEBookLatestData"
+          >
+            <owl-carousel-o [options]="customOptionsThree">
+              <ng-template
+                carouselSlide
+                *ngFor="let row of eBookLatestData; let i = index"
+              >
+                <div
+                  class="w-40 cursor-pointer slide"
+                  style="padding: 20px; overflow-wrap: anywhere"
+                  (click)="onGoToDetailBook(row.uuid)"
+                  (mouseenter)="onChangeBookLastUploadHover(true, i)"
+                  (mouseleave)="onChangeBookLastUploadHover(false, i)"
+                >
+                  <img
+                    [src]="row.pathCover"
+                    [alt]="row.title"
+                    class="object-cover object-center w-full h-48 rounded-xl"
+                  />
+                  <ng-container *ngIf="row.title.length > 25">
+                    <div class="mt-4 overflow-hidden">
+                      <h1
+                        class="text-base font-bold whitespace-nowrap"
+                        [ngClass]="{
+                          'animate-marquee': isBookLastUploadHover[i]
+                        }"
+                      >
+                        <span class="mr-2">
+                          {{ row.title }}
+                        </span>
+                      </h1>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="row.title.length <= 25"
+                    ><h1 class="mt-4 text-base font-bold">
+                      {{ row.title }}
+                    </h1></ng-container
+                  >
+                  <ng-container *ngIf="row.author.length > 15">
+                    <div class="overflow-x-hidden">
+                      <p
+                        class="text-xs whitespace-nowrap"
+                        [ngClass]="{
+                          'animate-marquee2': isBookLastUploadHover[i]
+                        }"
+                      >
+                        {{ row.author }}
+                      </p>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="row.author.length <= 15">
+                    <p class="text-xs">
+                      {{ row.author }}
+                    </p></ng-container
+                  >
+                </div>
+              </ng-template>
+            </owl-carousel-o>
+          </ng-container>
+        </ng-container>
+        <ng-template #emptyEBookLatestData>
+          <div
+            class="flex items-center justify-center h-40 min-[600px]:text-lg font-semibold max-[600px]:text-xs"
+          >
+            <h2>No Books available.</h2>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <!-- Discover Popular Categories -->
+  <div
+    class="px-12 my-8 fourth-feature bg-dark-soft py-14"
+    style="margin-top: 100px; margin-bottom: 100px"
+  >
+    <div class="flex justify-center">
+      <h1 class="text-white uppercase">Discover Popular Categories</h1>
+    </div>
+    <ng-container *ngIf="isBookCategoryLoading">
+      <div class="flex items-center justify-center h-32">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isBookCategoryLoading">
+      <ng-container
+        *ngIf="eBookCategoryData.length > 0; else emptyEbookCategoryData"
+      >
+        <div class="flex flex-wrap justify-center mt-5">
+          <div
+            class="w-40 px-4 py-2 m-2 bg-white rounded-full cursor-pointer"
+            *ngFor="let row of eBookCategoryData; let i = index"
+            (mouseenter)="onChangeBookPopularCategoryHover(true, i)"
+            (mouseleave)="onChangeBookPopularCategoryHover(false, i)"
+            (click)="onClickEbookCategory(row)"
+          >
+            <ng-container *ngIf="row.name.length > 14">
+              <div class="relative flex overflow-x-hidden rounded-full">
+                <p
+                  class="font-semibold text-center whitespace-nowrap"
+                  [ngClass]="{
+                    'animate-marquee2': isBookPopularCategoryHover[i]
+                  }"
+                >
+                  <span class="mr-2">
+                    {{ row.name }}
+                  </span>
+                </p>
+                <p
+                  *ngIf="isBookPopularCategoryHover[i]"
+                  [ngClass]="{
+                    'animate-re_marquee2': isBookPopularCategoryHover[i]
+                  }"
+                  class="absolute top-0 font-semibold text-center whitespace-nowrap"
+                >
+                  <span class="mr-2">
+                    {{ row.name }}
+                  </span>
+                </p>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="row.name.length <= 14">
+              <p class="font-semibold text-center">
+                {{ row.name }}
+              </p>
+            </ng-container>
+          </div>
+        </div>
+        <div class="flex justify-center mt-8">
+          <button
+            class="px-4 py-2 text-white rounded-lg cursor-pointer bg-soft-green"
+            (click)="onGoToEbookPage()"
+          >
+            View All
+            <fa-icon [icon]="faArrowRight" class="ml-1 text-white"></fa-icon>
+          </button>
+        </div>
+      </ng-container>
+      <ng-template #emptyEbookCategoryData>
+        <div
+          class="flex items-center justify-center h-32 min-[600px]:text-lg font-semibold max-[600px]:text-xs"
+        >
+          <h2 class="text-white">No Book Categories available.</h2>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+  <!-- Photo Gallery -->
+  <div class="relative" style="margin-top: 100px">
+    <div class="grid grid-cols-2 gap-1 px-20 max-[600px]:px-8 mt-10">
+      <div
+        class="flex justify-start min-[600px]:text-2xl font-semibold max-[600px]:text-sm"
+      >
+        <fa-icon [icon]="faImage" class="mr-2 text-success"></fa-icon>
+        <h1 class="whitespace-nowrap">Photo Gallery</h1>
+      </div>
+      <div
+        class="flex justify-end min-[600px]:text-1xl max-[600px]:text-sm font-semibold"
+      >
+        <a routerLink="/user/nex-library/album">See All</a>
+      </div>
+    </div>
+    <div class="fifth-feature">
+      <ng-container *ngIf="isAlbumLoading">
+        <div class="flex items-center justify-center font-semibold h-60">
+          <app-loading></app-loading>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!isAlbumLoading">
+        <ng-container *ngIf="albumData.length > 0; else emptyAlbumData">
+          <div
+            class="grid xl:grid-cols-3 xs:grid-cols-1 gap-2 px-20 max-[600px]:px-8"
+          >
+            <div
+              class="flex justify-center mx-1 mt-5 fifth-feature"
+              style="overflow-wrap: anywhere"
+              *ngFor="let row of albumData; let i = index"
+            >
+              <div
+                class="block max-w-sm rounded-lg shadow-lg cursor-pointer bg-neutral-50 w-80"
+                (mouseenter)="onChangeAlbumHover(true, i)"
+                (mouseleave)="onChangeAlbumHover(false, i)"
+              >
+                <img
+                  class="object-cover object-center w-full rounded-lg h-60"
+                  [src]="row.path"
+                  [alt]="row.title"
+                />
+                <div class="p-5">
+                  <p class="mb-3 text-sm text-gray-500">
+                    {{ formattedDate(row.createdAt) }}
+                  </p>
+                  <ng-container *ngIf="row.title.length > 20">
+                    <div class="overflow-hidden">
+                      <h5
+                        class="mb-2 text-xl font-semibold leading-tight cursor-pointer whitespace-nowrap"
+                        [ngClass]="{
+                          'animate-marquee': isAlbumHover[i]
+                        }"
+                      >
+                        {{ row.title }}
+                      </h5>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="row.title.length <= 20">
+                    <h5 class="mb-2 text-xl font-medium leading-tight">
+                      {{ row.title }}
+                    </h5>
+                  </ng-container>
+                  <ng-container *ngIf="row.description.length > 45">
+                    <div class="overflow-hidden">
+                      <p
+                        class="mb-4 text-sm whitespace-nowrap"
+                        [ngClass]="{
+                          'animate-marquee2': isAlbumHover[i]
+                        }"
+                      >
+                        {{ row.description }}
+                      </p>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="row.description.length <= 45">
+                    <p class="mb-4 text-sm">
+                      {{ row.description }}
+                    </p>
+                  </ng-container>
+
+                  <a
+                    (click)="onGoToDetailAlbum(row.uuid)"
+                    class="inline-block rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                    data-te-ripple-init
+                    data-te-ripple-color="light"
+                  >
+                    View Album
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #emptyAlbumData>
+          <div
+            class="flex items-center justify-center h-60 min-[600px]:text-lg font-semibold max-[600px]:text-xs"
+          >
+            <h2>No Albums Available.</h2>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+
+    <img
+      class="absolute left-0 rotate-180 -top-3/4 -z-20"
+      src="../../../../assets/image/home-page/gradient/229.png"
+      alt=""
+    />
+    <img
+      class="absolute right-0 -top-3/4 -z-20"
+      src="../../../../assets/image/home-page/gradient/229.png"
+      alt=""
+    />
+  </div>
+
+  <!-- Web Directory -->
+  <div style="margin-top: 100px; margin-bottom: 100px" class="relative">
+    <div class="grid grid-cols-2 gap-1 px-20 max-[600px]:px-8 mt-10">
+      <div
+        class="flex justify-start min-[600px]:text-2xl font-semibold max-[600px]:text-sm"
+      >
+        <fa-icon [icon]="faEarth" class="mr-2 text-success"></fa-icon>
+        <h1 class="whitespace-nowrap">Web Directory</h1>
+      </div>
+      <div
+        class="flex justify-end min-[600px]:text-1xl max-[600px]:text-sm font-semibold"
+      >
+        <div class="cursor-pointer" (click)="onGoToWebDirectoryPage()">
+          See All
+        </div>
+      </div>
+    </div>
+    <div class="sixty-feature">
+      <ng-container *ngIf="isWebDirectoryLoading">
+        <div class="flex items-center justify-center font-semibold h-60">
+          <app-loading></app-loading>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!isWebDirectoryLoading">
+        <ng-container
+          *ngIf="
+            webDirectoryUnitData.length > 0;
+            else emptyWebDirectoryUnitData
+          "
+        >
+          <div
+            class="grid gap-4 px-20 xl:grid-cols-6 lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 hp:grid-cols-1 sm:px-8"
+          >
+            <div
+              class="flex items-center justify-center sixty-feature"
+              *ngFor="let row of webDirectoryUnitData; let i = index"
+            >
+              <div class="w-40 h-full cursor-pointer">
+                <div
+                  (mouseenter)="
+                    row.name.length > 17
+                      ? onChangeWebDirectoryHover(true, i)
+                      : null
+                  "
+                  (mouseleave)="
+                    row.name.length > 17
+                      ? onChangeWebDirectoryHover(false, i)
+                      : null
+                  "
+                  (click)="onClickBussinessUnit(row)"
+                >
+                  <h1
+                    class="place-self-center text-center mb-3 mt-5 font-bold text-success max-[600px]:text-2xl min-[600px]:text-6xl max-[600px]:p-4 min-[600px]:p-10 bg-gray-100"
+                  >
+                    {{
+                      row.code.length > 3
+                        ? row.code.substring(0, 3) + "..."
+                        : row.code
+                    }}
+                  </h1>
+                </div>
+                <ng-container *ngIf="row.name.length > 17">
+                  <div
+                    class="relative flex max-[600px]:text-xs overflow-x-hidden"
+                  >
+                    <p
+                      [ngClass]="{
+                        'animate-marquee': isWebDirectoryHover[i]
+                      }"
+                      class="whitespace-nowrap"
+                    >
+                      <span class="mr-4">
+                        {{ row.name }}
+                      </span>
+                    </p>
+                    <p
+                      *ngIf="isWebDirectoryHover[i]"
+                      [ngClass]="{
+                        'animate-re_marquee': isWebDirectoryHover[i]
+                      }"
+                      class="absolute top-0 whitespace-nowrap"
+                    >
+                      <span class="mr-4">
+                        {{ row.name }}
+                      </span>
+                    </p>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="row.name.length <= 17"
+                  ><div class="max-[600px]:text-xs text-center">
+                    <p>{{ row.name }}</p>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #emptyWebDirectoryUnitData>
+          <div
+            class="flex items-center justify-center h-60 min-[600px]:text-lg font-semibold max-[600px]:text-xs"
+          >
+            <h2>No Web Directory Available.</h2>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+
+    <img
+      class="absolute top-0 left-0 -z-20"
+      src="../../../../assets/image/home-page/gradient/227.png"
+      alt=""
+    />
+
+    <img
+      class="absolute top-0 right-0 -z-10"
+      src="../../../../assets/image/home-page/gradient/228.png"
+      alt=""
+    />
+
+    <img
+      class="absolute top-0 right-0 -z-20"
+      src="../../../../assets/image/home-page/gradient/229.png"
+      alt=""
+    />
+  </div>
+</div>
+
+<img
+  class="absolute left-0 top-2/3 -z-20"
+  src="../../../../assets/image/home-page/gradient/227.png"
+  alt=""
+/>
+
+<img
+  class="absolute right-0 top-3/4 -z-10"
+  src="../../../../assets/image/home-page/gradient/228.png"
+  alt=""
+/>
+
+<img
+  class="absolute right-0 top-1/2 -z-20"
+  src="../../../../assets/image/home-page/gradient/229.png"
+  alt=""
+/>

@@ -1,0 +1,92 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX TALK</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">Podcasts</h1>
+      <div class="flex justify-start mt-5">
+        <h1 class="text-gray-400">Podcasts</h1>
+        <fa-icon class="mx-3 text-gray-400" [icon]="faArrowRight"></fa-icon>
+        <h1 class="text-black">{{ subPageTitle }}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<ul
+  class="flex flex-col flex-wrap pl-0 mt-5 mb-5 list-none border-b-0 md:flex-row"
+  role="tablist"
+  data-te-nav-ref
+>
+  <li role="presentation">
+    <a
+      class="my-2 block border-x-0 border-t-0 border-b-2 border-transparent px-7 pt-4 pb-3.5 text-lg font-semibold text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:font-semibold data-[te-nav-active]:border-soft-green data-[te-nav-active]:text-soft-green dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-soft-green-400 dark:data-[te-nav-active]:text-soft-green-400"
+      data-te-toggle="pill"
+      data-te-target="#tab-podcast-creator"
+      data-te-nav-active
+      role="tab"
+      aria-controls="tab-podcast-creator"
+      aria-selected="true"
+      (click)="changeSubPageTitle('Creators')"
+      >Podcast Channels</a
+    >
+  </li>
+  <li role="presentation">
+    <a
+      class="focus:border-transparen my-2 block border-x-0 border-t-0 border-b-2 border-transparent px-7 pt-4 pb-3.5 text-lg font-semibold text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:font-semibold data-[te-nav-active]:border-soft-green data-[te-nav-active]:text-soft-green dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-soft-green-400 dark:data-[te-nav-active]:text-soft-green-400"
+      data-te-toggle="pill"
+      data-te-target="#tab-podcast-series"
+      role="tab"
+      aria-controls="tab-podcast-series"
+      aria-selected="false"
+      (click)="changeSubPageTitle('Series')"
+      >Podcast Series</a
+    >
+  </li>
+  <li role="presentation">
+    <a
+      class="my-2 block border-x-0 border-t-0 border-b-2 border-transparent px-7 pt-4 pb-3.5 text-lg font-semibold text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:font-semibold data-[te-nav-active]:border-soft-green data-[te-nav-active]:text-soft-green dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-soft-green-400 dark:data-[te-nav-active]:text-soft-green-400"
+      data-te-toggle="pill"
+      data-te-target="#tab-podcast"
+      role="tab"
+      aria-controls="tab-podcast"
+      aria-selected="false"
+      (click)="changeSubPageTitle('Episodes')"
+      >Podcast episodes</a
+    >
+  </li>
+</ul>
+<div class="mb-6">
+  <div
+    class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+    id="tab-podcast-creator"
+    role="tabpanel"
+    aria-labelledby="tab-podcast-creator"
+    data-te-tab-active
+  >
+    <app-creator-podcast
+      *ngIf="subPageTitle.toLowerCase() === 'creators'"
+      [personalNumber]="personalNumber"
+    ></app-creator-podcast>
+  </div>
+  <div
+    class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+    id="tab-podcast-series"
+    role="tabpanel"
+    aria-labelledby="tab-podcast-series"
+  >
+    <app-series-podcast
+      *ngIf="subPageTitle.toLowerCase() === 'series'"
+      [personalNumber]="personalNumber"
+    ></app-series-podcast>
+  </div>
+  <div
+    class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+    id="tab-podcast"
+    role="tabpanel"
+    aria-labelledby="tab-podcast"
+  >
+    <app-podcast
+      *ngIf="subPageTitle.toLowerCase() === 'episodes'"
+      [personalNumber]="personalNumber"
+    ></app-podcast>
+  </div>
+</div>

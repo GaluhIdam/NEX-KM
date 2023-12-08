@@ -1,0 +1,128 @@
+<div class="px-20 mt-16">
+  <div class="mb-8">
+    <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+      <a class="mr-3 text-gray-400 cursor-pointer" (click)="onGoHomePage()"
+        >Home</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a class="mr-3 text-gray-400 cursor-pointer" (click)="onGoToNexTalkPage()"
+        >Nex Talk</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a routerLink="/user/nex-talks/podcast" class="mr-3 text-gray-400"
+        >Podcast</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <p class="mr-3 text-black activeLink">{{ selectedCategory.name }}</p>
+    </div>
+  </div>
+  <div class="mb-8">
+    <h1 class="mb-5 text-5xl font-semibold text-blue-800">NEX PODCAST</h1>
+    <p class="mb-3 text-3xl text-blue-700">Podcast List</p>
+    <p>Discover a new podcast anytime and anywhere</p>
+  </div>
+  <div class="grid gap-5 lg:grid-cols-4 xs:grid-cols-1">
+    <!-- Left -->
+    <div
+      class="flex flex-col py-3 bg-white shadow-md rounded-xl lg:min-h-screen"
+    >
+      <ng-container *ngFor="let category of categoryData">
+        <div
+          class="flex flex-row items-center justify-start px-4 py-2 cursor-pointer rounded-2xl"
+          (click)="onChangeCategory(category)"
+          [class.bg-soft-green]="selectedCategory.name === category.name"
+        >
+          <div
+            [class.text-white]="selectedCategory.name === category.name"
+            [class.font-semibold]="selectedCategory.name === category.name"
+          >
+            <ng-container *ngIf="category.name === 'Podcast List'">
+              <fa-icon
+                [icon]="faMusic"
+                class="mr-3 text-black"
+                [class.text-white]="selectedCategory.name === category.name"
+              ></fa-icon>
+            </ng-container>
+            <ng-container *ngIf="category.name === 'Latest Release'">
+              <fa-icon
+                [icon]="faVolumeHigh"
+                class="mr-3 text-black"
+                [class.text-white]="selectedCategory.name === category.name"
+              ></fa-icon>
+            </ng-container>
+            <ng-container *ngIf="category.name === 'Recently Played'">
+              <fa-icon
+                [icon]="faClock"
+                class="mr-3 text-black"
+                [class.text-white]="selectedCategory.name === category.name"
+              ></fa-icon>
+            </ng-container>
+            <ng-container *ngIf="category.name === 'Liked Podcast'">
+              <fa-icon
+                [icon]="faThumbsUp"
+                class="mr-3 text-black"
+                [class.text-white]="selectedCategory.name === category.name"
+              ></fa-icon>
+            </ng-container>
+            {{ category.name }}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Right -->
+    <div class="col-span-3">
+      <ng-container *ngIf="selectedCategory.name === 'Podcast List'">
+        <app-podcast-list></app-podcast-list
+      ></ng-container>
+      <ng-container *ngIf="selectedCategory.name === 'Latest Release'"
+        ><app-podcast-latest-release
+          [player]="player"
+          [(playCount)]="playCount"
+          [isLoading]="isPodcastLastReleaseLoading"
+          [isDurationLoading]="isPodcastLastReleaseDurationLoading"
+          [(podcastLastReleaseData)]="podcastLastReleaseData"
+          [(podcastLastPlayData)]="podcastLastPlayData"
+          [likedPodcastData]="podcastLikedData"
+          [(selectedPodcastToPlay)]="selectedPodcastToPlay"
+          [(currentIndexPodcastToPlay)]="currentIndexPodcastToPlay"
+          [(isPodcastLastReleasePlay)]="isPodcastLastReleasePlay"
+          [(isPodcastLastPlay)]="isPodcastRecentlyPlay"
+          [(isPodcastLikedPlay)]="isPodcastLikedPlay"
+        ></app-podcast-latest-release>
+      </ng-container>
+      <ng-container *ngIf="selectedCategory.name === 'Recently Played'"
+        ><app-podcast-recently-played
+          [player]="player"
+          [(playCount)]="playCount"
+          [isLoading]="isPodcastLastPlayLoading"
+          [isDurationLoading]="isPodcastLastPlayDurationLoading"
+          [(podcastLastReleaseData)]="podcastLastReleaseData"
+          [(podcastLastPlayData)]="podcastLastPlayData"
+          [likedPodcastData]="podcastLikedData"
+          [(selectedPodcastToPlay)]="selectedPodcastToPlay"
+          [(currentIndexPodcastToPlay)]="currentIndexPodcastToPlay"
+          [(isPodcastLastReleasePlay)]="isPodcastLastReleasePlay"
+          [(isPodcastLastPlay)]="isPodcastRecentlyPlay"
+          [(isPodcastLikedPlay)]="isPodcastLikedPlay"
+        ></app-podcast-recently-played>
+      </ng-container>
+      <ng-container *ngIf="selectedCategory.name === 'Liked Podcast'"
+        ><app-podcast-liked-podcast
+          [player]="player"
+          [(playCount)]="playCount"
+          [isLoading]="isPodcastLikedLoading"
+          [isDurationLoading]="isPodcastLikedDurationLoading"
+          [(podcastLastReleaseData)]="podcastLastReleaseData"
+          [(podcastLastPlayData)]="podcastLastPlayData"
+          [likedPodcastData]="podcastLikedData"
+          [(selectedPodcastToPlay)]="selectedPodcastToPlay"
+          [(currentIndexPodcastToPlay)]="currentIndexPodcastToPlay"
+          [(isPodcastLastReleasePlay)]="isPodcastLastReleasePlay"
+          [(isPodcastLastPlay)]="isPodcastRecentlyPlay"
+          [(isPodcastLikedPlay)]="isPodcastLikedPlay"
+        ></app-podcast-liked-podcast>
+      </ng-container>
+    </div>
+  </div>
+</div>

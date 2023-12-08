@@ -1,0 +1,350 @@
+<!-- Header -->
+<div class="mt-10 lg:mx-10 mx-5 px-5 py-10 rounded-xl bg-cover bg-center"
+  [style.background-image]="'url(' +communityDetail.headlinedPhotoPath + ')'">
+  <div class="grid lg:grid-cols-2 xs:grid-cols-1 px-5 text-white">
+    <!-- Left -->
+    <div>
+      <p class="lg:text-3xl text-lg font-semibold">Welcome to</p>
+      <p class="lg:text-5xl text-3xl font-semibold uppercase mt-2">{{ communityDetail.name }}</p>
+      <div class="mt-10">
+        <p class="w-full my-1 text-sm">
+          <fa-icon [icon]="faUsers" class="text-white mr-1"></fa-icon>
+          {{ communityDetail._count.communitiesCommunityMembers }} Members
+        </p>
+        <p class="w-full my-1 text-sm">
+          <fa-icon [icon]="faCalendar" class="text-white mr-3"></fa-icon>
+          Founded at {{formatDateNotDays(communityDetail.createdAt)}}
+        </p>
+        <p class="w-full my-1 text-sm">
+          <fa-icon [icon]="faLocationPin" class="text-white mr-3"></fa-icon>
+          {{communityDetail.location}}
+        </p>
+      </div>
+      <div class="mt-7 flex flex-rows">
+        <button type="button" *ngIf="communityPersonalNumber !== keycloakService.getUsername()"
+          (click)="createFollower()"
+          class="text-white border w-36 mr-2 my-2 border-white rounded px-3 py-1 hover:bg-white hover:text-primary">Follow</button>
+        <button type="button" *ngIf="communityPersonalNumber === keycloakService.getUsername()"
+          (click)="deleteFollower()"
+          class="text-white border w-36 mr-2 my-2 border-white rounded px-3 py-1 hover:bg-white hover:text-primary">Unfollow</button>
+        <button type="button" (click)="show()"
+          *ngIf="keycloakService.getUsername() === communityDetail.leaderPersonalNumber" data-te-toggle="modal"
+          data-te-target="#exampleModalXl" data-te-ripple-init data-te-ripple-color="light"
+          class="text-white border w-36 my-2 border-white rounded px-3 py-1 hover:bg-white hover:text-primary">Edit</button>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="text-end self-end xs:mt-10">
+      <p class="font-semibold text-md">Leader</p>
+      <img [src]="photo" class="rounded-full w-12 h-12 ml-auto" alt="Profile Image" loading="lazy" />
+      <p class="font-semibold text-md">{{communityDetail.leader}}</p>
+      <p class="text-sm">{{ personalEmail }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- About & Leader Profile Header -->
+<div class="lg:flex lg:flex-row lg:mx-10 mx-5 mt-10">
+  <div class="mt-5 w-full">
+    <div class="flex flex-rows">
+      <fa-icon [icon]="faInfoCircle" class="text-green-400 mr-2"></fa-icon>
+      <p class="lg:text-2xl text-lg font-semibold">About</p>
+    </div>
+    <p class="text-justify lg:text-base tex-xs mx-3 mt-3">{{ communityDetail.about }}</p>
+  </div>
+  <div class="mt-5 w-full">
+    <div class="flex flex-rows">
+      <fa-icon [icon]="faInfoCircle" class="text-green-400 mr-2"></fa-icon>
+      <p class="lg:text-2xl text-lg font-semibold">Leader Profile</p>
+    </div>
+    <p class="text-justify lg:text-base tex-xs mx-3 mt-3">{{ communityDetail.leaderProfile }}</p>
+  </div>
+</div>
+
+
+<!-- Recent Activity -->
+<div class="mx-5 lg:mx-10 mt-10">
+  <div class="grid grid-cols-2 gap-1 mt-10 mb-5">
+    <div class="flex justify-start text-xl">
+      <fa-icon [icon]="faImage" class="text-2xl text-success mr-2 place-self-center"></fa-icon>
+      <p class="whitespace-nowrap text-2xl font-semibold">Recent Activity</p>
+    </div>
+    <div class="text-lg flex justify-end font-semibold">
+      <a [routerLink]="'/user/nex-community/activity/'+uuid">See All</a>
+    </div>
+  </div>
+  <div class="grid lg:grid-cols-4 grid-cols-1 gap-4">
+    <div *ngFor="let row of dataActivity" class="block rounded-lg bg-white shadow-sm border border-gray-300">
+      <img class="object-cover h-56 w-full rounded-t-lg" [src]="row.path" alt="image" />
+      <div class="p-6 bg-gray-100">
+        <p class="text-xs text-gray-400 font-medium">{{ formatDateNotDays(row.createdAt) }}</p>
+        <h5 class="mt-3 text-lg font-semibold leading-tight text-neutral-800 dark:text-neutral-50">
+          {{ trimString(row.title, 20) }}
+        </h5>
+        <p class="mt-2 mb-4 text-sm text-neutral-600 dark:text-neutral-200">
+          {{ trimString(row.description, 140) }}
+        </p>
+        <div class="flex flex-row justify-between">
+          <p class="font-bold">{{ row.communityActivitiesCommunities.name }}</p>
+          <a [routerLink]="'/user/nex-community/activity-detail/'+uuid+'/'+row.uuid"
+            class="inline-block mt-2 mr-2 rounded bg-primary px-4 pb-2 pt-2.5 text-xs text-white hover:text-primary hover:bg-white hover:border hover:border-primary shadow"
+            data-te-ripple-init data-te-ripple-color="light">
+            <fa-icon [icon]="faEye" class="mr-1"></fa-icon> View Activity
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="text-center text-sm text-gray-400" *ngIf="!dataActivity">Activity not available!</p>
+</div>
+
+
+<!-- Members -->
+<div class="mx-5 lg:mx-10 mt-10">
+  <div class="grid grid-cols-2 gap-1 mt-10 mb-5">
+    <div class="flex justify-start text-xl">
+      <fa-icon [icon]="faUsers" class="text-2xl text-success mr-2 place-self-center"></fa-icon>
+      <p class="whitespace-nowrap text-2xl font-semibold">Members</p>
+    </div>
+    <div class="text-lg flex justify-end font-semibold">
+      <a [routerLink]="'/user/nex-community/member/'+uuid">See All</a>
+    </div>
+  </div>
+  <div class="grid lg:grid-cols-4 grid-cols-1 gap-4">
+    <div class="rounded-lg shadow w-full h-fit px-4 py-2" *ngFor="let row of dataMember">
+      <div class="flex items-center w-full">
+        <img class="w-12 h-12 rounded-full mr-3"
+          [src]="'https://talentlead.gmf-aeroasia.co.id/images/avatar/'+row.personalNumber+'.jpg'">
+        <div class="flex flex-col mr-4 w-full">
+          <strong class="text-xs">{{ trimString(row.personalName, 15) }}</strong>
+          <span class="text-xs">{{ row.communityMembersCommunityRoles.name }}</span>
+        </div>
+        <div class="flex justify-end">
+          <button type="button"
+            class="bg-regal-blue rounded px-3 py-1 text-white hover:bg-white hover:text-regal-blue hover:border hover:border-regal-blue"
+            *ngIf="row.personalNumber != keycloakService.getUsername()">Follow</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h1 *ngIf="!dataMember" class="text-center text-gray-400">Sorry, data is empty</h1>
+</div>
+
+
+<!--Extra large modal-->
+<div data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="exampleModalXl" tabindex="-1" aria-labelledby="exampleModalXlLabel" aria-modal="true" role="dialog">
+  <div data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px] min-[992px]:max-w-[800px] min-[1200px]:max-w-[1140px]">
+    <div
+      class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600 mb-10">
+      <div
+        class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+        <!--Modal title-->
+        <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200" id="exampleModalXlLabel">
+          <fa-icon [icon]="faPencil" class="mr-1 text-success"></fa-icon> Edit Community
+        </h5>
+        <!--Close button-->
+        <button type="button" (click)="reset()"
+          class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!--Modal body-->
+      <div class="relative p-4">
+        <form [formGroup]="mform" (submit)="createCommunity()">
+          <div class="rounded">
+            <div class="flex flex-rows justify-end mb-5">
+
+              <div class="grid grid-rows-2 gap-2">
+                <div class="w-fit mr-5">
+                  <img *ngIf="imageValidator == null || imageValidator == false"
+                    class="object-cover rounded-lg w-56 h-96"
+                    src="../../../../../../assets/image/community/thumbnail/thumbnail-300x500.jpeg" alt="default">
+                  <img *ngIf="imageValidator === true" [src]="imageShow" class="object-cover rounded-lg w-64 h-96"
+                    alt="default-true">
+                  <div class="mt-3 mb-2">
+                    <label for="title" class="font-base text-gray-500">Profile Image <span
+                        class="text-red-500">*</span></label>
+                  </div>
+                  <input class="px-2 py-1 rounded w-full" (change)="onFileSelected($event)" type="file">
+                  <p *ngIf="imageValidator == false" class="text-red-500 text-xs italic mt-1">
+                    * {{ imageValidatorMessage }}.
+                  </p>
+                </div>
+
+
+                <div class="w-fit mr-5">
+                  <img *ngIf="imageValidatorLogo == null || imageValidatorLogo == false"
+                    class="object-cover rounded-full w-56 h-56"
+                    src="../../../../../../assets/image/community/logo/community-logo.png" alt="default">
+                  <img *ngIf="imageValidatorLogo === true" [src]="imageShowLogo"
+                    class="object-cover rounded-full w-56 h-56" alt="default-true">
+                  <div class="mt-3 mb-2">
+                    <label for="title" class="font-base text-gray-500">Logo Image <span
+                        class="text-red-500">*</span></label>
+                  </div>
+                  <input class="px-2 py-1 rounded w-full" (change)="onFileSelectedLogo($event)" type="file">
+                  <p *ngIf="imageValidatorLogo == false" class="text-red-500 text-xs italic mt-1">
+                    * {{ imageValidatorMessageLogo }}.
+                  </p>
+                </div>
+              </div>
+
+              <div class="w-full">
+                <div class="mb-4">
+                  <img *ngIf="imageValidatorCover == null || imageValidatorCover == false" class="w-[100%] rounded-lg"
+                    [src]="imageShowCover" alt="cover-default">
+                  <img *ngIf="imageValidatorCover === true" [src]="imageShowCover" class="rounded-lg"
+                    alt="default-true">
+                  <div class="mt-3 mb-2">
+                    <label for="title" class="font-base text-gray-500">Cover Image Community <span
+                        class="text-red-500">*</span></label>
+                  </div>
+                  <input class="px-2 py-1 rounded w-full" (change)="onFileSelectedCover($event)" type="file">
+                  <p *ngIf="imageValidatorCover == false" class="text-red-500 text-xs italic mt-1">
+                    * {{ imageValidatorMessageCover }}.
+                  </p>
+                </div>
+
+                <!-- Line -->
+                <div class="grid grid-cols-2 gap-4">
+                  <!-- name -->
+                  <div class="mb-4 flex flex-col">
+                    <label for="name" class="font-base text-gray-500 mb-1">Community Name <span
+                        class="text-red-500">*</span></label>
+                    <input type="text" formControlName="name"
+                      [ngClass]="{'border-rose-500': mform.get('name')?.touched && mform.get('name')?.invalid }"
+                      class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('name')?.touched && mform.get('name')?.invalid">
+                      * Name is required.
+                    </p>
+                  </div>
+                  <!-- name -->
+
+                  <!-- leader -->
+                  <div class="mb-4">
+                    <label for="title" class="font-base text-gray-500 mb-2">Leader <span
+                        class="text-red-500">*</span></label>
+                    <div class="mt-[3px]">
+                      <div
+                        [ngClass]="{'border border-rose-500 rounded': mform.get('leaderPersonalNumber')?.touched && mform.get('leaderPersonalNumber')?.invalid }">
+                        <ng-select formControlName="leaderPersonalNumber" [items]="dataUser"
+                          (search)="searchData($event)" bindLabel="personalName" bindValue="personalNumber"
+                          placeholder="Select leader">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <p *ngIf="mform.get('leaderPersonalNumber')?.touched && mform.get('leaderPersonalNumber')?.invalid"
+                      class="text-red-500 text-xs italic mt-1">
+                      * Leader is required.
+                    </p>
+                  </div>
+                  <!-- leader -->
+
+                  <!-- founded -->
+                  <div class="mb-4 flex flex-col">
+                    <label for="founded" class="font-base text-gray-500 mb-1">Founded <span
+                        class="text-red-500">*</span></label>
+                    <input type="text" formControlName="founded"
+                      [ngClass]="{'border-rose-500': mform.get('founded')?.touched && mform.get('founded')?.invalid }"
+                      class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('founded')?.touched && mform.get('founded')?.invalid">
+                      * Founded is required.
+                    </p>
+                  </div>
+                  <!-- founded -->
+
+                  <!-- location -->
+                  <div class="mb-4 flex flex-col">
+                    <label for="location" class="font-base text-gray-500 mb-1">Location <span
+                        class="text-red-500">*</span></label>
+                    <input type="text" formControlName="location"
+                      [ngClass]="{'border-rose-500': mform.get('location')?.touched && mform.get('location')?.invalid }"
+                      class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('location')?.touched && mform.get('location')?.invalid">
+                      * Location is required.
+                    </p>
+                  </div>
+                </div>
+                <!-- location -->
+
+                <!-- about -->
+                <div class="mb-4 flex flex-col">
+                  <label for="about" class="font-base text-gray-500 mb-1">About <span
+                      class="text-red-500">*</span></label>
+                  <textarea formControlName="about" rows="5"
+                    [ngClass]="{'border-rose-500': mform.get('about')?.touched && mform.get('about')?.invalid }"
+                    class="w-full border border-2 boder-gray-600 rounded p-3"></textarea>
+                  <p class="text-xs text-rose-500 italic mt-1"
+                    *ngIf="mform.get('about')?.touched && mform.get('about')?.invalid">
+                    * About is required.
+                  </p>
+                </div>
+                <!-- about -->
+
+                <!-- leader profile -->
+                <div class="mb-4 flex flex-col">
+                  <label for="leaderProfile" class="font-base text-gray-500 mb-1">Leader Profile <span
+                      class="text-red-500">*</span></label>
+                  <textarea formControlName="leaderProfile"
+                    [ngClass]="{'border-rose-500': mform.get('leaderProfile')?.touched && mform.get('leaderProfile')?.invalid }"
+                    rows="5" class="w-full border border-2 boder-gray-600 rounded p-3"></textarea>
+                  <p class="text-xs text-rose-500 italic mt-1"
+                    *ngIf="mform.get('leaderProfile')?.touched && mform.get('leaderProfile')?.invalid">
+                    * Leader profile is required.
+                  </p>
+                </div>
+                <!-- leader profile -->
+
+                <!-- instagram -->
+                <div class="mb-4 flex flex-col">
+                  <label for="instagram" class="font-base text-gray-500 mb-1">Instagram <span
+                      class="text-red-500">*</span></label>
+                  <input type="text" formControlName="instagram"
+                    [ngClass]="{'border-rose-500': mform.get('instagram')?.touched && mform.get('instagram')?.invalid }"
+                    class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                  <p class="text-xs text-rose-500 italic mt-1"
+                    *ngIf="mform.get('instagram')?.touched && mform.get('instagram')?.invalid">
+                    * Instagram is required.
+                  </p>
+                </div>
+                <!-- instagram -->
+              </div>
+            </div>
+          </div>
+          <!--Modal footer-->
+          <div
+            class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+            <button type="button"
+              class="inline-block mr-2 rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-primary-accent-100 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
+              data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+              Close
+            </button>
+            <button type="submit"
+              class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+              data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+              Save changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<img class="absolute left-0 top-2/3 -z-20" src="../../../../assets/image/home-page/gradient/227.png" alt="" />
+
+<img class="absolute right-0 top-3/4 -z-10" src="../../../../assets/image/home-page/gradient/228.png" alt="" />
+
+<img class="absolute right-0 top-1/2 -z-20" src="../../../../assets/image/home-page/gradient/229.png" alt="" />

@@ -1,0 +1,494 @@
+<div *ngIf="load">
+  <app-loading></app-loading>
+</div>
+<div *ngIf="!load">
+  <div class="grid grid-cols-2 gap-1">
+    <div class="flex justify-start">
+      <div>
+        <h1 class="text-gray-500">NEX COMMUNITY</h1>
+        <h1 class="text-4xl font-semibold text-gray-700">{{ title.title }}</h1>
+        <div class="flex justify-start mt-2">
+          <h1 class="text-gray-400">Community</h1>
+          <fa-icon class="text-gray-400 mx-2" [icon]="faArrowRight"></fa-icon>
+          <h1 class="text-black">Detail Community</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5">
+    <!--Tabs navigation-->
+    <ul class="mb-5 flex list-none flex-row flex-wrap border-b-0 pl-0" role="tablist" data-te-nav-ref>
+      <li role="presentation">
+        <a href="#tabs-home"
+          class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-lg font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+          data-te-toggle="pill" data-te-target="#tabs-home" data-te-nav-active role="tab" aria-controls="tabs-home"
+          aria-selected="true">About</a>
+      </li>
+      <li role="presentation">
+        <a href="#tabs-profile"
+          class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-lg font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+          data-te-toggle="pill" data-te-target="#tabs-profile" role="tab" aria-controls="tabs-profile"
+          aria-selected="false">Member</a>
+      </li>
+      <li role="presentation">
+        <a href="#tabs-messages"
+          class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-lg font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+          data-te-toggle="pill" data-te-target="#tabs-messages" role="tab" aria-controls="tabs-messages"
+          aria-selected="false">Activity</a>
+      </li>
+    </ul>
+
+    <!--Tabs content-->
+    <div class="mb-6">
+
+      <!-- Community Edit Tab -->
+      <div class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+        id="tabs-home" role="tabpanel" aria-labelledby="tabs-home-tab" data-te-tab-active>
+        <!-- Edit Off -->
+        <div *ngIf="!edited" class="bg-white shadow px-5 mt-5 py-5 rounded">
+          <div class="flex flex-rows justify-end mb-5">
+            <a routerLink="../../community"
+              class="border border-danger text-danger hover:bg-danger hover:text-white rounded px-3 mr-2 py-1"><fa-icon
+                [icon]="faCircleArrowLeft"></fa-icon> Back</a>
+            <button type="button" (click)="editedMode()"
+              class="border border-success text-success hover:bg-success hover:text-white rounded px-3 py-1"><fa-icon
+                [icon]="faPencil"></fa-icon> Edit</button>
+          </div>
+          <div class="flex flex-rows">
+            <div class="grid grid-rows-2 gap-2">
+              <div class="w-fit mr-5">
+                <img class="object-cover w-64 h-96" [src]="communityData.thumbnailPhotoPath"
+                  [alt]="communityData.thumbnailPhoto">
+              </div>
+              <div class="w-fit mr-5">
+                <img class="object-cover w-64" [src]="communityData.icon" [alt]="communityData.icon">
+              </div>
+            </div>
+            <div class="w-full">
+              <img class="w-[100%]" [src]="communityData.headlinedPhotoPath" [alt]="communityData.headlinedPhoto">
+              <div class="grid grid-cols-2 gap-4 mt-5">
+                <div class="mb-5">
+                  <label for="title" class="font-base text-gray-500">Community Name <span
+                      class="text-red-500">*</span></label>
+                  <input type="text" class="w-full px-2 py-1 rounded border border-gray-300"
+                    [value]="communityData.name">
+                </div>
+                <div class="mb-5">
+                  <label for="title" class="font-base text-gray-500">Leader <span class="text-red-500">*</span></label>
+                  <input type="text" disabled class="w-full px-2 py-1 rounded border border-gray-300"
+                    [value]="communityData.leader">
+                </div>
+                <div class="mb-5">
+                  <label for="title" class="font-base text-gray-500">Founded <span class="text-red-500">*</span></label>
+                  <input type="date" disabled class="w-full px-2 py-1 rounded border border-gray-300"
+                    [value]="formatDateNow(communityData.createdAt!)">
+                </div>
+                <div class="mb-5">
+                  <label for="title" class="font-base text-gray-500">Location <span
+                      class="text-red-500">*</span></label>
+                  <input type="text" disabled class="w-full px-2 py-1 rounded border border-gray-300"
+                    [value]="communityData.location">
+                </div>
+              </div>
+              <div class="mb-4 flex flex-col">
+                <label for="about" class="font-base text-gray-500 mb-1">About <span
+                    class="text-red-500">*</span></label>
+                <textarea [value]="communityData.about" disabled rows="5"
+                  class="w-full border border-2 boder-gray-600 rounded p-3"></textarea>
+              </div>
+              <div class="mb-4 flex flex-col">
+                <label for="about" class="font-base text-gray-500 mb-1">Leader Profile <span
+                    class="text-red-500">*</span></label>
+                <textarea [value]="communityData.leaderProfile" disabled rows="5"
+                  class="w-full border border-2 boder-gray-600 rounded p-3"></textarea>
+              </div>
+              <div class="mb-4 flex flex-col">
+                <label for="instagram" class="font-base text-gray-500 mb-1">Instagram <span
+                    class="text-red-500">*</span></label>
+                <input disabled type="text" [value]="communityData.instagram"
+                  class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="mb-4 flex flex-col">
+                  <label for="status" class="font-base text-gray-500 mb-1">Status <span
+                      class="text-red-500">*</span></label>
+                  <input disabled type="text" [value]="communityData.statusPublish === false ? 'Private' : 'Publish'"
+                    class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                </div>
+                <div class="mb-4 flex flex-col">
+                  <label for="approveBy" class="font-base text-gray-500 mb-1">Publish/Private By <span
+                      class="text-red-500">*</span></label>
+                  <input disabled type="text" [value]="personalName"
+                    class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Edit Off -->
+
+        <!-- Edit On -->
+        <div *ngIf="edited">
+          <form [formGroup]="mform" (submit)="updateCommunityData()">
+            <div class="bg-white shadow px-5 mt-5 py-5 rounded">
+              <div class="flex flex-rows justify-end mb-5">
+                <button type="button" (click)="editedMode()"
+                  class="border border-danger text-danger hover:bg-danger hover:text-white rounded px-3 mr-2 py-1"><fa-icon
+                    [icon]="faCircleXmark"></fa-icon> Cancel</button>
+                <button type="submit"
+                  class="border border-success text-success hover:bg-success hover:text-white rounded px-3 py-1"><fa-icon
+                    [icon]="faCircleCheck"></fa-icon> Save</button>
+              </div>
+              <div class="flex flex-cols">
+                <div class="grid grid-rows-2 gap-2">
+                  <div class="w-fit mr-5">
+                    <img *ngIf="imageValidator == null || imageValidator == false"
+                      class="object-cover rounded-lg w-56 h-96"
+                      src="../../../../../../assets/image/community/thumbnail/thumbnail-300x500.jpeg" alt="default">
+                    <img *ngIf="imageValidator === true" [src]="imageShow" class="object-cover rounded-lg w-64 h-96"
+                      alt="default-true">
+                    <div class="mt-3 mb-2">
+                      <label for="title" class="font-base text-gray-500">Profile Image <span
+                          class="text-red-500">*</span></label>
+                    </div>
+                    <input class="px-2 py-1 rounded w-full" (change)="onFileSelected($event)" type="file">
+                    <p *ngIf="imageValidator == false" class="text-red-500 text-xs italic mt-1">
+                      * {{ imageValidatorMessage }}.
+                    </p>
+                  </div>
+
+
+                  <div class="w-fit mr-5">
+                    <img *ngIf="imageValidatorLogo == null || imageValidatorLogo == false"
+                      class="object-cover rounded-full w-56 h-56"
+                      src="../../../../../../assets/image/community/logo/community-logo.png" alt="default">
+                    <img *ngIf="imageValidatorLogo === true" [src]="imageShowLogo"
+                      class="object-cover rounded-full w-56 h-56" alt="default-true">
+                    <div class="mt-3 mb-2">
+                      <label for="title" class="font-base text-gray-500">Logo Image <span
+                          class="text-red-500">*</span></label>
+                    </div>
+                    <input class="px-2 py-1 rounded w-full" (change)="onFileSelectedLogo($event)" type="file">
+                    <p *ngIf="imageValidatorLogo == false" class="text-red-500 text-xs italic mt-1">
+                      * {{ imageValidatorMessageLogo }}.
+                    </p>
+                  </div>
+                </div>
+                <div class="w-full">
+                  <div class="mb-4">
+                    <img *ngIf="imageValidatorCover == null || imageValidatorCover == false" class="w-[100%]"
+                      [src]="imageShowCover" alt="cover-default">
+                    <img *ngIf="imageValidatorCover === true" [src]="imageShowCover" alt="default-true">
+                    <div class="mt-3 mb-2">
+                      <label for="title" class="font-base text-gray-500">Cover Image Community <span
+                          class="text-red-500">*</span></label>
+                    </div>
+                    <input class="px-2 py-1 rounded w-full" (change)="onFileSelectedCover($event)" type="file">
+                    <p *ngIf="imageValidatorCover == false" class="text-red-500 text-xs italic mt-1">
+                      * {{ imageValidatorMessageCover }}.
+                    </p>
+                  </div>
+
+                  <!-- Line -->
+                  <div class="grid grid-cols-2 gap-4">
+                    <!-- name -->
+                    <div class="mb-4 flex flex-col">
+                      <label for="name" class="font-base text-gray-500 mb-1">Community Name <span
+                          class="text-red-500">*</span></label>
+                      <input type="text" formControlName="name"
+                        [ngClass]="{'border-rose-500': mform.get('name')?.touched && mform.get('name')?.invalid }"
+                        class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                      <p class="text-xs text-rose-500 italic mt-1"
+                        *ngIf="mform.get('name')?.touched && mform.get('name')?.invalid">
+                        * Name is required.
+                      </p>
+                    </div>
+                    <!-- name -->
+
+                    <!-- leader -->
+                    <div class="mb-4">
+                      <label for="title" class="font-base text-gray-500 mb-2">Leader <span
+                          class="text-red-500">*</span></label>
+                      <div class="mt-[3px]">
+                        <div
+                          [ngClass]="{'border border-rose-500 rounded': mform.get('leaderPersonalNumber')?.touched && mform.get('leaderPersonalNumber')?.invalid }">
+                          <ng-select formControlName="leaderPersonalNumber" [items]="dataUser"
+                            (search)="searchData($event)" bindLabel="personalName" bindValue="personalNumber"
+                            placeholder="Select leader">
+                          </ng-select>
+                        </div>
+                      </div>
+                      <p *ngIf="mform.get('leaderPersonalNumber')?.touched && mform.get('leaderPersonalNumber')?.invalid"
+                        class="text-red-500 text-xs italic mt-1">
+                        * Leader is required.
+                      </p>
+                    </div>
+                    <!-- leader -->
+
+                    <!-- founded -->
+                    <div class="mb-4 flex flex-col">
+                      <label for="founded" class="font-base text-gray-500 mb-1">Founded <span
+                          class="text-red-500">*</span></label>
+                      <input type="text" formControlName="founded"
+                        [ngClass]="{'border-rose-500': mform.get('founded')?.touched && mform.get('founded')?.invalid }"
+                        class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                      <p class="text-xs text-rose-500 italic mt-1"
+                        *ngIf="mform.get('founded')?.touched && mform.get('founded')?.invalid">
+                        * Founded is required.
+                      </p>
+                    </div>
+                    <!-- founded -->
+
+                    <!-- location -->
+                    <div class="mb-4 flex flex-col">
+                      <label for="location" class="font-base text-gray-500 mb-1">Location <span
+                          class="text-red-500">*</span></label>
+                      <input type="text" formControlName="location"
+                        [ngClass]="{'border-rose-500': mform.get('location')?.touched && mform.get('location')?.invalid }"
+                        class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                      <p class="text-xs text-rose-500 italic mt-1"
+                        *ngIf="mform.get('location')?.touched && mform.get('location')?.invalid">
+                        * Location is required.
+                      </p>
+                    </div>
+                  </div>
+                  <!-- location -->
+
+                  <!-- about -->
+                  <div class="mb-4 flex flex-col">
+                    <label for="about" class="font-base text-gray-500 mb-1">About <span
+                        class="text-red-500">*</span></label>
+                    <textarea formControlName="about" rows="5"
+                      [ngClass]="{'border-rose-500': mform.get('about')?.touched && mform.get('about')?.invalid }"
+                      class="w-full border border-2 boder-gray-600 rounded p-3"></textarea>
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('about')?.touched && mform.get('about')?.invalid">
+                      * About is required.
+                    </p>
+                  </div>
+                  <!-- about -->
+
+                  <!-- leader profile -->
+                  <div class="mb-4 flex flex-col">
+                    <label for="leaderProfile" class="font-base text-gray-500 mb-1">Leader Profile <span
+                        class="text-red-500">*</span></label>
+                    <textarea formControlName="leaderProfile"
+                      [ngClass]="{'border-rose-500': mform.get('leaderProfile')?.touched && mform.get('leaderProfile')?.invalid }"
+                      rows="5" class="w-full border border-2 boder-gray-600 rounded p-3"></textarea>
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('leaderProfile')?.touched && mform.get('leaderProfile')?.invalid">
+                      * Leader profile is required.
+                    </p>
+                  </div>
+                  <!-- leader profile -->
+
+                  <!-- instagram -->
+                  <div class="mb-4 flex flex-col">
+                    <label for="instagram" class="font-base text-gray-500 mb-1">Instagram <span
+                        class="text-red-500">*</span></label>
+                    <input type="text" formControlName="instagram"
+                      [ngClass]="{'border-rose-500': mform.get('instagram')?.touched && mform.get('instagram')?.invalid }"
+                      class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('instagram')?.touched && mform.get('instagram')?.invalid">
+                      * Instagram is required.
+                    </p>
+                  </div>
+                  <!-- instagram -->
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- Edit On -->
+      </div>
+
+      <!-- Member Tab -->
+      <div class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+        id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
+        <div class="bg-white shadow rounded-lg mt-5">
+          <div class="grid grid-cols-2 gap-1">
+            <div class="flex justify-start h-fit w-fit p-5">
+              <div class="relative flex w-full flex-wrap items-stretch bg-white rounded-lg border border-1">
+                <button
+                  class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+                  type="button" id="button-addon1">
+                  <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+                </button>
+                <form [formGroup]="mformMemberPage">
+                  <input type="text" formControlName="search"
+                    class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                    placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col overflow-x-auto">
+            <div class="p-5">
+              <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm font-light">
+                  <thead class="border-b font-medium border-gray-500 bg-gray-100 text-gray-600 w-full">
+                    <tr class="w-full">
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">No</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Name</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Unit</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Title</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Email</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Join Date</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="!dataMember">
+                      <td class="min-w-full text-center py-3 text-gray-500" colspan="14"><fa-icon
+                          [icon]="faSadTear"></fa-icon> Sorry, data
+                        is empty.</td>
+                    </tr>
+                    <tr *ngFor="let row of dataMember; index as i" class="border-b dark:border-neutral-500 w-full">
+                      <td class="whitespace-nowrap px-6 text-center py-4 font-medium">{{ i+1 }}</td>
+                      <td class="whitespace-nowrap px-6 text-left py-4">{{ row.personalName }}</td>
+                      <td class="whitespace-nowrap px-6 text-center py-4">{{ row.personalUnit }}</td>
+                      <td class="whitespace-nowrap px-6 text-center py-4">{{ row.communityMembersCommunityRoles.name }}
+                      </td>
+                      <td class="whitespace-nowrap px-6 text-center py-4">{{ row.personalEmail }}</td>
+                      <td class="whitespace-nowrap px-6 text-center py-4">{{ formatDateNotDays(row.createdAt) }}</td>
+                      <td class="whitespace-nowrap px-6 text-center py-4"><button
+                          *ngIf="row.communityMembersCommunityRoles.name != 'Leader'" type="button"
+                          (click)="deleteMemberData(row.uuid)"><fa-icon [icon]="faTrash"
+                            class="text-danger border border-danger px-2 py-2 rounded"></fa-icon></button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <form [formGroup]="mformMemberPage">
+                <div class="flex justify-start mt-5">
+                  <!-- Pagination -->
+                  <nav aria-label="Page navigation example">
+                    <ul class="list-style-none flex mt-10 place-self-center">
+                      <li class="mr-3 place-self-center">
+                        <p>Total : {{ totalData }}</p>
+                      </li>
+                      <li class="mr-3 place-self-center">
+                        <select class="border boder-regal-blue rounded py-1 px-2 place-self-center"
+                          formControlName="limit">
+                          <option [value]="10">10</option>
+                          <option [value]="20">20</option>
+                          <option [value]="50">50</option>
+                          <option [value]="100">100</option>
+                        </select>
+                      </li>
+                      <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+                        <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                          class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                      </li>
+                      <li class="ml-3 flex flex-cols">
+                        <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                          formControlName="page">
+                      </li>
+                      <li class="place-self-center text-white rounded px-2 py-1">
+                        <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                          class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Tab -->
+      <div class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+        id="tabs-messages" role="tabpanel" aria-labelledby="tabs-profile-tab">
+        <div class="bg-white shadow rounded-lg mt-5">
+          <div class="grid grid-cols-2 gap-1">
+            <div class="flex justify-start h-fit w-fit p-5">
+              <div class="relative flex w-full flex-wrap items-stretch bg-white rounded-lg border border-1">
+                <button
+                  class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+                  type="button" id="button-addon1">
+                  <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+                </button>
+                <form [formGroup]="mformPaginateActivity">
+                  <input type="text" formControlName="search"
+                    class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+                    placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col overflow-x-auto">
+            <div class="p-5">
+              <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm font-light">
+                  <thead class="border-b font-medium border-gray-500 bg-gray-100 text-gray-600 w-full">
+                    <tr class="w-full">
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">No</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-left">Title</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Posted By</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Created At</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">View Count</th>
+                      <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="!dataActivity">
+                      <td class="min-w-full text-center py-3 text-gray-500" colspan="14"><fa-icon
+                          [icon]="faSadTear"></fa-icon> Sorry,
+                        data
+                        is empty.</td>
+                    </tr>
+                    <tr *ngFor="let row of dataActivity; index as i" class="border-b dark:border-neutral-500 w-full">
+                      <td class="whitespace-nowrap px-6 text-center py-4 font-medium">{{ i+1 }}</td>
+                      <td class="whitespace-nowrap px-6 text-center py-4">{{ row.title }}</td>
+                      <td class="whitespace-nowrap px-6 text-center py-4">{{ row.personalName }}</td>
+                      <td class="whitespace-nowrap px-6 text-center py-4">{{ formatDateNotDays(row.createdAt) }}</td>
+                      <td class="whitespace-nowrap px-6 text-center py-4">{{ '-' }}</td>
+                      <td class="whitespace-nowrap px-6 text-center py-4"><button type="button"><fa-icon [icon]="
+                          faTrash" class="text-danger border border-danger px-2 py-2 rounded"></fa-icon></button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <form [formGroup]="mformPaginateActivity">
+                <div class="flex justify-start mt-5">
+                  <!-- Pagination -->
+                  <nav aria-label="Page navigation example">
+                    <ul class="list-style-none flex mt-10 place-self-center">
+                      <li class="mr-3 place-self-center">
+                        <p>Total : {{ totalData }}</p>
+                      </li>
+                      <li class="mr-3 place-self-center">
+                        <select class="border boder-regal-blue rounded py-1 px-2 place-self-center"
+                          formControlName="limit">
+                          <option [value]="10">10</option>
+                          <option [value]="20">20</option>
+                          <option [value]="50">50</option>
+                          <option [value]="100">100</option>
+                        </select>
+                      </li>
+                      <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+                        <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                          class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                      </li>
+                      <li class="ml-3 flex flex-cols">
+                        <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                          formControlName="page">
+                      </li>
+                      <li class="place-self-center text-white rounded px-2 py-1">
+                        <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                          class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

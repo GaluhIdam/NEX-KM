@@ -1,0 +1,1637 @@
+<!-- Search & Trend Section -->
+<div class="flex justify-center py-20 bg-center bg-library">
+  <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+    <div class="min-[600px]:w-[32rem] place-self-center">
+      <h1
+        class="text-white font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl"
+      >
+        Explore New Experience of Collaboration
+      </h1>
+    </div>
+    <div
+      class="relative mb-4 flex min-[600px]:w-[800px] flex-wrap items-stretch bg-white rounded-full mt-4"
+    >
+      <button
+        class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+        type="button"
+        id="button-addon1"
+      >
+        <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+      </button>
+      <input
+        type="text"
+        class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+        placeholder="Search"
+        aria-label="Example text with button addon"
+        aria-describedby="button-addon1"
+      />
+    </div>
+    <h1 class="text-white">TRENDING SEARCH</h1>
+    <div>
+      <ul
+        class="flex flex-wrap pl-0 list-none md:flex-row"
+        role="tablist"
+        data-te-nav-ref
+      >
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Travelling
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Interior Design
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Music
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Dancing
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="w-11/12 mx-auto mt-8">
+  <div>
+    <p class="mb-4 text-5xl font-semibold text-blue-800">NEX FORUM</p>
+  </div>
+  <div class="flex justify-start">
+    <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+      <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a routerLink="/user/nex-talks" class="mr-3 text-gray-400">Nex Talk</a>
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a routerLink="/user/nex-talks/forum" class="mr-3 text-gray-400">Forum</a>
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <p class="mr-3 text-black activeLink">View</p>
+    </div>
+  </div>
+</div>
+
+<div class="px-20 py-5 mt-10 bg-gray-50">
+  <ng-container *ngIf="isLoading">
+    <div class="flex items-center justify-center min-h-screen">
+      <app-loading></app-loading>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="isError">
+      <app-service-error></app-service-error>
+    </ng-container>
+    <ng-container *ngIf="!isError && forumDetailData">
+      <div class="grid gap-5 mt-5 lg:grid-cols-4 xs:grid-cols-1">
+        <!-- Right -->
+        <div class="col-span-4">
+          <!-- Post page -->
+          <div class="block w-full p-6 mb-3 bg-white rounded-lg shadow-lg">
+            <div class="flex flex-row">
+              <div class="flex flex-col justify-center mr-5">
+                <fa-icon
+                  [icon]="faChevronUp"
+                  class="cursor-pointer hover:text-regal-blue"
+                  (click)="
+                    !isVoteLoading
+                      ? onChangeForumVote(
+                          forumDetailData.id,
+                          this.personalNumber,
+                          true
+                        )
+                      : null
+                  "
+                ></fa-icon>
+                <p
+                  class="text-lg font-bold text-center"
+                  [class]="
+                    calculateForumVote(forumDetailData.forumVote) >= 0
+                      ? 'text-regal-blue'
+                      : 'text-red-500'
+                  "
+                >
+                  {{
+                    convertedForumCountValue(
+                      calculateForumVote(forumDetailData.forumVote)
+                    )
+                  }}
+                </p>
+                <fa-icon
+                  [icon]="faChevronDown"
+                  class="cursor-pointer hover:text-red-500"
+                  (click)="
+                    !isVoteLoading
+                      ? onChangeForumVote(
+                          forumDetailData.id,
+                          this.personalNumber,
+                          false
+                        )
+                      : null
+                  "
+                ></fa-icon>
+              </div>
+              <div class="w-full">
+                <div class="grid grid-cols-2">
+                  <div>
+                    <h5
+                      class="mb-2 text-xl font-medium leading-tight text-neutral-800"
+                    >
+                      {{ forumDetailData.title }}
+                    </h5>
+                    <span>
+                      <span
+                        class="inline-block whitespace-nowrap rounded-full cursor-pointer bg-blue-300 hover:bg-blue-400 px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-[0.75em] font-bold leading-none text-white"
+                      >
+                        <fa-icon
+                          [icon]="faTag"
+                          class="mr-2 text-white"
+                        ></fa-icon>
+                        {{ forumDetailData.talkCategory.name }}
+                      </span>
+                    </span>
+                  </div>
+                  <div class="text-right">
+                    <a
+                      data-te-dropdown-item-ref
+                      data-te-toggle="modal"
+                      [attr.data-te-target]="
+                        '#shareModal' + forumDetailData.uuid
+                      "
+                      data-te-ripple-init
+                      data-te-ripple-color="light"
+                    >
+                      <fa-icon
+                        [icon]="faShareNodes"
+                        class="text-xl text-gray-400 cursor-pointer"
+                      ></fa-icon>
+                    </a>
+                  </div>
+                  <app-share-modal
+                    [uuid]="forumDetailData.uuid"
+                    [content]="'forum'"
+                    [urlToShare]="
+                      'http://172.16.41.107:3011/user/nex-talks/forum/comments/' +
+                      forumDetailData.uuid
+                    "
+                  ></app-share-modal>
+                </div>
+                <img
+                  *ngIf="forumDetailData.path !== '-'"
+                  [src]="forumDetailData.path"
+                  [alt]="forumDetailData.title"
+                  class="mt-3 rounded-3xl min-[600px]:w-1/2 min-[600px]:h-80 max-[600px]:w-full max-[600px]:h-60"
+                />
+
+                <ng-container *ngIf="parsedForumDescription.length > 1000">
+                  <ng-container *ngIf="isShowMoreButtonClicked">
+                    <p
+                      class="mt-3 mb-4 text-base text-neutral-600"
+                      [innerHTML]="parsedForumDescription"
+                    ></p>
+                  </ng-container>
+                  <ng-container *ngIf="!isShowMoreButtonClicked">
+                    <p
+                      class="mt-3 mb-4 text-base text-neutral-600"
+                      [innerHTML]="
+                        parsedForumDescription.substr(0, 1000) + '...'
+                      "
+                    ></p>
+                  </ng-container>
+
+                  <button
+                    class="p-2 mb-4 text-xs font-bold text-blue-500 bg-blue-100 rounded-xl w-fit hover:shadow-lg"
+                    [hidden]="isShowMoreButtonClicked"
+                    (click)="onClickedShowMoreButton()"
+                  >
+                    Show More
+                  </button>
+                  <button
+                    class="p-2 mb-4 text-xs font-bold text-blue-500 bg-blue-100 rounded-xl w-fit hover:shadow-lg"
+                    [hidden]="!isShowMoreButtonClicked"
+                    (click)="onClickedShowMoreButton()"
+                  >
+                    Show Less
+                  </button>
+                </ng-container>
+
+                <ng-container *ngIf="parsedForumDescription.length < 1000">
+                  <p
+                    class="mt-3 mb-4 text-base text-neutral-600"
+                    [innerHTML]="parsedForumDescription"
+                  ></p>
+                </ng-container>
+                <hr />
+                <div class="grid grid-cols-2">
+                  <div class="flex items-center mt-3 space-x-4">
+                    <div class="flex-shrink-0">
+                      <img
+                        class="w-8 h-8 rounded-full"
+                        [src]="
+                          forumUploader.userPhoto !== ''
+                            ? forumUploader.userPhoto
+                            : '../../../../assets/image/empty-profile-image.jpeg'
+                        "
+                        alt="forum uploader"
+                      />
+                    </div>
+                    <div class="flex min-w-0 gap-2">
+                      <p class="text-base font-medium text-gray-500">
+                        Posted by
+                      </p>
+                      <p
+                        class="text-base text-blue-500 cursor-pointer hover:text-blue-400"
+                        (click)="
+                          forumUploader.personalNumber !== ''
+                            ? onGotoUserPage(forumUploader.personalNumber)
+                            : undefined
+                        "
+                      >
+                        {{ forumUploader.userName }}
+                      </p>
+                      <p class="text-base text-gray-500">
+                        {{ calculateTimeDifference(forumDetailData.createdAt) }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-end mt-3">
+                    <span
+                      class="flex items-center h-full gap-2 text-blue-600 cursor-pointer"
+                    >
+                      <fa-icon
+                        [icon]="faMessage"
+                        class="text-xl text-gray-400"
+                      ></fa-icon>
+                      <p>
+                        {{ paginator ? paginator.totalData : 0 }}
+                        +
+                      </p>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comment -->
+          <section class="mt-5">
+            <div class="w-full mx-auto">
+              <div class="grid grid-cols-2 mb-6">
+                <div>
+                  <h2 class="text-lg font-bold text-gray-900 lg:text-2xl">
+                    {{ paginator ? paginator.totalData : 0 }}
+                    {{
+                      (paginator ? paginator.totalData : 0) > 0
+                        ? "Comments"
+                        : "Comment"
+                    }}
+                  </h2>
+                </div>
+                <div class="flex gap-4 ml-auto">
+                  <span
+                    class="text-lg font-semibold text-blue-500 cursor-pointer"
+                    [class.text-gray-400]="sortBy !== 'top'"
+                    [class.underline]="sortBy === 'top'"
+                    (click)="onChangeOrderComment('Top')"
+                    >Top Comment
+                  </span>
+                  <span
+                    class="text-lg font-semibold text-blue-500 cursor-pointer"
+                    [class.text-gray-400]="sortBy !== 'desc'"
+                    [class.underline]="sortBy === 'desc'"
+                    (click)="onChangeOrderComment('New')"
+                    >New</span
+                  >
+                </div>
+              </div>
+              <form
+                class="mb-6"
+                [formGroup]="commentForm"
+                (ngSubmit)="onSubmitComment(commentForm)"
+              >
+                <div
+                  class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50"
+                >
+                  <div class="px-4 py-2 bg-white rounded-t-lg">
+                    <label for="comment" class="sr-only">Your comment</label>
+                    <textarea
+                      id="comment"
+                      name="comment"
+                      formControlName="comment"
+                      rows="4"
+                      (input)="onInputComment('main')"
+                      (click)="onClickInputComment($event, 'main')"
+                      class="w-full p-4 text-sm text-gray-900 bg-white border-0"
+                      placeholder="Write a comment..."
+                      #contentInputMainComment
+                    ></textarea>
+                    <div class="flex flex-row overflow-x-auto">
+                      <a
+                        *ngFor="let emj of emoji"
+                        (click)="clickEmoji(emj, 'main')"
+                        class="mb-2 mr-2 text-base cursor-pointer sliding-emoticon"
+                        >{{ emj }}</a
+                      >
+                    </div>
+                    <div
+                      *ngIf="
+                        !comment?.valid && (comment?.dirty || comment?.touched)
+                      "
+                    >
+                      <small
+                        class="text-red-800"
+                        [hidden]="!comment?.errors?.required"
+                      >
+                        Comment is required
+                      </small>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-end px-3 py-2 border-t">
+                    <button
+                      type="submit"
+                      [disabled]="commentForm.status === 'INVALID'"
+                      class="inline-flex items-center disabled:bg-gray-500 py-2.5 px-10 text-base font-medium text-center text-white bg-blue-700 rounded-full focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+                    >
+                      Post
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <ng-container *ngIf="isCommentLoading">
+                <div class="flex items-center justify-center h-60">
+                  <app-loading></app-loading>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!isCommentLoading">
+                <ng-container
+                  *ngIf="
+                    forumCommentData.length > 0;
+                    else emptyForumCommentData
+                  "
+                >
+                  <div class="flex flex-col justify-between min-h-screen">
+                    <div>
+                      <!-- Main comment -->
+                      <ng-container
+                        *ngFor="let comment of forumCommentData; let i = index"
+                      >
+                        <article
+                          class="p-6 mb-6 text-base bg-white rounded-lg shadow-lg"
+                        >
+                          <footer
+                            class="flex items-center justify-between mb-4"
+                          >
+                            <div class="flex items-center">
+                              <div
+                                class="inline-flex items-center mr-3 text-sm text-gray-900"
+                              >
+                                <img
+                                  class="w-8 h-8 mr-2 rounded-full"
+                                  [src]="
+                                    forumCommentUsers[i].userPhoto !== ''
+                                      ? forumCommentUsers[i].userPhoto
+                                      : '../../../../assets/image/empty-profile-image.jpeg'
+                                  "
+                                  alt="forum uploader"
+                                />
+                              </div>
+                              <div class="flex flex-col">
+                                <p
+                                  class="text-base text-blue-500 cursor-pointer hover:text-blue-400"
+                                  (click)="
+                                    forumCommentUsers[i].personalNumber !== ''
+                                      ? onGotoUserPage(
+                                          forumCommentUsers[i].personalNumber
+                                        )
+                                      : undefined
+                                  "
+                                >
+                                  {{ forumCommentUsers[i].userName }}
+                                </p>
+                                <p class="text-xs text-gray-600">
+                                  {{
+                                    formattedDate(comment.createdAt) +
+                                      ", " +
+                                      calculateTimeDifference(comment.createdAt)
+                                  }}
+                                </p>
+                              </div>
+                            </div>
+                          </footer>
+                          <p class="text-gray-500">
+                            {{ comment.comment }}
+                          </p>
+                          <div class="flex items-center my-4">
+                            <button
+                              type="button"
+                              data-te-toggle="tooltip"
+                              title="Reply"
+                              (click)="
+                                isReplyCommentShowed[i] === false
+                                  ? onShowReplyCommentForm(comment.id, i)
+                                  : onCloseReplyCommentForm(i)
+                              "
+                              class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg text-primary border-primary hover:bg-primary hover:text-white"
+                            >
+                              <fa-icon
+                                [icon]="faComment"
+                                class="mr-1"
+                              ></fa-icon>
+                              Reply
+                            </button>
+                            <button
+                              type="button"
+                              data-te-toggle="tooltip"
+                              title="Like"
+                              (click)="
+                                onChangeCommentLike(
+                                  forumDetailData.id,
+                                  comment.id,
+                                  true
+                                )
+                              "
+                              class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-danger hover:bg-danger hover:text-white border-danger"
+                            >
+                              <fa-icon [icon]="faHeart" class="mr-1"></fa-icon
+                              >{{
+                                getFilteredCommentLikeCount(
+                                  comment.likeComment,
+                                  true
+                                )
+                              }}
+                            </button>
+                            <button
+                              type="button"
+                              data-te-toggle="tooltip"
+                              title="Dislike"
+                              (click)="
+                                onChangeCommentLike(
+                                  forumDetailData.id,
+                                  comment.id,
+                                  false
+                                )
+                              "
+                              class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-warning hover:bg-warning hover:text-white border-warning"
+                            >
+                              <fa-icon
+                                [icon]="faHeartBroken"
+                                class="mr-1"
+                              ></fa-icon
+                              >{{
+                                getFilteredCommentLikeCount(
+                                  comment.likeComment,
+                                  false
+                                )
+                              }}
+                            </button>
+                            <button
+                              type="button"
+                              title="Delete"
+                              data-te-toggle="modal"
+                              data-te-target="#shareModal"
+                              class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-success hover:bg-success hover:text-white border-success"
+                            >
+                              <fa-icon
+                                [icon]="faShareNodes"
+                                class="mr-1"
+                              ></fa-icon
+                              >Share
+                            </button>
+
+                            <button
+                              type="button"
+                              title="Report"
+                              data-te-toggle="modal"
+                              data-te-target="#reportModal"
+                              class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-orange hover:bg-orange hover:text-white border-orange"
+                            >
+                              <fa-icon
+                                [icon]="faExclmation"
+                                class="mr-1"
+                              ></fa-icon
+                              >Report
+                            </button>
+                            <button
+                              type="button"
+                              data-te-toggle="tooltip"
+                              title="Delete"
+                              *ngIf="personalNumber === comment.personalNumber"
+                              (click)="onDeleteComment(comment.uuid)"
+                              class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-danger hover:bg-danger hover:text-white border-danger"
+                            >
+                              <fa-icon [icon]="faTrash" class="mr-1"></fa-icon
+                              >Delete
+                            </button>
+                          </div>
+                          <button
+                            class="p-2 text-xs font-bold text-blue-500 rounded-xl w-fit hover:bg-blue-100"
+                            [disabled]="comment.childComment.length === 0"
+                            (click)="onClickCommentCount(i)"
+                          >
+                            <fa-icon
+                              [icon]="
+                                comment.isChildCommentShow
+                                  ? faChevronUp
+                                  : faChevronDown
+                              "
+                              class="mr-3"
+                            ></fa-icon>
+                            {{ comment.childComment.length }}
+                            {{
+                              comment.childComment.length > 1
+                                ? "Replies"
+                                : "Reply"
+                            }}
+                          </button>
+                          <!-- Reply Form -->
+                          <form
+                            class="mt-3 mb-6"
+                            *ngIf="isReplyCommentShowed[i] === true"
+                            [formGroup]="replyCommentForm"
+                            (ngSubmit)="onSubmitComment(replyCommentForm)"
+                          >
+                            <div
+                              class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50"
+                            >
+                              <div class="px-4 py-2 bg-white rounded-t-lg">
+                                <label for="comment" class="sr-only"
+                                  >Your comment</label
+                                >
+                                <textarea
+                                  id="comment"
+                                  name="comment"
+                                  formControlName="comment"
+                                  rows="4"
+                                  class="w-full p-4 text-sm text-gray-900 bg-white border-0"
+                                  placeholder="Write a comment..."
+                                  (input)="onInputComment('reply')"
+                                  (click)="onClickInputComment($event, 'reply')"
+                                  #contentInputReplyComment
+                                ></textarea>
+                                <div class="flex flex-row overflow-x-auto">
+                                  <a
+                                    *ngFor="let emj of emoji"
+                                    (click)="clickEmoji(emj, 'reply')"
+                                    class="mb-2 mr-2 text-base cursor-pointer sliding-emoticon"
+                                    >{{ emj }}</a
+                                  >
+                                </div>
+                                <div
+                                  *ngIf="
+                                    !replyComment?.valid &&
+                                    (replyComment?.dirty ||
+                                      replyComment?.touched)
+                                  "
+                                >
+                                  <small
+                                    class="text-red-800"
+                                    [hidden]="!replyComment?.errors?.required"
+                                  >
+                                    Comment is required
+                                  </small>
+                                </div>
+                              </div>
+                              <div
+                                class="flex items-center justify-end gap-4 px-3 py-2 border-t"
+                              >
+                                <button
+                                  type="button"
+                                  (click)="onCloseReplyCommentForm(i)"
+                                  class="inline-flex items-center bg-danger py-2.5 px-10 text-base font-medium text-center text-white rounded-full focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  type="submit"
+                                  [disabled]="
+                                    replyCommentForm.status === 'INVALID'
+                                  "
+                                  class="inline-flex items-center disabled:bg-gray-500 py-2.5 px-10 text-base font-medium text-center text-white bg-blue-700 rounded-full focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+                                >
+                                  Post
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                          <!-- Reply Form -->
+                        </article>
+                        <!-- Reply comment -->
+                        <ng-container *ngIf="comment.isChildCommentShow">
+                          <ng-container
+                            *ngIf="isReplyCommentDataShowLoading[i]"
+                          >
+                            <div class="flex items-center justify-center h-40">
+                              <app-loading></app-loading>
+                            </div>
+                          </ng-container>
+                          <ng-container
+                            *ngIf="!isReplyCommentDataShowLoading[i]"
+                          >
+                            <ng-container
+                              *ngFor="
+                                let child of comment.childComment;
+                                let j = index
+                              "
+                            >
+                              <article
+                                class="p-6 mb-6 ml-6 text-base bg-white rounded-lg shadow-lg lg:ml-12"
+                              >
+                                <footer
+                                  class="flex items-center justify-between mb-4"
+                                >
+                                  <div class="flex items-center">
+                                    <div
+                                      class="inline-flex items-center mr-3 text-sm text-gray-900"
+                                    >
+                                      <img
+                                        class="w-8 h-8 mr-2 rounded-full"
+                                        [src]="
+                                          forumReplayCommentUsers[i][j]
+                                            .userPhoto !== ''
+                                            ? forumReplayCommentUsers[i][j]
+                                                .userPhoto
+                                            : '../../../../assets/image/empty-profile-image.jpeg'
+                                        "
+                                        alt="forum uploader"
+                                      />
+                                    </div>
+                                    <div class="flex flex-col">
+                                      <p
+                                        class="text-base text-blue-500 cursor-pointer hover:text-blue-400"
+                                        (click)="
+                                          forumReplayCommentUsers[i][j]
+                                            .personalNumber !== ''
+                                            ? onGotoUserPage(
+                                                forumReplayCommentUsers[i][j]
+                                                  .personalNumber
+                                              )
+                                            : undefined
+                                        "
+                                      >
+                                        {{
+                                          forumReplayCommentUsers[i][j].userName
+                                        }}
+                                      </p>
+                                      <p class="text-xs text-gray-600">
+                                        {{
+                                          formattedDate(child.createdAt) +
+                                            ", " +
+                                            calculateTimeDifference(
+                                              child.createdAt
+                                            )
+                                        }}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </footer>
+                                <p class="text-gray-500">
+                                  {{ child.comment }}
+                                </p>
+                                <div class="flex items-center my-4">
+                                  <button
+                                    type="button"
+                                    data-te-toggle="tooltip"
+                                    title="Reply"
+                                    (click)="
+                                      isChildReplyCommentShowed[i][j] === false
+                                        ? onShowReplyCommentForm(child.id, i, j)
+                                        : onCloseReplyCommentForm(i, j)
+                                    "
+                                    class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg text-primary border-primary hover:bg-primary hover:text-white"
+                                  >
+                                    <fa-icon
+                                      [icon]="faComment"
+                                      class="mr-1"
+                                    ></fa-icon>
+                                    Reply
+                                  </button>
+                                  <button
+                                    type="button"
+                                    data-te-toggle="tooltip"
+                                    title="Like"
+                                    (click)="
+                                      onChangeCommentLike(
+                                        forumDetailData.id,
+                                        child.id,
+                                        true
+                                      )
+                                    "
+                                    class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-danger hover:bg-danger hover:text-white border-danger"
+                                  >
+                                    <fa-icon
+                                      [icon]="faHeart"
+                                      class="mr-1"
+                                    ></fa-icon
+                                    >{{
+                                      getFilteredCommentLikeCount(
+                                        child.likeComment,
+                                        true
+                                      )
+                                    }}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    data-te-toggle="tooltip"
+                                    title="Dislike"
+                                    (click)="
+                                      onChangeCommentLike(
+                                        forumDetailData.id,
+                                        child.id,
+                                        false
+                                      )
+                                    "
+                                    class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-warning hover:bg-warning hover:text-white border-warning"
+                                  >
+                                    <fa-icon
+                                      [icon]="faHeartBroken"
+                                      class="mr-1"
+                                    ></fa-icon
+                                    >{{
+                                      getFilteredCommentLikeCount(
+                                        child.likeComment,
+                                        false
+                                      )
+                                    }}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    title="Share"
+                                    data-te-toggle="modal"
+                                    data-te-target="#shareModal"
+                                    class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-success hover:bg-success hover:text-white border-success"
+                                  >
+                                    <fa-icon
+                                      [icon]="faShareNodes"
+                                      class="mr-1"
+                                    ></fa-icon
+                                    >Share
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    title="Report"
+                                    data-te-toggle="modal"
+                                    data-te-target="#reportModal"
+                                    class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-orange hover:bg-orange hover:text-white border-orange"
+                                  >
+                                    <fa-icon
+                                      [icon]="faExclmation"
+                                      class="mr-1"
+                                    ></fa-icon
+                                    >Report
+                                  </button>
+                                  <button
+                                    type="button"
+                                    data-te-toggle="tooltip"
+                                    title="Delete"
+                                    *ngIf="
+                                      personalNumber === child.personalNumber
+                                    "
+                                    (click)="onDeleteComment(child.uuid)"
+                                    class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-danger hover:bg-danger hover:text-white border-danger"
+                                  >
+                                    <fa-icon
+                                      [icon]="faTrash"
+                                      class="mr-1"
+                                    ></fa-icon
+                                    >Delete
+                                  </button>
+                                </div>
+                                <button
+                                  class="p-2 text-xs font-bold text-blue-500 rounded-xl w-fit hover:bg-blue-100"
+                                  [disabled]="child.childComment.length === 0"
+                                  (click)="onClickCommentCount(i, j)"
+                                >
+                                  <fa-icon
+                                    [icon]="
+                                      child.isChildCommentShow
+                                        ? faChevronUp
+                                        : faChevronDown
+                                    "
+                                    class="mr-3"
+                                  ></fa-icon>
+                                  {{ child.childComment.length }}
+                                  {{
+                                    child.childComment.length > 1
+                                      ? "Replies"
+                                      : "Reply"
+                                  }}
+                                </button>
+                                <!-- Child Reply Form -->
+                                <form
+                                  class="mt-3 mb-6"
+                                  *ngIf="
+                                    isChildReplyCommentShowed[i][j] === true
+                                  "
+                                  [formGroup]="replyCommentForm"
+                                  (ngSubmit)="onSubmitComment(replyCommentForm)"
+                                >
+                                  <div
+                                    class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50"
+                                  >
+                                    <div
+                                      class="px-4 py-2 bg-white rounded-t-lg"
+                                    >
+                                      <label for="comment" class="sr-only"
+                                        >Your comment</label
+                                      >
+                                      <textarea
+                                        id="comment"
+                                        name="comment"
+                                        formControlName="comment"
+                                        rows="4"
+                                        class="w-full p-4 text-sm text-gray-900 bg-white border-0"
+                                        placeholder="Write a comment..."
+                                        (input)="onInputComment('reply')"
+                                        (click)="
+                                          onClickInputComment($event, 'reply')
+                                        "
+                                        #contentInputReplyComment
+                                      ></textarea>
+                                      <div
+                                        class="flex flex-row overflow-x-auto"
+                                      >
+                                        <a
+                                          *ngFor="let emj of emoji"
+                                          (click)="clickEmoji(emj, 'reply')"
+                                          class="mb-2 mr-2 text-base cursor-pointer sliding-emoticon"
+                                          >{{ emj }}</a
+                                        >
+                                      </div>
+                                      <div
+                                        *ngIf="
+                                          !replyComment?.valid &&
+                                          (replyComment?.dirty ||
+                                            replyComment?.touched)
+                                        "
+                                      >
+                                        <small
+                                          class="text-red-800"
+                                          [hidden]="
+                                            !replyComment?.errors?.required
+                                          "
+                                        >
+                                          Comment is required
+                                        </small>
+                                      </div>
+                                    </div>
+                                    <div
+                                      class="flex items-center justify-end gap-4 px-3 py-2 border-t"
+                                    >
+                                      <button
+                                        type="button"
+                                        (click)="onCloseReplyCommentForm(i, j)"
+                                        class="inline-flex items-center bg-danger py-2.5 px-10 text-base font-medium text-center text-white rounded-full focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+                                      >
+                                        Cancel
+                                      </button>
+                                      <button
+                                        type="submit"
+                                        [disabled]="
+                                          replyCommentForm.status === 'INVALID'
+                                        "
+                                        class="inline-flex items-center disabled:bg-gray-500 py-2.5 px-10 text-base font-medium text-center text-white bg-blue-700 rounded-full focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+                                      >
+                                        Post
+                                      </button>
+                                    </div>
+                                  </div>
+                                </form>
+                                <!-- Child Reply Form -->
+                              </article>
+
+                              <!-- Child Reply Comment -->
+                              <ng-container *ngIf="child.isChildCommentShow">
+                                <ng-container
+                                  *ngIf="
+                                    isChildReplyCommentDataShowLoading[i][j]
+                                  "
+                                >
+                                  <div
+                                    class="flex items-center justify-center h-40"
+                                  >
+                                    <app-loading></app-loading>
+                                  </div>
+                                </ng-container>
+                                <ng-container
+                                  *ngIf="
+                                    !isChildReplyCommentDataShowLoading[i][j]
+                                  "
+                                >
+                                  <ng-container
+                                    *ngFor="
+                                      let childReply of child.childComment;
+                                      let k = index
+                                    "
+                                  >
+                                    <article
+                                      class="p-6 mb-6 ml-24 text-base bg-white rounded-lg shadow-lg lg:ml-24"
+                                    >
+                                      <footer
+                                        class="flex items-center justify-between mb-4"
+                                      >
+                                        <div class="flex items-center">
+                                          <div
+                                            class="inline-flex items-center mr-3 text-sm text-gray-900"
+                                          >
+                                            <img
+                                              class="w-8 h-8 mr-2 rounded-full"
+                                              [src]="
+                                                forumChildReplayCommentUsers[i][
+                                                  j
+                                                ][k].userPhoto !== ''
+                                                  ? forumChildReplayCommentUsers[
+                                                      i
+                                                    ][j][k].userPhoto
+                                                  : '../../../../assets/image/empty-profile-image.jpeg'
+                                              "
+                                              alt="forum uploader"
+                                            />
+                                          </div>
+                                          <div class="flex flex-col">
+                                            <p
+                                              class="text-base text-blue-500 cursor-pointer hover:text-blue-400"
+                                              (click)="
+                                                forumChildReplayCommentUsers[i][
+                                                  j
+                                                ][k].personalNumber !== ''
+                                                  ? onGotoUserPage(
+                                                      forumChildReplayCommentUsers[
+                                                        i
+                                                      ][j][k].personalNumber
+                                                    )
+                                                  : undefined
+                                              "
+                                            >
+                                              {{
+                                                forumChildReplayCommentUsers[i][
+                                                  j
+                                                ][k].userName
+                                              }}
+                                            </p>
+                                            <p class="text-xs text-gray-600">
+                                              {{
+                                                formattedDate(
+                                                  childReply.createdAt
+                                                ) +
+                                                  ", " +
+                                                  calculateTimeDifference(
+                                                    childReply.createdAt
+                                                  )
+                                              }}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </footer>
+                                      <p class="text-gray-500">
+                                        {{ childReply.comment }}
+                                      </p>
+                                      <div class="flex items-center my-4">
+                                        <button
+                                          type="button"
+                                          data-te-toggle="tooltip"
+                                          title="Like"
+                                          (click)="
+                                            onChangeCommentLike(
+                                              forumDetailData.id,
+                                              childReply.id,
+                                              true
+                                            )
+                                          "
+                                          class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-danger hover:bg-danger hover:text-white border-danger"
+                                        >
+                                          <fa-icon
+                                            [icon]="faHeart"
+                                            class="mr-1"
+                                          ></fa-icon
+                                          >{{
+                                            getFilteredCommentLikeCount(
+                                              childReply.likeComment,
+                                              true
+                                            )
+                                          }}
+                                        </button>
+                                        <button
+                                          type="button"
+                                          data-te-toggle="tooltip"
+                                          title="Dislike"
+                                          (click)="
+                                            onChangeCommentLike(
+                                              forumDetailData.id,
+                                              childReply.id,
+                                              false
+                                            )
+                                          "
+                                          class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-warning hover:bg-warning hover:text-white border-warning"
+                                        >
+                                          <fa-icon
+                                            [icon]="faHeartBroken"
+                                            class="mr-1"
+                                          ></fa-icon
+                                          >{{
+                                            getFilteredCommentLikeCount(
+                                              childReply.likeComment,
+                                              false
+                                            )
+                                          }}
+                                        </button>
+                                        <button
+                                          type="button"
+                                          title="Delete"
+                                          data-te-toggle="modal"
+                                          data-te-target="#shareModal"
+                                          class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-success hover:bg-success hover:text-white border-success"
+                                        >
+                                          <fa-icon
+                                            [icon]="faShareNodes"
+                                            class="mr-1"
+                                          ></fa-icon
+                                          >Share
+                                        </button>
+
+                                        <button
+                                          type="button"
+                                          title="Report"
+                                          data-te-toggle="modal"
+                                          data-te-target="#reportModal"
+                                          class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-orange hover:bg-orange hover:text-white border-orange"
+                                        >
+                                          <fa-icon
+                                            [icon]="faExclmation"
+                                            class="mr-1"
+                                          ></fa-icon
+                                          >Report
+                                        </button>
+                                        <button
+                                          type="button"
+                                          data-te-toggle="tooltip"
+                                          title="Delete"
+                                          *ngIf="
+                                            personalNumber ===
+                                            childReply.personalNumber
+                                          "
+                                          (click)="
+                                            onDeleteComment(childReply.uuid)
+                                          "
+                                          class="items-center px-3 py-1 mr-2 text-xs text-center border rounded-lg cursor-pointer text-danger hover:bg-danger hover:text-white border-danger"
+                                        >
+                                          <fa-icon
+                                            [icon]="faTrash"
+                                            class="mr-1"
+                                          ></fa-icon
+                                          >Delete
+                                        </button>
+                                      </div>
+                                    </article>
+                                  </ng-container>
+                                </ng-container>
+                              </ng-container>
+                              <!-- Child Reply Comment -->
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                        <!-- End of Reply comment -->
+                      </ng-container>
+                      <!-- End of Main comment -->
+                    </div>
+                    <!-- Pagination -->
+                    <div
+                      class="flex items-center justify-start mt-5"
+                      *ngIf="paginator && !isCommentLoading"
+                    >
+                      <h1 class="mr-5">Total : {{ paginator.totalData }}</h1>
+                      <div class="flex items-center justify-start mx-10">
+                        <span class="text-sm">Show</span>
+                        <select
+                          *ngIf="paginator"
+                          [(ngModel)]="paginator.pageSize"
+                          (ngModelChange)="changePageSize()"
+                          class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+                        >
+                          <option
+                            *ngFor="let size of paginator?.pageOption"
+                            [ngValue]="size"
+                          >
+                            {{ size }} data
+                          </option>
+                        </select>
+                      </div>
+                      <div class="flex items-center justify-center mx-3">
+                        <button
+                          type="button"
+                          (click)="changePageNumber(false)"
+                          [disabled]="paginator.pageNumber == 1"
+                          [class]="
+                            paginator.pageNumber == 1
+                              ? 'bg-gray-200'
+                              : 'bg-gray-50'
+                          "
+                          class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300"
+                        >
+                          Previous
+                        </button>
+                        <!-- <button
+                    class="ml-2 text-gray-400"
+                    (click)="goToPageNumberByPageClick(i + 1)"
+                    *ngFor="let page of pages; let i = index"
+                  >
+                    {{ i + 1 }}
+                  </button> -->
+                        <button
+                          type="button"
+                          (click)="changePageNumber(true)"
+                          [disabled]="
+                            paginator.pageNumber == paginator.totalPage
+                          "
+                          [class]="
+                            paginator.pageNumber == paginator.totalPage
+                              ? 'bg-gray-200'
+                              : 'bg-gray-50'
+                          "
+                          class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300 ml-2"
+                        >
+                          Next
+                        </button>
+                      </div>
+                      <h1 class="w-fit">Go to Page</h1>
+                      <select
+                        *ngIf="paginator"
+                        [(ngModel)]="paginator.pageNumber"
+                        (ngModelChange)="goToPageNumberByPageSelect($event)"
+                        class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+                      >
+                        <option
+                          *ngFor="let page of pages; let i = index"
+                          [ngValue]="i + 1"
+                        >
+                          {{ i + 1 }}
+                        </option>
+                      </select>
+                    </div>
+                    <!-- Pagination -->
+                  </div>
+                </ng-container>
+              </ng-container>
+              <ng-template #emptyForumCommentData>
+                <div class="flex items-center justify-center h-60">
+                  <h2>No Comments available</h2>
+                </div>
+              </ng-template>
+            </div>
+          </section>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<!-- Share Modal -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="shareModal"
+  tabindex="-1"
+  aria-labelledby="shareModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div class="relative flex-auto p-4" data-te-modal-body-ref>
+        <div class="my-4">
+          <p class="text-sm">Share this link via</p>
+
+          <div class="flex justify-around my-4">
+            <!--FACEBOOK ICON-->
+            <div
+              class="border hover:bg-[#1877f2] w-12 h-12 fill-[#1877f2] hover:fill-white border-blue-200 rounded-full flex items-center justify-center shadow-xl hover:shadow-blue-500/50 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.926.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0 0 14.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.355H7.332v3.209h2.753v8.202h3.312z"
+                ></path>
+              </svg>
+            </div>
+            <!--TWITTER ICON-->
+            <div
+              class="border hover:bg-[#1d9bf0] w-12 h-12 fill-[#1d9bf0] hover:fill-white border-blue-200 rounded-full flex items-center justify-center shadow-xl hover:shadow-sky-500/50 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M19.633 7.997c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.05a8.07 8.07 0 0 0 5.001-1.721 4.036 4.036 0 0 1-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 0 1-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 0 1-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 0 0 8.306 4.215c-.062-.3-.1-.611-.1-.923a4.026 4.026 0 0 1 4.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 0 0 2.556-.973 4.02 4.02 0 0 1-1.771 2.22 8.073 8.073 0 0 0 2.319-.624 8.645 8.645 0 0 1-2.019 2.083z"
+                ></path>
+              </svg>
+            </div>
+            <!--INSTAGRAM ICON-->
+            <div
+              class="border hover:bg-[#bc2a8d] w-12 h-12 fill-[#bc2a8d] hover:fill-white border-pink-200 rounded-full flex items-center justify-center shadow-xl hover:shadow-pink-500/50 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M11.999 7.377a4.623 4.623 0 1 0 0 9.248 4.623 4.623 0 0 0 0-9.248zm0 7.627a3.004 3.004 0 1 1 0-6.008 3.004 3.004 0 0 1 0 6.008z"
+                ></path>
+                <circle cx="16.806" cy="7.207" r="1.078"></circle>
+                <path
+                  d="M20.533 6.111A4.605 4.605 0 0 0 17.9 3.479a6.606 6.606 0 0 0-2.186-.42c-.963-.042-1.268-.054-3.71-.054s-2.755 0-3.71.054a6.554 6.554 0 0 0-2.184.42 4.6 4.6 0 0 0-2.633 2.632 6.585 6.585 0 0 0-.419 2.186c-.043.962-.056 1.267-.056 3.71 0 2.442 0 2.753.056 3.71.015.748.156 1.486.419 2.187a4.61 4.61 0 0 0 2.634 2.632 6.584 6.584 0 0 0 2.185.45c.963.042 1.268.055 3.71.055s2.755 0 3.71-.055a6.615 6.615 0 0 0 2.186-.419 4.613 4.613 0 0 0 2.633-2.633c.263-.7.404-1.438.419-2.186.043-.962.056-1.267.056-3.71s0-2.753-.056-3.71a6.581 6.581 0 0 0-.421-2.217zm-1.218 9.532a5.043 5.043 0 0 1-.311 1.688 2.987 2.987 0 0 1-1.712 1.711 4.985 4.985 0 0 1-1.67.311c-.95.044-1.218.055-3.654.055-2.438 0-2.687 0-3.655-.055a4.96 4.96 0 0 1-1.669-.311 2.985 2.985 0 0 1-1.719-1.711 5.08 5.08 0 0 1-.311-1.669c-.043-.95-.053-1.218-.053-3.654 0-2.437 0-2.686.053-3.655a5.038 5.038 0 0 1 .311-1.687c.305-.789.93-1.41 1.719-1.712a5.01 5.01 0 0 1 1.669-.311c.951-.043 1.218-.055 3.655-.055s2.687 0 3.654.055a4.96 4.96 0 0 1 1.67.311 2.991 2.991 0 0 1 1.712 1.712 5.08 5.08 0 0 1 .311 1.669c.043.951.054 1.218.054 3.655 0 2.436 0 2.698-.043 3.654h-.011z"
+                ></path>
+              </svg>
+            </div>
+
+            <!--WHATSAPP ICON-->
+            <div
+              class="border hover:bg-[#25D366] w-12 h-12 fill-[#25D366] hover:fill-white border-green-200 rounded-full flex items-center justify-center shadow-xl hover:shadow-green-500/50 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M18.403 5.633A8.919 8.919 0 0 0 12.053 3c-4.948 0-8.976 4.027-8.978 8.977 0 1.582.413 3.126 1.198 4.488L3 21.116l4.759-1.249a8.981 8.981 0 0 0 4.29 1.093h.004c4.947 0 8.975-4.027 8.977-8.977a8.926 8.926 0 0 0-2.627-6.35m-6.35 13.812h-.003a7.446 7.446 0 0 1-3.798-1.041l-.272-.162-2.824.741.753-2.753-.177-.282a7.448 7.448 0 0 1-1.141-3.971c.002-4.114 3.349-7.461 7.465-7.461a7.413 7.413 0 0 1 5.275 2.188 7.42 7.42 0 0 1 2.183 5.279c-.002 4.114-3.349 7.462-7.461 7.462m4.093-5.589c-.225-.113-1.327-.655-1.533-.73-.205-.075-.354-.112-.504.112s-.58.729-.711.879-.262.168-.486.056-.947-.349-1.804-1.113c-.667-.595-1.117-1.329-1.248-1.554s-.014-.346.099-.458c.101-.1.224-.262.336-.393.112-.131.149-.224.224-.374s.038-.281-.019-.393c-.056-.113-.505-1.217-.692-1.666-.181-.435-.366-.377-.504-.383a9.65 9.65 0 0 0-.429-.008.826.826 0 0 0-.599.28c-.206.225-.785.767-.785 1.871s.804 2.171.916 2.321c.112.15 1.582 2.415 3.832 3.387.536.231.954.369 1.279.473.537.171 1.026.146 1.413.089.431-.064 1.327-.542 1.514-1.066.187-.524.187-.973.131-1.067-.056-.094-.207-.151-.43-.263"
+                ></path>
+              </svg>
+            </div>
+
+            <!--TELEGRAM ICON-->
+            <div
+              class="border hover:bg-[#229ED9] w-12 h-12 fill-[#229ED9] hover:fill-white border-sky-200 rounded-full flex items-center justify-center shadow-xl hover:shadow-sky-500/50 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="m20.665 3.717-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <p class="text-sm">Or copy link</p>
+          <!--BOX LINK-->
+          <div
+            class="flex items-center justify-between py-2 mt-4 border-2 border-gray-200"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              class="ml-2 fill-gray-500"
+            >
+              <path
+                d="M8.465 11.293c1.133-1.133 3.109-1.133 4.242 0l.707.707 1.414-1.414-.707-.707c-.943-.944-2.199-1.465-3.535-1.465s-2.592.521-3.535 1.465L4.929 12a5.008 5.008 0 0 0 0 7.071 4.983 4.983 0 0 0 3.535 1.462A4.982 4.982 0 0 0 12 19.071l.707-.707-1.414-1.414-.707.707a3.007 3.007 0 0 1-4.243 0 3.005 3.005 0 0 1 0-4.243l2.122-2.121z"
+              ></path>
+              <path
+                d="m12 4.929-.707.707 1.414 1.414.707-.707a3.007 3.007 0 0 1 4.243 0 3.005 3.005 0 0 1 0 4.243l-2.122 2.121c-1.133 1.133-3.109 1.133-4.242 0L10.586 12l-1.414 1.414.707.707c.943.944 2.199 1.465 3.535 1.465s2.592-.521 3.535-1.465L19.071 12a5.008 5.008 0 0 0 0-7.071 5.006 5.006 0 0 0-7.071 0z"
+              ></path>
+            </svg>
+
+            <input
+              class="w-full bg-transparent outline-none"
+              type="text"
+              placeholder="link"
+              value="https://boxicons.com/?query=link"
+            />
+
+            <button
+              class="px-5 py-2 mr-2 text-sm text-white bg-indigo-500 rounded hover:bg-indigo-600"
+            >
+              Copy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Report Modal -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="reportModal"
+  tabindex="-1"
+  aria-labelledby="reportModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="reportModalLabel"
+        >
+          Why are you reporting this?
+        </h5>
+      </div>
+      <div class="relative flex-auto p-4" data-te-modal-body-ref>
+        <div id="accordionExample">
+          <!-- Collapse 1 -->
+          <div
+            class="bg-white border rounded-t-lg border-t-lg border-neutral-200"
+          >
+            <h2 class="mb-0" id="headingTwo">
+              <button
+                class="group relative flex w-full items-center rounded-none border-0 bg-white py-4 px-5 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none"
+                type="button"
+                data-te-collapse-init
+                data-te-collapse-collapsed
+                data-te-target="#collapseOne"
+                aria-expanded="false"
+                aria-controls="collapseOne"
+              >
+                Spam
+                <span
+                  class="ml-auto -mr-1 h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </h2>
+            <div
+              id="collapseOne"
+              class="!visible hidden"
+              data-te-collapse-item
+              aria-labelledby="headingTwo"
+              data-te-parent="#accordionExample"
+            >
+              <div class="px-5 mb-3">
+                <div
+                  class="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg"
+                >
+                  <span
+                    class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason1
+                  </span>
+                  <span
+                    class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason2
+                  </span>
+                  <span
+                    class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason3
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Collapse 2 -->
+          <div class="bg-white border border-t-0 border-neutral-200">
+            <h2 class="mb-0" id="headingTwo">
+              <button
+                class="group relative flex w-full items-center rounded-none border-0 bg-white py-4 px-5 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none"
+                type="button"
+                data-te-collapse-init
+                data-te-collapse-collapsed
+                data-te-target="#collapseTwo"
+                aria-expanded="false"
+                aria-controls="collapseTwo"
+              >
+                Adult content
+                <span
+                  class="ml-auto -mr-1 h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </h2>
+            <div
+              id="collapseTwo"
+              class="!visible hidden"
+              data-te-collapse-item
+              aria-labelledby="headingTwo"
+              data-te-parent="#accordionExample"
+            >
+              <div class="px-5 mb-3">
+                <div
+                  class="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg"
+                >
+                  <span
+                    class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason1
+                  </span>
+                  <span
+                    class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason2
+                  </span>
+                  <span
+                    class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason3
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Collapse 3 -->
+          <div class="bg-white border border-t-0 border-neutral-200">
+            <h2 class="mb-0" id="headingTwo">
+              <button
+                class="group relative flex w-full items-center rounded-none border-0 bg-white py-4 px-5 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none"
+                type="button"
+                data-te-collapse-init
+                data-te-collapse-collapsed
+                data-te-target="#collapseThree"
+                aria-expanded="false"
+                aria-controls="collapseThree"
+              >
+                Harassment or hateful speech
+                <span
+                  class="ml-auto -mr-1 h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </h2>
+            <div
+              id="collapseThree"
+              class="!visible hidden"
+              data-te-collapse-item
+              aria-labelledby="headingTwo"
+              data-te-parent="#accordionExample"
+            >
+              <div class="px-5 mb-3">
+                <div
+                  class="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg"
+                >
+                  <span
+                    class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason1
+                  </span>
+                  <span
+                    class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason2
+                  </span>
+                  <span
+                    class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason3
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Collapse 4 -->
+          <div
+            class="bg-white border border-t-0 rounded-b-lg border-neutral-200"
+          >
+            <h2 class="mb-0 accordion-header" id="headingThree">
+              <button
+                class="group relative flex w-full items-center border-0 bg-white py-4 px-5 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none"
+                type="button"
+                data-te-collapse-init
+                data-te-collapse-collapsed
+                data-te-target="#collapseFour"
+                aria-expanded="false"
+                aria-controls="collapseFour"
+              >
+                I just dont want to see this
+                <span
+                  class="ml-auto -mr-1 h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </h2>
+            <div
+              id="collapseFour"
+              class="!visible hidden"
+              data-te-collapse-item
+              aria-labelledby="headingThree"
+              data-te-parent="#accordionExample"
+            >
+              <div class="px-5 mb-3">
+                <div
+                  class="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg"
+                >
+                  <span
+                    class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason1
+                  </span>
+                  <span
+                    class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason2
+                  </span>
+                  <span
+                    class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                  >
+                    Reason3
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

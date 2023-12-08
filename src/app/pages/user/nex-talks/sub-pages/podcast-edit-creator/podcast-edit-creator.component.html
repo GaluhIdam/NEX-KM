@@ -1,0 +1,254 @@
+<!-- header -->
+<div class="px-20 mt-16">
+  <div class="mb-8">
+    <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+      <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a routerLink="/user/nex-talks" class="mr-3 text-gray-400">Nex Talk</a>
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a routerLink="/user/nex-talks/podcast" class="mr-3 text-gray-400"
+        >Podcast</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <a
+        routerLink="/user/nex-talks/podcast/my-podcast"
+        class="mr-3 text-gray-400"
+        >My Podcast</a
+      >
+      <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+      <p class="mr-3 text-black activeLink">Edit Channel</p>
+    </div>
+  </div>
+</div>
+
+<div class="mt-10 sm:px-36 xs:px-10">
+  <div class="mb-10 text-center">
+    <h1 class="text-5xl font-semibold text-blue-800 font">
+      Welcome GMF Heroes!
+    </h1>
+    <p class="mt-4 font-semibold text-gray-500">Upload your podcast now</p>
+  </div>
+
+  <div [hidden]="progress == 0">
+    <div class="w-full mt-8 bg-neutral-200 dark:bg-neutral-600">
+      <div
+        class="bg-primary p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+        [style.width.%]="progress"
+      >
+        {{ progress }}%
+      </div>
+    </div>
+    <h1 class="mt-2 mb-2 text-xs italic text-danger">
+      Please wait and do not refresh or leave page!
+    </h1>
+  </div>
+
+  <ng-container *ngIf="isLoading || isImageLoading">
+    <div class="flex items-center justify-center font-semibold h-60">
+      <app-loading></app-loading>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && !isImageLoading">
+    <form
+      [formGroup]="creatorForm"
+      (ngSubmit)="onSaveClick()"
+      [hidden]="progress > 0"
+    >
+      <div
+        class="grid gap-4 p-6 bg-white rounded-lg shadow-xl sm:grid-cols-10 xs:grid-cols-1 shadow-gray-200"
+      >
+        <div class="sm:col-span-3">
+          <div
+            class="xs:flex xs:flex-row xs:justify-between xs:items-center xs:py-2"
+          >
+            <p class="font-semibold">
+              Image <span class="text-danger">*</span>
+            </p>
+            <div class="sm:hidden">
+              <button
+                *ngIf="selectedImageFile === null"
+                (click)="triggerImageFileInputClick()"
+                class="w-fit rounded bg-primary px-6 pt-2.5 pb-2 text-sm text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+              >
+                <fa-icon
+                  [icon]="faUpload"
+                  class="mr-2 text-sm text-white"
+                ></fa-icon>
+                Upload Image
+              </button>
+              <button
+                *ngIf="selectedImageFile !== null"
+                (click)="onRemoveImage()"
+                class="w-fit rounded bg-danger px-6 pt-2.5 pb-2 text-sm mt-5 text-white transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-danger-600"
+              >
+                <fa-icon
+                  [icon]="faTrash"
+                  class="mr-2 text-sm text-white"
+                ></fa-icon>
+                Delete Image
+              </button>
+            </div>
+          </div>
+          <div *ngIf="selectedImageFile === null">
+            <div
+              class="py-32 mx-auto text-center border-2 rounded-xl"
+              (dragover)="onImageDragOver($event)"
+              (dragleave)="onImageDragLeave($event)"
+              (drop)="onImageDrop($event)"
+            >
+              <p><b>Upload a file</b> or drag and drop</p>
+              <p>Image File up to 1 MB</p>
+              <div class="hidden p-2 border-2">
+                <input
+                  #imageFileInput
+                  id="image"
+                  accept=".png, .jpg, .jpeg"
+                  type="file"
+                  (change)="onImageUploaded($event)"
+                />
+              </div>
+            </div>
+            <div class="flex justify-between">
+              <div *ngIf="!image?.valid && (image?.dirty || image?.touched)">
+                <small class="text-red-800" [hidden]="!image?.errors?.required">
+                  Image is required
+                </small>
+              </div>
+              <div></div>
+              <div class="sm:flex sm:justify-end xs:hidden">
+                <button
+                  type="button"
+                  (click)="triggerImageFileInputClick()"
+                  class="w-fit rounded bg-primary px-6 pt-2.5 pb-2 text-sm mt-5 text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                >
+                  <fa-icon
+                    [icon]="faUpload"
+                    class="mr-2 text-sm text-white"
+                  ></fa-icon>
+                  Upload Image
+                </button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="selectedImageFile !== null">
+            <div class="flex items-center" style="height: 310px">
+              <img
+                *ngIf="previewImage"
+                class="w-full h-full rounded-xl"
+                [src]="previewImage"
+                alt="Preview"
+              />
+            </div>
+            <div class="sm:flex sm:justify-end xs:hidden">
+              <button
+                (click)="onRemoveImage()"
+                class="w-fit rounded bg-danger px-6 pt-2.5 pb-2 text-sm mt-5 text-white transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-danger-600"
+              >
+                <fa-icon
+                  [icon]="faTrash"
+                  class="mr-2 text-sm text-white"
+                ></fa-icon>
+                Delete Image
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="sm:col-span-7">
+          <div class="mb-8">
+            <label for="name" class="font-semibold"
+              >Channel Name <span class="text-danger-700">*</span></label
+            >
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="mt-4 w-full min-w-0 flex-auto rounded-lg border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out focus:z-[3] focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
+              placeholder="Input Your Name Here..."
+            />
+            <div *ngIf="!name?.valid && (name?.dirty || name?.touched)">
+              <small class="text-red-800" [hidden]="!name?.errors?.required">
+                Channel Name is required
+              </small>
+            </div>
+          </div>
+          <div class="mb-8">
+            <label for="description" class="font-semibold"
+              >Description <span class="text-danger-700">*</span></label
+            >
+            <textarea
+              class="mt-4 peer block min-h-[auto] w-full rounded-lg border-2 border-neutral-300 bg-transparent py-[0.32rem] px-3 leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none"
+              id="description"
+              rows="3"
+              formControlName="description"
+              id="description"
+              placeholder="Input Your Description Here"
+            ></textarea>
+
+            <div
+              *ngIf="
+                !description?.valid &&
+                (description?.dirty || description?.touched)
+              "
+            >
+              <small
+                class="text-red-800"
+                [hidden]="!description?.errors?.required"
+              >
+                Description is required
+              </small>
+            </div>
+          </div>
+          <div class="mb-24">
+            <label for="talkCategorId" class="font-semibold"
+              >Talk Category <span class="text-danger">*</span></label
+            >
+            <ng-select
+              class="mt-4"
+              id="talkCategoryId"
+              name="talkCategoryId"
+              formControlName="talkCategoryId"
+              placeholder="Select Talk Category"
+            >
+              <ng-option
+                *ngFor="let talkCategory of talkCategoryData"
+                value="{{ talkCategory.id }}"
+              >
+                {{ talkCategory.name }}
+              </ng-option>
+            </ng-select>
+            <div
+              *ngIf="
+                !talkCategoryId?.valid &&
+                (talkCategoryId?.dirty || talkCategoryId?.touched)
+              "
+            >
+              <small
+                class="text-red-800"
+                [hidden]="!talkCategoryId?.errors?.required"
+              >
+                Talk Category is required
+              </small>
+            </div>
+          </div>
+          <div class="flex justify-end gap-2">
+            <button
+              type="button"
+              (click)="onCancelClick()"
+              class="mb-2 block w-fit rounded bg-danger px-6 pt-2.5 pb-2 text-base mt-5 font-medium leading-normal text-white"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              [disabled]="creatorForm.status === 'INVALID'"
+              class="disabled:bg-gray-400 mb-2 block w-fit rounded bg-primary px-6 pt-2.5 pb-2 text-base mt-5 font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+            >
+              Edit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</div>

@@ -1,0 +1,78 @@
+<div class="mt-8">
+  <div class="flex grid-cols-2 gap-4 flex-cols">
+    <!-- Categories Section -->
+    <div class="px-9 py-9 min-[600px]:w-60 shadow-lg mx-5 max-[600px]:hidden">
+      <h1 class="font-semibold tracking-wider uppercase text-regal-blue">
+        Manage Book
+      </h1>
+      <div class="flex justify-start mt-5">
+        <ul class="w-96">
+          <li class="w-full py-2" *ngFor="let row of manageBookCategoryData">
+            <div
+              (click)="onChangeManageBookCategory(row)"
+              [class.text-soft-green]="
+                selectedManageBookCategory.name === row.name
+              "
+              [class.font-semibold]="
+                selectedManageBookCategory.name === row.name
+              "
+              class="text-gray-400"
+            >
+              {{ row.name }}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Categories Section -->
+
+    <div class="w-full">
+      <div class="grid min-[600px]:grid-cols-1 max-[600px]:grid-rows-1 gap-4">
+        <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+          <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+          <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+          <a routerLink="/user/nex-library" class="mr-3 text-gray-400"
+            >Nex Library</a
+          >
+          <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+          <p class="mr-3 font-bold text-black activeLink">Manage</p>
+        </div>
+      </div>
+      <div class="w-full px-4 mt-8 min-[600px]:hidden">
+        <div class="w-full px-5 py-5 mt-3 bg-gray-100 rounded-lg h-fit">
+          <h1 class="font-semibold tracking-wider uppercase text-regal-blue">
+            Manage Book
+          </h1>
+          <div class="flex justify-start mt-3">
+            <ul class="w-96">
+              <li
+                class="w-full py-2"
+                *ngFor="let row of manageBookCategoryData"
+              >
+                <div
+                  (click)="onChangeManageBookCategory(row)"
+                  [class.text-soft-green]="selectedManageBookCategory === row"
+                  [class.font-semibold]="selectedManageBookCategory === row"
+                  class="text-gray-400"
+                >
+                  {{ row.name }}
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- My Collection Section -->
+      <div *ngIf="selectedManageBookCategory.name === 'My Collection'">
+        <app-my-collection></app-my-collection>
+      </div>
+      <!-- My Collection Section -->
+
+      <!-- My EBook Section -->
+      <div *ngIf="selectedManageBookCategory.name === 'My Ebook'">
+        <app-my-ebook></app-my-ebook>
+      </div>
+      <!-- My EBook Section -->
+    </div>
+  </div>
+</div>

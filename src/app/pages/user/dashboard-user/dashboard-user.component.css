@@ -1,0 +1,43 @@
+.flippable-image {
+  transition: transform 0.5s ease, width 0.5s ease;
+  transform-origin: bottom center;
+  width: 100%;
+}
+
+.flippable-image.flying {
+  animation: takeoffAndLand 3s ease;
+  transform: scale(1) rotate(0) translate(-200%, 0);
+}
+
+@keyframes takeoffAndLand {
+  0% {
+    transform: scale(1) rotateX(0) translate(0, 0);
+  }
+  2% {
+    transform: scale(0.8) rotate(0) translate(-10%, 0%);
+  }
+  4% {
+    transform: scale(0.5) rotate(0) translate(-50%, 0%);
+  }
+  5% {
+    transform: scale(0.3) rotate(0) translate(-100%, 0%);
+  }
+  25% {
+    transform: scale(0.3) rotate(0) translate(0, 0);
+  }
+  50% {
+    transform: scale(0.5) rotate(-30deg) translate(80%, -80%);
+  }
+  75% {
+    transform: scale(0.8) rotate(-30deg) translate(150%, -150%);
+  }
+  85% {
+    transform: scale(1.5) rotate(-30deg) translate(180%, -180%);
+  }
+  95% {
+    transform: scale(1.5) rotate(-30deg) translate(200%, -200%);
+  }
+  100% {
+    transform: scale(1.5) rotate(-30deg) translate(200%, -200%);
+  }
+}

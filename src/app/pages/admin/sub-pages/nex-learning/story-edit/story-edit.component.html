@@ -1,0 +1,252 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX LEARNING</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">Inspirational/Retirement Story</h1>
+      <div class="flex justify-start mt-3">
+        <h1 class="text-gray-400 text-base">Edit Inspirational/Retirement Story</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="p-10 mt-10 mb-10 bg-white rounded-lg">
+  <div [hidden]="progress == 0">
+    <h1 class="mb-2">Uploading Video</h1>
+    <div class="w-full bg-neutral-200 dark:bg-neutral-600">
+      <div class="bg-primary p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+        [style.width.%]="progress">
+        {{progress}}%
+      </div>
+    </div>
+    <h1 class="mb-2 mt-2 text-xs text-danger italic">Please wait and do not refresh or leave page!</h1>
+  </div>
+  <div *ngIf="loading">
+    <app-loading></app-loading>
+  </div>
+  <div *ngIf="!loading">
+    <form [formGroup]="mform" (submit)="postStory(uuid)" [hidden]="progress > 0">
+      <div class="flex flex-rows justify-end">
+        <a routerLink="/admin/inspirational-story"
+          class="px-3 py-1 text-base bg-gray-500 text-white rounded hover:bg-gray-700 mr-2"><fa-icon
+            [icon]="faXmark"></fa-icon> Cancel</a>
+        <button type="submit" class="px-3 py-1 text-base bg-blue-500 text-white rounded hover:bg-blue-700"><fa-icon
+            [icon]="faCheckCircle"></fa-icon> Save</button>
+      </div>
+
+      <div class="block w-full">
+        <!-- Title Input -->
+        <div class="mb-4 flex flex-col">
+          <label for="title" class="font-base text-gray-500 mb-1">Title <span class="text-red-500">*</span></label>
+          <div
+            [ngClass]="{'border border-rose-500 rounded': mform.get('title')?.touched && mform.get('title')?.invalid }">
+            <input type="text" formControlName="title" class="w-full px-2 py-1 rounded border border-gray-300"
+              id="exampleInput90" />
+          </div>
+          <p class="text-xs text-rose-500 italic mt-1"
+            *ngIf="mform.get('title')?.touched && mform.get('title')?.invalid">
+            * Title is required.
+          </p>
+        </div>
+        <!-- Title Input -->
+
+        <!-- Category Input -->
+        <div class="mb-4">
+          <label for="title" class="font-base text-gray-500 mb-2">Category <span class="text-red-500">*</span></label>
+          <div
+            [ngClass]="{'border rounded border-rose-500 rounded': mform.get('category')?.touched && mform.get('category')?.invalid }">
+            <select formControlName="category" data-te-select-init
+              class="m-0 w-full block flex-auto rounded px-1 py-2 border-solid border-2 border-gray-200">
+              <option *ngFor="let data of categoryStoryList" [value]="data">{{ data }}</option>
+            </select>
+          </div>
+          <p *ngIf="mform.get('category')?.touched && mform.get('category')?.invalid"
+            class="text-red-500 text-xs italic mt-1">
+            * Category is required.
+          </p>
+        </div>
+        <!-- Category Input -->
+
+        <div class="grid grid-cols-2 gap-2">
+          <!-- Video Input -->
+          <div class="mb-4">
+            <label for="title" class="font-base text-gray-500 mb-2">Video <span class="text-red-500">*</span></label>
+            <div mat-card-image plyr
+              [plyrOptions]="{ autoplay: false, controls: [ 'play' , 'mute', 'progress'], clickToPlay: true }"
+              [plyrTitle]="'Custom video'" [plyrPlaysInline]="true" [plyrCrossOrigin]="false" [plyrSources]="[{
+                        src: videoShow,
+              type: 'video/mp4',
+              size: 576,
+              provider: 'html5'
+                }]" (plyrInit)="player = $event" (plyrPlay)="played($event)"></div>
+            <div class="mt-1"
+              [ngClass]="{ 'border border-rose-500 rounded': mform.get('video')?.touched && mform.get('video')?.invalid }">
+              <input type="file" formControlName="video" name="video" (change)="onFileSelected($event)"
+                class="m-0 w-full block min-w-0 flex-auto rounded px-2 py-1 text-regal-blue border border-gray-300">
+            </div>
+            <p *ngIf="mform.get('video')?.touched && mform.get('video')?.invalid"
+              class="text-red-500 text-xs italic mt-1">
+              * Video file is required.
+            </p>
+            <p *ngIf="videoValidator == false" class="text-red-500 text-xs italic mt-1">
+              * {{ videoValidatorMessage }}.
+            </p>
+          </div>
+          <!-- Video Input -->
+          <div class="mb-4">
+            <label for="title" class="font-base text-gray-500 mb-2">Image <span class="text-red-500">*</span></label>
+            <img [src]="imageShow" class="w-full" alt="image">
+            <div class="mt-1"
+              [ngClass]="{ 'border border-rose-500 rounded': mform.get('image')?.touched && mform.get('image')?.invalid }">
+              <input type="file" formControlName="image" name="image" (change)="onFileSelected($event)"
+                class="m-0 w-full block min-w-0 flex-auto rounded px-2 py-1 text-regal-blue border border-gray-300">
+            </div>
+            <p *ngIf="mform.get('image')?.touched && mform.get('image')?.invalid"
+              class="text-red-500 text-xs italic mt-1">
+              * image file is required.
+            </p>
+            <p *ngIf="imageValidator == false" class="text-red-500 text-xs italic mt-1">
+              * {{ imageValidatorMessage }}.
+            </p>
+          </div>
+          <!-- Image Input -->
+        </div>
+
+
+        <!-- Date Created Input -->
+        <div class="mb-4 flex flex-col">
+          <label for="title" class="font-base text-gray-500 mb-1">Date Created : <span
+              class="text-red-500">*</span></label>
+          <div
+            [ngClass]="{'border border-rose-500 rounded': mform.get('dateCreated')?.touched && mform.get('dateCreated')?.invalid }">
+            <input type="date" formControlName="dateCreated" class="w-full px-2 py-1 rounded border border-gray-300"
+              id="exampleInput90" />
+          </div>
+          <p *ngIf="mform.get('dateCreated')?.touched && mform.get('dateCreated')?.invalid"
+            class="text-red-500 text-xs italic mt-1">
+            * Date create is required.
+          </p>
+        </div>
+        <!-- Date Created Input -->
+
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Date Created By Input -->
+          <div class="mb-3">
+            <label for="title" class="font-base text-gray-500 mb-1">Created By : <span
+                class="text-red-500">*</span></label>
+            <div
+              [ngClass]="{'border border-rose-500 rounded': mform.get('createdBy')?.touched && mform.get('createdBy')?.invalid }">
+              <input type="text" formControlName="createdBy" class="w-full px-2 py-1 rounded border border-gray-300"
+                id="exampleInput90" />
+            </div>
+            <p *ngIf="mform.get('createdBy')?.touched && mform.get('createdBy')?.invalid"
+              class="text-red-500 text-xs italic mt-1">
+              * Created by is required.
+            </p>
+          </div>
+          <!-- Date Created By Input -->
+
+          <!-- Unit Input -->
+          <div class="mb-3">
+            <label for="title" class="font-base text-gray-500 mb-1">Unit : <span class="text-red-500">*</span></label>
+            <div
+              [ngClass]="{'border border-rose-500 rounded': mform.get('unit')?.touched && mform.get('unit')?.invalid }">
+              <input type="text" formControlName="unit" class="w-full px-2 py-1 rounded border border-gray-300"
+                id="exampleInput90" />
+            </div>
+            <p *ngIf="mform.get('unit')?.touched && mform.get('unit')?.invalid"
+              class="text-red-500 text-xs italic mt-1">
+              * Unit is required.
+            </p>
+          </div>
+          <!-- Unit Input -->
+
+          <!-- Editor Choice Input -->
+          <div class="mb-4">
+            <label for="title" class="font-base text-gray-500 mb-2">Editor Choice <span
+                class="text-red-500">*</span></label>
+            <div class="mt-1"
+              [ngClass]="{'border border-rose-500 rounded': mform.get('editorChoice')?.touched && mform.get('editorChoice')?.invalid }">
+              <select formControlName="editorChoice" data-te-select-init data-te-select-auto-select="true"
+                class="m-0 w-full block mt-1 min-w-0 flex-auto rounded-lg px-3 py-2 border-solid border-2 border-gray-200">
+                <option *ngFor="let rows of statusEditorChoice" [value]="rows.status">{{ rows.name }}</option>
+              </select>
+            </div>
+            <p *ngIf="mform.get('editorChoice')?.touched && mform.get('editorChoice')?.invalid"
+              class="text-red-500 text-xs italic mt-1">
+              * Editor Choice is required.
+            </p>
+          </div>
+          <!-- Editor Choice Input -->
+
+          <!-- Favorite Input -->
+          <div class="mb-3">
+            <label for="title" class="font-base text-gray-500 mb-1">Favorite : <span
+                class="text-red-500">*</span></label>
+            <div class="mt-1"
+              [ngClass]="{'border border-rose-500 rounded': mform.get('favorite')?.touched && mform.get('favorite')?.invalid }">
+              <select formControlName="favorite" data-te-select-init data-te-select-auto-select="true"
+                class="m-0 w-full block mt-1 min-w-0 flex-auto rounded-lg px-3 py-2 border-solid border-2 border-gray-200">
+                <option *ngFor="let rows of favoriteList" [value]="rows.status">{{ rows.name }}</option>
+              </select>
+            </div>
+            <p *ngIf="mform.get('favorite')?.touched && mform.get('favorite')?.invalid"
+              class="text-red-500 text-xs italic mt-1">
+              * Favorite is required.
+            </p>
+          </div>
+          <!-- Favorite Input -->
+
+          <!-- Status Input -->
+          <div class="mb-4">
+            <label for="title" class="font-base text-gray-500 mb-2">Status <span class="text-red-500">*</span></label>
+            <div class="mt-1"
+              [ngClass]="{'border border-rose-500 rounded': mform.get('statusApprove')?.touched && mform.get('statusApprove')?.invalid }">
+              <select formControlName="statusApprove" data-te-select-init data-te-select-auto-select="true"
+                class="m-0 w-full block mt-1 min-w-0 flex-auto rounded-lg px-3 py-2 border-solid border-2 border-gray-200">
+                <option *ngFor="let rows of statusApproveList" [value]="rows.status">{{ rows.name }}</option>
+              </select>
+            </div>
+            <p *ngIf="mform.get('statusApprove')?.touched && mform.get('statusApprove')?.invalid"
+              class="text-red-500 text-xs italic mt-1">
+              * Status is required.
+            </p>
+          </div>
+          <!-- Status Input -->
+
+          <!-- Approval By Input -->
+          <div class="mb-4">
+            <label for="title" class="font-base text-gray-500 mb-3">Approval/Reject By : <span
+                class="text-red-500">*</span></label>
+            <div class="mt-1"
+              [ngClass]="{'border border-rose-500 rounded': mform.get('approvalBy')?.touched && mform.get('approvalBy')?.invalid }">
+              <input type="text" formControlName="approvalBy"
+                class="w-full px-2 py-1 rounded border border-gray-300 mt-1" id="exampleInput90" />
+            </div>
+            <p *ngIf="mform.get('approvalBy')?.touched && mform.get('approvalBy')?.invalid"
+              class="text-red-500 text-xs italic mt-1">
+              * Approval by is required.
+            </p>
+          </div>
+          <!-- Approval By Input -->
+
+        </div>
+
+        <!-- Description Status -->
+        <div class="mt-5">
+          <label for="title" class="font-base text-gray-500 mb-2">Description <span
+              class="text-red-500">*</span></label>
+          <div class="mt-1"
+            [ngClass]="{ 'border border-rose-500': mform.get('description')?.touched && mform.get('description')?.invalid }">
+            <textarea name="description" formControlName="description" [ngxSummernote]="config"></textarea>
+          </div>
+          <div class="text-red-500" *ngIf="mform.get('description')?.touched && mform.get('description')?.invalid">
+            <p class="text-sm italic mt-2">
+              Description is required.
+            </p>
+          </div>
+        </div>
+        <!-- Description Status -->
+      </div>
+    </form>
+  </div>
+</div>

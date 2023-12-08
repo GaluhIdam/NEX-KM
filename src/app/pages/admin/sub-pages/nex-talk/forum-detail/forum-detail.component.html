@@ -1,0 +1,114 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX LIBRARY</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">
+        {{ titlePage.title }}
+      </h1>
+      <div class="flex justify-start mt-5">
+        <a routerLink="/admin/forum" class="text-gray-400">{{
+          titlePage.title
+        }}</a>
+        <fa-icon class="mx-3 text-gray-400" [icon]="faArrowRight"></fa-icon>
+        <h1>Detail</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="p-5 my-5 bg-white shadow">
+  <ng-container *ngIf="isLoading">
+    <div class="flex items-center justify-center h-80">
+      <app-loading></app-loading>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="isError">
+      <app-service-error></app-service-error>
+    </ng-container>
+    <ng-container *ngIf="!isError && forumDetailData">
+      <div class="flex justify-end">
+        <button
+          class="px-5 py-2 border rounded-lg border-1 border-danger text-danger"
+          (click)="onDeleteForum(forumDetailData.uuid)"
+        >
+          <fa-icon [icon]="faTrash"></fa-icon> Delete
+        </button>
+      </div>
+      <div class="flex flex-col mb-5">
+        <label for="book-title">Forum Title</label>
+        <input
+          type="text"
+          disabled
+          class="px-3 py-2 mt-2 bg-gray-100 rounded-lg"
+          [value]="forumDetailData.title"
+        />
+      </div>
+      <div class="flex flex-col mb-5">
+        <label for="book-title">Category</label>
+        <input
+          type="text"
+          disabled
+          class="px-3 py-2 mt-2 bg-gray-100 rounded-lg"
+          [value]="forumDetailData.talkCategory.name"
+        />
+      </div>
+      <div class="flex flex-col mb-5">
+        <label for="book-title">Overview</label>
+        <div
+          class="px-3 py-2 pb-20 mt-2 bg-gray-100 rounded-lg"
+          [innerHTML]="parsedForumDescription"
+        ></div>
+      </div>
+      <div class="flex flex-col mb-5">
+        <label for="book-title">Date Created</label>
+        <input
+          type="text"
+          disabled
+          class="px-3 py-2 mt-2 bg-gray-100 rounded-lg"
+          [value]="formattedDate(forumDetailData.createdAt)"
+        />
+      </div>
+      <div class="grid grid-cols-2 gap-1">
+        <div class="flex flex-col mb-5 mr-4">
+          <label for="book-title">Created By</label>
+          <input
+            type="text"
+            disabled
+            class="px-3 py-2 mt-2 bg-gray-100 rounded-lg"
+            [value]="forumDetailData.createdBy"
+          />
+        </div>
+        <div class="flex flex-col mb-5">
+          <label for="book-title">Unit</label>
+          <input
+            type="text"
+            disabled
+            class="px-3 py-2 mt-2 bg-gray-100 rounded-lg"
+            [value]="forumDetailData.unit"
+          />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-1">
+        <div class="flex flex-col mb-5 mr-4">
+          <label for="book-title">Likes</label>
+          <input
+            type="text"
+            disabled
+            class="px-3 py-2 mt-2 bg-gray-100 rounded-lg"
+            [value]="forumDetailData.likeCount"
+          />
+        </div>
+        <div class="flex flex-col mb-5">
+          <label for="book-title">Comments</label>
+          <input
+            type="text"
+            disabled
+            class="px-3 py-2 mt-2 bg-gray-100 rounded-lg"
+            [value]="forumDetailData.forumComment.length"
+          />
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

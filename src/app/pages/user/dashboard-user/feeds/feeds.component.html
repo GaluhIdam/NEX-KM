@@ -1,0 +1,150 @@
+<div class="flex max-[600px]:flex-col min-[600px]:mx-5 justify-between w-full">
+    <div class="max-[600px]:ml-5">
+      <h1 class="min-[600px]:text-3xl text-xl" style="font-weight: 800;">My Feeds</h1>
+      <p class="font-semibold mb-5 text-success">List All Your Content</p>
+    </div>
+    <button (click)="openPostModal()" type="button"
+      class="rounded-lg bg-primary max-[600px]:mx-5 px-3 py-2 text-white hover:bg-primary-700 h-fit">
+      <fa-icon [icon]="faPencil" class="mr-2 text-white"></fa-icon> Post Something
+    </button>
+</div>
+
+<ng-container *ngIf="isUnderConstruction">
+  <app-under-construction-page></app-under-construction-page>
+</ng-container>
+
+<ng-container *ngIf="!isUnderConstruction" class="w-full">
+  <div class="mb-6">
+    <!-- My Feeds -->
+    <div class="hidden opacity-100 mt-8 w-full transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+      id="tabs-home" role="tabpanel" data-te-tab-active>
+      <ng-container *ngIf="isLoading">
+        <div class="py-96 h-96">
+          <app-loading></app-loading>
+        </div>
+      </ng-container>
+      <div class="text-center lg:gap-2 hp:gap-8 font-semibold w-full" *ngIf="!isLoading && (!feeds || feeds.length <= 0)">No
+        feeds yet</div>
+      <div *ngIf="!isLoading && feeds && feeds.length > 0"
+        class="grid justify-center lg:grid-cols-3 hp:grid-cols-1 lg:gap-2 md:grid-cols-3 md:gap-3 sm:grid-cols-2 sm:gap-x-1 hp:gap-8">
+        <!-- Loop here -->
+        <div *ngFor="let feed of feeds"
+          class="h-fit bg-gray-100 border-2 border-gray-300 lg:w-full hp:w-60 rounded-2xl hp:mx-auto">
+          <a [routerLink]="goToPage(feed._source.uuid, feed._index, feed._source.approvalStatus)">
+            <img class="rounded-t-2xl w-full h-40 object-cover"
+              [src]="feed._source.pathCover ?? feed._source.pathImage ?? feed._source.path" alt="Image Feeds" />
+          </a>
+          <div class="p-4">
+            <div class="grid grid-cols-2">
+              <div>
+                <span [class]="badge(feed._source.approvalStatus)"
+                  class="inline-block whitespace-nowrap rounded-full mb-3 px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-[0.75em] font-bold leading-none text-white">
+                  {{ checkApprovalStatus(feed._source.approvalStatus) }}
+                </span>
+              </div>
+              <div class="text-end">
+                <button id="dropdownFeeds" role="button" data-te-dropdown-toggle-ref aria-expanded="false">
+                  <fa-icon [icon]="faEllipsis" class="text-xl text-gray-500"></fa-icon>
+                </button>
+                <ul
+                  class="absolute left-auto m-0 mt-1 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                  aria-labelledby="dropdownFeeds" data-te-dropdown-menu-ref>
+                  <li>
+                    <button [disabled]="feed._source.status ?? !feed._source.bannedStatus"
+                      (click)="publishUnpublish(feed._source.uuid, feed._index, true)"
+                      class="block w-full px-4 py-2 text-sm font-normal text-left bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                      data-te-dropdown-item-ref>
+                      Publish
+                    </button>
+                  </li>
+                  <li>
+                    <button [disabled]="feed._source.bannedStatus ?? !feed._source.status"
+                      (click)="publishUnpublish(feed._source.uuid, feed._index, false)"
+                      class="block w-full px-4 py-2 text-sm font-normal text-left bg-transparent whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30"
+                      data-te-dropdown-item-ref>
+                      Unpublish
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <h5 class="mb-2 text-xs italic font-semibold text-gray-400">
+              {{ formatedDate(feed._source.createdAt) }}
+            </h5>
+            <p class="mb-4 text-sm truncate text-neutral-600">
+              <a [routerLink]="goToPage(feed._source.uuid, feed._index, feed._source.approvalStatus)">
+                {{ feed._source.title }}
+              </a>
+            </p>
+            <span
+              class="inline-block bg-gray-400 whitespace-nowrap rounded-full mb-3 px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-[0.75em] font-bold leading-none text-white">
+              {{ getIndexName(feed._index) }}
+            </span>
+            <div class="flex gap-0">
+              <div class="flex-none">
+                <img [src]="userPhoto" class="w-10 rounded-full" alt="avatar" loading="lazy" />
+              </div>
+              <div class="flex-1 ml-4 lg:mt-1">
+                <div class="flex items-center">
+                  <p class="text-xs font-semibold">{{ feed._source.uploadBy ?? feed._source.createdBy }}</p>
+                </div>
+                <p class="text-xs font-medium">{{ personnelUnit + ' - ' + personnelTitle }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Loop -->
+        <!-- <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"></app-pagination> -->
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center">
+  <div class="absolute inset-0 bg-black opacity-50"></div>
+  <div
+    class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-fit px-12 py-4 flex-col rounded-xl border-none bg-white bg-clip-padding text-current shadow-lg outline-none text-center">
+    <!--Close button-->
+    <button type="button" (click)="closePostModal()"
+      class="box-content absolute p-2 text-white bg-red-500 border-none rounded-full right-4 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+      data-te-modal-dismiss aria-label="Close">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <div class="flex items-center justify-center flex-shrink-0 p-4 mt-8 rounded-t-md">
+      <h5 class="text-xl font-semibold leading-normal text-center font-jakarta text-neutral-800" id="postModal">
+        What do you want to post today?
+      </h5>
+    </div>
+    <div class="relative flex-auto p-4 -mt-2" data-te-modal-body-ref>
+      <div class="grid grid-cols-2 gap-6">
+        <a href="/user/nex-library/publish-book">
+          <img src="../../../../assets/image/book.png" class="w-32 mx-auto my-5" alt="Icon Ebook" />
+          <h5 class="text-xl font-semibold leading-normal text-center font-jakarta text-neutral-800" id="postModal">
+            Ebook
+          </h5>
+        </a>
+        <a href="/user/nex-library/publish-album">
+          <img src="../../../../assets/image/polaroid.png" class="w-32 mx-auto my-5" alt="Icon Gallery" />
+          <h5 class="text-xl font-semibold leading-normal text-center font-jakarta text-neutral-800" id="postModal">
+            Gallery
+          </h5>
+        </a>
+        <a href="/user/nex-learning/article-publish">
+          <img src="../../../../assets/image/newspaper.png" class="w-32 mx-auto mb-5" alt="Icon Article" />
+          <h5 class="text-xl font-semibold leading-normal text-center font-jakarta text-neutral-800" id="postModal">
+            Article
+          </h5>
+        </a>
+        <a href="/user/nex-talks/podcast/my-podcast">
+          <img src="../../../../assets/image/podcast.png" class="w-32 mx-auto mb-5" alt="Icon Podcast" />
+          <h5 class="text-xl font-semibold leading-normal text-center font-jakarta text-neutral-800" id="postModal">
+            Podcast
+          </h5>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

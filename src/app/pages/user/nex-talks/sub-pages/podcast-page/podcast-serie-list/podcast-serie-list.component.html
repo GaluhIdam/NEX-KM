@@ -1,0 +1,571 @@
+<!-- Search & Trend Section -->
+<div class="flex justify-center py-20 bg-center bg-library">
+  <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+    <div class="min-[600px]:w-[32rem] place-self-center">
+      <h1
+        class="text-white font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl"
+      >
+        Explore new Experience of Collaboration
+      </h1>
+    </div>
+    <div
+      class="relative mb-4 flex min-[600px]:w-[800px] flex-wrap items-stretch bg-white rounded-full mt-4"
+    >
+      <button
+        class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+        type="button"
+        id="button-addon1"
+      >
+        <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+      </button>
+      <input
+        type="text"
+        class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+        placeholder="Search"
+        aria-label="Example text with button addon"
+        aria-describedby="button-addon1"
+      />
+    </div>
+    <h1 class="text-white">TRENDING SEARCH</h1>
+    <div>
+      <ul
+        class="flex flex-wrap pl-0 list-none md:flex-row"
+        role="tablist"
+        data-te-nav-ref
+      >
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Travelling
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Interior Design
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Music
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Dancing
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="w-11/12 mx-auto mt-8">
+  <div>
+    <p
+      class="mb-4 text-5xl font-semibold text-blue-800 max-[600px]:text-center"
+    >
+      NEX PODCAST
+    </p>
+  </div>
+  <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+    <a class="mr-3 text-gray-400 cursor-pointer" (click)="onGoHomePage()"
+      >Home</a
+    >
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <a class="mr-3 text-gray-400 cursor-pointer" (click)="onGoToNexTalkPage()"
+      >Nex Talk</a
+    >
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <p class="mr-3 text-black activeLink">Podcast</p>
+  </div>
+</div>
+
+<div
+  class="flex items-center justify-center w-11/12 gap-8 mx-auto mt-16 mb-8 lg:flex-row xs:flex-col"
+>
+  <!-- Loop here -->
+  <div class="block max-w-sm text-center rounded-lg cursor-pointer">
+    <img
+      class="rounded-xl"
+      src="https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg"
+      alt=""
+    />
+  </div>
+  <div class="block max-w-md text-center rounded-lg cursor-pointer">
+    <img
+      class="rounded-xl"
+      src="https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg"
+      alt=""
+    />
+  </div>
+  <div class="block max-w-sm text-center rounded-lg cursor-pointer">
+    <img
+      class="rounded-xl"
+      src="https://tecdn.b-cdn.net/img/new/standard/nature/184.jpg"
+      alt=""
+    />
+  </div>
+</div>
+
+<!-- Podcast List -->
+<section>
+  <div class="px-20 py-8 bg-[#CEE1A2]">
+    <!-- Header -->
+    <div class="grid grid-cols-2 my-8">
+      <div>
+        <p class="text-4xl font-semibold text-blue-800">Podcast List</p>
+      </div>
+      <div class="text-right">
+        <p
+          class="text-lg font-semibold text-blue-800 cursor-pointer hover:text-blue-500"
+          (click)="podcastList()"
+        >
+          See All
+        </p>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <ng-container *ngIf="isSerieListLoading">
+      <div class="flex items-center justify-center h-56">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isSerieListLoading">
+      <ng-container *ngIf="serieListData.length > 0; else emptyPodcastListData">
+        <div class="grid lg:gap-16 lg:grid-cols-4 xs:grid-cols-2 xs:gap-4">
+          <!-- Loop here -->
+          <ng-container *ngFor="let serie of serieListData; let i = index">
+            <div class="block max-w-sm text-center rounded-lg cursor-pointer">
+              <div class="relative">
+                <img
+                  class="object-cover object-center w-full shadow-lg h-52 rounded-xl"
+                  [src]="serie.path"
+                  alt=""
+                  (click)="
+                    serie.personalNumber === userPersonalNumber
+                      ? onGoToMyPodcastDetail(serie.uuid)
+                      : onGotoPodcastDetail(serie.uuid)
+                  "
+                />
+                <button
+                  type="button"
+                  (click)="onSelectPodcastListToPlay('list', serie, i)"
+                  class="absolute w-12 h-12 rounded-full bottom-2 right-2 hover:shadow-xl hover:w-14 hover:h-14 bg-primary text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-primary-600 focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-8 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                >
+                  <ng-container *ngIf="!serie.isPause">
+                    <fa-icon
+                      [icon]="faPlay"
+                      class="text-base text-white"
+                    ></fa-icon>
+                  </ng-container>
+                  <ng-container *ngIf="serie.isPause">
+                    <fa-icon
+                      [icon]="faPause"
+                      class="text-base text-white"
+                    ></fa-icon>
+                  </ng-container>
+                </button>
+              </div>
+              <div
+                class="hover:shadow-xl hover:rounded-xl"
+                (click)="onGoCreatorDetail(serie.creator.uuid)"
+              >
+                <h5
+                  class="mt-4 mb-2 text-xl font-semibold leading-tight text-neutral-800"
+                >
+                  {{
+                    serie.title.length > 20
+                      ? serie.title.substr(0, 20) + ".."
+                      : serie.title
+                  }}
+                </h5>
+                <p class="pb-2 text-base text-neutral-600">
+                  {{
+                    serie.creator.name.length > 30
+                      ? serie.creator.name.substr(0, 30) + ".."
+                      : serie.creator.name
+                  }}
+                </p>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #emptyPodcastListData>
+        <div class="flex items-center justify-center h-40">
+          <h2>No podcast series available.</h2>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</section>
+
+<!-- Last Release -->
+<section>
+  <div class="px-20">
+    <!-- Header -->
+    <div class="grid grid-cols-2 mt-20 mb-10">
+      <div>
+        <p class="text-4xl font-semibold text-blue-800">Last Release</p>
+      </div>
+      <div class="text-right">
+        <p
+          class="text-lg font-semibold text-blue-800 cursor-pointer hover:text-blue-500"
+          (click)="podcastLatestRelease()"
+        >
+          See All
+        </p>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <ng-container *ngIf="isSerieLastReleaseLoading">
+      <div class="flex items-center justify-center h-56">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isSerieLastReleaseLoading">
+      <ng-container
+        *ngIf="
+          serieLastReleaseData.length > 0;
+          else emptyPodcastLastReleaseData
+        "
+      >
+        <div class="grid gap-5 lg:grid-cols-6 xs:grid-cols-2">
+          <!-- Loop here -->
+          <ng-container
+            *ngFor="let serie of serieLastReleaseData; let i = index"
+          >
+            <div
+              class="block max-w-sm text-center bg-white rounded-lg cursor-pointer"
+            >
+              <div class="relative">
+                <img
+                  class="object-cover object-center w-full shadow-lg h-52 rounded-xl"
+                  [src]="serie.path"
+                  alt=""
+                  (click)="
+                    serie.personalNumber === userPersonalNumber
+                      ? onGoToMyPodcastDetail(serie.uuid)
+                      : onGotoPodcastDetail(serie.uuid)
+                  "
+                />
+                <button
+                  type="button"
+                  (click)="onSelectPodcastListToPlay('last-release', serie, i)"
+                  class="absolute w-10 h-10 rounded-full bottom-2 right-2 hover:shadow-xl hover:w-12 hover:h-12 bg-primary text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-primary-600 focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-8 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                >
+                  <ng-container *ngIf="!serie.isPause">
+                    <fa-icon
+                      [icon]="faPlay"
+                      class="text-base text-white"
+                    ></fa-icon>
+                  </ng-container>
+                  <ng-container *ngIf="serie.isPause">
+                    <fa-icon
+                      [icon]="faPause"
+                      class="text-base text-white"
+                    ></fa-icon>
+                  </ng-container>
+                </button>
+              </div>
+              <div
+                class="hover:shadow-xl hover:rounded-xl"
+                (click)="onGoCreatorDetail(serie.creator.uuid)"
+              >
+                <h5
+                  class="mt-4 mb-2 text-xl font-semibold leading-tight text-neutral-800"
+                >
+                  {{
+                    serie.title.length > 15
+                      ? serie.title.substr(0, 15) + ".."
+                      : serie.title
+                  }}
+                </h5>
+                <p class="pb-2 text-base text-neutral-600">
+                  {{
+                    serie.creator.name.length > 20
+                      ? serie.creator.name.substr(0, 20) + ".."
+                      : serie.creator.name
+                  }}
+                </p>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #emptyPodcastLastReleaseData>
+        <div class="flex items-center justify-center h-40">
+          <h2>No podcast series available.</h2>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</section>
+
+<!-- Recently and Liked Podcast -->
+<section>
+  <div class="grid grid-cols-2 gap-20 px-20">
+    <!-- Left -->
+    <div>
+      <!-- Header -->
+      <div class="grid mt-20 mb-10 xl:grid-cols-2 xs:grid-cols-1">
+        <div>
+          <p class="text-4xl font-semibold text-gray-600">Recently Played</p>
+        </div>
+        <div class="mt-2 text-right">
+          <p
+            class="text-lg text-blue-600 cursor-pointer hover:text-blue-300"
+            (click)="podcastRecentlyPlayed()"
+          >
+            See All
+          </p>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <ng-container *ngIf="isPodcastLastPlayLoading">
+        <div class="flex items-center justify-center h-40">
+          <app-loading></app-loading>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!isPodcastLastPlayLoading">
+        <ng-container
+          *ngIf="podcastLastPlayData.length > 0; else emptyPodcastLastPlayData"
+        >
+          <!-- Body -->
+          <div class="grid grid-rows-4" *ngIf="isTherePodcastPlayed">
+            <!-- Loop here -->
+            <ng-container *ngFor="let podcast of podcastLastPlayData">
+              <div
+                class="flex flex-col w-full mt-10 rounded-lg cursor-pointer md:flex-row hover:shadow-md"
+                *ngIf="podcast.updatedAt !== podcast.createdAt"
+              >
+                <div class="relative">
+                  <img
+                    class="object-cover w-32 h-24 rounded-xl md:rounded-l-lg"
+                    [src]="podcast.pathImage"
+                    [alt]="podcast.title"
+                  />
+                  <!-- <button
+                    type="button"
+                    (click)="onSelectPodcastToPlay(podcast)"
+                    class="absolute w-8 h-8 rounded-full bottom-2 right-2 hover:shadow-xl hover:w-10 hover:h-10 bg-primary text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-primary-600 focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-8 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                  >
+                    <fa-icon
+                      [icon]="faPlay"
+                      class="text-base text-white"
+                    ></fa-icon>
+                  </button> -->
+                </div>
+                <div class="flex flex-col justify-start ml-3">
+                  <h5 class="text-xl font-semibold text-neutral-800">
+                    {{ podcast.title }} : {{ podcast.seriePodcast.title }}
+                  </h5>
+                  <p class="text-lg">{{ podcast.title }}</p>
+                  <p class="text-base text-neutral-400">
+                    {{ podcast.seriePodcast.creator.name }}
+                  </p>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+        <ng-container
+          *ngIf="!isTherePodcastPlayed && podcastLastPlayData.length > 0"
+        >
+          <div class="flex items-center justify-center h-40">
+            <h2>No Podcast available.</h2>
+          </div>
+        </ng-container>
+        <ng-template #emptyPodcastLastPlayData>
+          <div class="flex items-center justify-center h-40">
+            <h2>No Podcast available.</h2>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+
+    <!-- Right -->
+    <div>
+      <!-- Header -->
+      <div class="grid mt-20 mb-10 xl:grid-cols-2 xs:grid-cols-1">
+        <div>
+          <p class="text-4xl font-semibold text-gray-600">Liked Podcast</p>
+        </div>
+        <div class="mt-2 text-right">
+          <p
+            class="text-lg text-blue-600 cursor-pointer hover:text-blue-300"
+            (click)="podcastLikedPodcast()"
+          >
+            See All
+          </p>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <ng-container *ngIf="isPodcastLikedLoading">
+        <div class="flex items-center justify-center h-40">
+          <app-loading></app-loading>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!isPodcastLikedLoading">
+        <ng-container
+          *ngIf="podcastLikedData.length > 0; else emptyPodcastLikedData"
+        >
+          <!-- Body -->
+          <div class="grid grid-rows-4" *ngIf="isTherePodcastLiked">
+            <!-- Loop here -->
+            <ng-container *ngFor="let podcast of podcastLikedData">
+              <div
+                class="flex flex-col w-full mt-10 rounded-lg cursor-pointer md:flex-row hover:shadow-md"
+                *ngIf="podcast.likeCount > 0"
+              >
+                <div class="relative">
+                  <img
+                    class="object-cover object-center w-32 h-24 rounded-xl md:rounded-l-lg"
+                    [src]="podcast.pathImage"
+                    [alt]="podcast.title"
+                  />
+                  <!-- <button
+                    type="button"
+                    (click)="onSelectPodcastToPlay(podcast)"
+                    class="absolute w-8 h-8 rounded-full bottom-2 right-2 hover:shadow-xl hover:w-10 hover:h-10 bg-primary text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-primary-600 focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-8 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                  >
+                    <fa-icon
+                      [icon]="faPlay"
+                      class="text-base text-white"
+                    ></fa-icon>
+                  </button> -->
+                </div>
+                <div class="flex flex-col justify-start ml-3">
+                  <h5 class="text-xl font-semibold text-neutral-800">
+                    {{ podcast.title }} : {{ podcast.seriePodcast.title }}
+                  </h5>
+                  <p class="text-lg">{{ podcast.title }}</p>
+                  <p class="text-base text-neutral-400">
+                    {{ podcast.seriePodcast.creator.name }}
+                  </p>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+        <ng-container
+          *ngIf="!isTherePodcastLiked && podcastLikedData.length > 0"
+        >
+          <div class="flex items-center justify-center h-40">
+            <h2>No Podcast available.</h2>
+          </div>
+        </ng-container>
+        <ng-template #emptyPodcastLikedData>
+          <div class="flex items-center justify-center h-40">
+            <h2>No Podcast available.</h2>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</section>
+
+<!-- My Podcast -->
+<section>
+  <div class="px-20">
+    <!-- Header -->
+    <div class="grid grid-cols-2 mt-20 mb-10">
+      <div>
+        <p class="text-4xl font-semibold text-blue-800">My Podcast</p>
+      </div>
+      <div class="text-right">
+        <p
+          class="text-lg font-semibold text-blue-800 cursor-pointer hover:text-blue-500"
+          (click)="podcastMyPodcast()"
+        >
+          Manage Podcast
+        </p>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <ng-container *ngIf="isSerieUserLoading">
+      <div class="flex items-center justify-center h-56">
+        <app-loading></app-loading>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isSerieUserLoading">
+      <ng-container *ngIf="serieUserData.length > 0; else emptyPodcastUserData">
+        <div class="grid gap-5 lg:grid-cols-6 xs:grid-cols-2">
+          <!-- Loop here -->
+          <ng-container *ngFor="let serie of serieUserData; let i = index">
+            <div
+              class="block max-w-sm text-center bg-white rounded-lg cursor-pointer hover:shadow-lg"
+            >
+              <div class="relative">
+                <img
+                  class="object-cover object-center w-full shadow-lg h-52 rounded-xl"
+                  [src]="serie.path"
+                  alt=""
+                  (click)="onGoToMyPodcastDetail(serie.uuid)"
+                />
+                <button
+                  type="button"
+                  (click)="onSelectPodcastListToPlay('user', serie, i)"
+                  class="absolute w-10 h-10 rounded-full bottom-2 right-2 hover:shadow-xl hover:w-12 hover:h-12 bg-primary text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-primary-600 focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-8 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                >
+                  <ng-container *ngIf="!serie.isPause">
+                    <fa-icon
+                      [icon]="faPlay"
+                      class="text-base text-white"
+                    ></fa-icon>
+                  </ng-container>
+                  <ng-container *ngIf="serie.isPause">
+                    <fa-icon
+                      [icon]="faPause"
+                      class="text-base text-white"
+                    ></fa-icon>
+                  </ng-container>
+                </button>
+              </div>
+              <div (click)="onGoToMyPodcastDetail(serie.uuid)">
+                <h5
+                  class="mt-4 mb-2 text-xl font-semibold leading-tight text-neutral-800"
+                >
+                  {{
+                    serie.title.length > 15
+                      ? serie.title.substr(0, 15) + ".."
+                      : serie.title
+                  }}
+                </h5>
+                <p class="pb-2 text-base text-neutral-600">
+                  {{
+                    serie.creator.name.length > 20
+                      ? serie.creator.name.substr(0, 20) + ".."
+                      : serie.creator.name
+                  }}
+                </p>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #emptyPodcastUserData>
+        <div class="flex items-center justify-center h-40">
+          <h2>No podcast series available.</h2>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</section>

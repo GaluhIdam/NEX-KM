@@ -1,0 +1,10 @@
+@media (min-width: 401px) {
+  .show-min {
+    display: none;
+  }
+}
+@media (max-width: 401px) {
+  .hidde-max {
+    display: none;
+  }
+}

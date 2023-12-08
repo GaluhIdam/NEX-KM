@@ -1,0 +1,375 @@
+<!-- Header -->
+<div class="mt-10 lg:mx-10 mx-5 px-5 py-10 rounded-xl bg-cover bg-center"
+  [style.background-image]="'url('+ communityDetail.headlinedPhotoPath + ')'">
+  <div class="grid lg:grid-cols-2 xs:grid-cols-1 px-5 text-white">
+    <!-- Left -->
+    <div>
+      <p class="lg:text-3xl text-lg font-semibold">Welcome to</p>
+      <p class="lg:text-5xl text-3xl font-semibold uppercase mt-2">{{ communityDetail.name }}</p>
+      <div class="mt-10">
+        <p class="w-full my-1 text-sm">
+          <fa-icon [icon]="faUsers" class="text-white mr-1"></fa-icon>
+          {{ communityDetail._count.communitiesCommunityMembers }} Members
+        </p>
+        <p class="w-full my-1 text-sm">
+          <fa-icon [icon]="faCalendar" class="text-white mr-3"></fa-icon>
+          Founded at {{formatDateNotDays(communityDetail.createdAt)}}
+        </p>
+        <p class="w-full my-1 text-sm">
+          <fa-icon [icon]="faLocationPin" class="text-white mr-3"></fa-icon>
+          {{communityDetail.location}}
+        </p>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="text-end self-end xs:mt-10">
+      <p class="font-semibold text-md">Leader</p>
+      <img [src]="photo" class="rounded-full w-12 h-12 ml-auto" alt="Profile Image" loading="lazy" />
+      <p class="font-semibold text-md">{{communityDetail.leader}}</p>
+      <p class="text-sm">{{email}}</p>
+    </div>
+  </div>
+</div>
+
+<div class="mt-10 mx-5 lg:px-5">
+  <!-- Tab Nav and Button -->
+  <div class="p-5 shadow rounded-lg">
+    <div class="grid min-[600px]:grid-cols-2 max-[600px]:grid-rows-2 gap-4 flex">
+      <div class="flex min-[600px]:justify-start max-[600px]:justify-center">
+        <a class="text-gray-400 mr-3 hover:text-black" routerLink="/user/nex-community">Nex Community</a>
+        <fa-icon [icon]="faArrowRight" class="text-gray-400 mr-3"></fa-icon>
+        <a [routerLink]="'/user/nex-community/'+uuid" class="text-gray-400 mr-3 hover:text-black">{{
+          communityDetail.name }}</a>
+        <fa-icon [icon]="faArrowRight" class="text-gray-400 mr-3"></fa-icon>
+        <p class="font-bold r-3 activeLink">Member</p>
+      </div>
+      <div class="flex justify-end">
+        <button type="button" data-te-toggle="modal" data-te-target="#exampleModalCenter" data-te-ripple-init
+          data-te-ripple-color="light" *ngIf="keycloakService.getUsername() === communityDetail.leaderPersonalNumber"
+          class="bg-success text-white hover:bg-white hover:text-success hover:border hover:border-success px-3 py-2 rounded-lg"><fa-icon
+            [icon]="faPlus" class="mr-2"></fa-icon>Add Member</button>
+        <!--Verically centered modal-->
+        <div data-te-modal-init
+          class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+          id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-modal="true"
+          role="dialog">
+          <form [formGroup]="mform" (submit)="createMemberData()">
+            <div data-te-modal-dialog-ref
+              class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+              <div
+                class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600">
+                <div
+                  class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                  <!--Modal title-->
+                  <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+                    id="exampleModalScrollableLabel">
+                    Add Member
+                  </h5>
+                  <!--Close button-->
+                  <button type="button" (click)="resetForm()"
+                    class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+                    data-te-modal-dismiss aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="h-6 w-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <!--Modal body-->
+                <div class="relative p-4">
+                  <div class="mb-4 flex flex-col">
+                    <label for="name" class="font-base text-gray-500 mb-1">Personal Number <span
+                        class="text-red-500">*</span></label>
+                    <div class="flex flex-row">
+                      <input type="text" formControlName="personalNumber"
+                        [ngClass]="{'border-rose-500': mform.get('personalNumber')?.touched && mform.get('personalNumber')?.invalid }"
+                        class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                      <button type="button" (click)="findDataSOE(mform.get('personalNumber')?.value)"
+                        class="ml-3 px-3 py-2 hover:bg-white hover:text-regal-blue hover:border-regal-blue hover:border rounded bg-regal-blue text-white h-fit"><fa-icon
+                          [icon]="faMagnifyingGlass"></fa-icon></button>
+                    </div>
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('personalNumber')?.touched && mform.get('personalNumber')?.invalid">
+                      * Personal Number is required.
+                    </p>
+                  </div>
+                  <div class="mb-4 flex flex-col">
+                    <label for="name" class="font-base text-gray-500 mb-1">Personal Name <span
+                        class="text-red-500">*</span></label>
+                    <input type="text" formControlName="personalName"
+                      [ngClass]="{'border-rose-500': mform.get('personalName')?.touched && mform.get('personalName')?.invalid }"
+                      class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('personalName')?.touched && mform.get('personalName')?.invalid">
+                      * Personal Name is required.
+                    </p>
+                  </div>
+                  <div class="mb-4 flex flex-col">
+                    <label for="name" class="font-base text-gray-500 mb-1">Personal Email <span
+                        class="text-red-500">*</span></label>
+                    <input type="text" formControlName="personalEmail"
+                      [ngClass]="{'border-rose-500': mform.get('personalEmail')?.touched && mform.get('personalEmail')?.invalid }"
+                      class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('personalEmail')?.touched && mform.get('personalEmail')?.invalid">
+                      * Personal Email is required.
+                    </p>
+                  </div>
+                  <div class="mb-4 flex flex-col">
+                    <label for="name" class="font-base text-gray-500 mb-1">Personal Unit <span
+                        class="text-red-500">*</span></label>
+                    <input type="text" formControlName="personalUnit"
+                      [ngClass]="{'border-rose-500': mform.get('personalUnit')?.touched && mform.get('personalUnit')?.invalid }"
+                      class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+                    <p class="text-xs text-rose-500 italic mt-1"
+                      *ngIf="mform.get('personalUnit')?.touched && mform.get('personalUnit')?.invalid">
+                      * Personal Unit is required.
+                    </p>
+                  </div>
+                  <div class="mb-4">
+                    <label for="title" class="font-base text-gray-500 mb-2">Role <span
+                        class="text-red-500">*</span></label>
+                    <div class="mt-1">
+                      <div
+                        [ngClass]="{'border border-rose-500 rounded': mform.get('role')?.touched && mform.get('role')?.invalid }">
+                        <ng-select id="role" name="role" formControlName="role" placeholder="Select status">
+                          <ng-option *ngFor="let data of dataRole" [value]="data.id"
+                            [disabled]="data.name === 'Leader' ? true : false">
+                            {{data.name}}
+                          </ng-option>
+                        </ng-select>
+                      </div>
+                    </div>
+                    <p *ngIf="mform.get('role')?.touched && mform.get('role')?.invalid"
+                      class="text-red-500 text-xs italic mt-1">
+                      * Role is required.
+                    </p>
+                  </div>
+                </div>
+
+                <!--Modal footer-->
+                <div
+                  class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                  <button type="button" (click)="resetForm()"
+                    class="mx-1 rounded bg-secondary text-white px-3 py-1 w-20 hover:bg-secondary-600"
+                    data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+                    Close
+                  </button>
+                  <button type="submit" class="mx-1 rounded bg-success hover:bg-success-600 text-white px-3 py-1 w-20"
+                    data-te-ripple-init data-te-modal-dismiss data-te-ripple-color="light">
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-2 max-w-[600px]:grid-rows-2 gap-2 my-5">
+      <div class="w-full flex justify-start">
+        <fa-icon [icon]="faUsers" class="text-2xl text-success mr-2 place-self-center"></fa-icon>
+        <p class="whitespace-nowrap text-2xl font-semibold">Members</p>
+      </div>
+      <form [formGroup]="mformPaginate">
+        <div class="w-full flex justify-end">
+          <input type="text" formControlName="search"
+            class="w-full mr-2 border border-gray-300 rounded py-[5.120px] px-3" placeholder="Search Member">
+          <div class="w-36">
+            <ng-select id="member" name="member" formControlName="sortBy" placeholder="Sort By">
+              <ng-option value="personalNameASC">
+                Name
+              </ng-option>
+              <ng-option value="personalUnitASC">
+                Unit
+              </ng-option>
+              <ng-option value="createdAtDESC">
+                Date
+              </ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="rounded-lg shadow w-full px-4 py-2 mb-3" *ngFor="let row of dataMember">
+      <div class="grid grid-cols-2 gap-2">
+        <div class="flex items-center w-full">
+          <img class="w-12 h-12 rounded-full mr-3"
+            [src]="'https://talentlead.gmf-aeroasia.co.id/images/avatar/'+row.personalNumber+'.jpg'">
+          <div class="flex flex-col mr-4">
+            <strong class="text-lg">{{ row.personalName }}</strong>
+            <span class="text-sm">{{ row.communityMembersCommunityRoles.name }} - {{ row.personalUnit
+              }}</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-end">
+          <button
+            *ngIf="row.communityMembersCommunityRoles.name !== 'Leader' && keycloakService.getUsername() === communityDetail.leaderPersonalNumber"
+            type="button" (click)="editModal(row.uuid, row)" data-te-toggle="modal"
+            data-te-target="#editexampleModalCenter" data-te-ripple-init
+            class="mr-2 bg-regal-blue rounded px-3 py-1 text-white hover:bg-white hover:text-regal-blue hover:border hover:border-regal-blue"><fa-icon
+              [icon]="faPencil"></fa-icon></button>
+          <button
+            *ngIf="row.communityMembersCommunityRoles.name !== 'Leader' && keycloakService.getUsername() === communityDetail.leaderPersonalNumber"
+            type="button" (click)="deleteMemberData(row.uuid)"
+            class="bg-danger rounded px-3 py-1 text-white hover:bg-white hover:text-danger hover:border hover:border-danger"><fa-icon
+              [icon]="faTrash"></fa-icon></button>
+        </div>
+      </div>
+    </div>
+    <h1 class="text-center text-gray-400" *ngIf="!dataMember">Sorry, Member is empty!</h1>
+    <form [formGroup]="mformPaginate">
+      <div class="flex justify-start mt-5">
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+          <ul class="list-style-none flex mt-10 place-self-center">
+            <li class="mr-3 place-self-center">
+              <p>Total : {{ totalData }}</p>
+            </li>
+            <li class="mr-3 place-self-center">
+              <select class="border boder-regal-blue rounded py-1 px-2 place-self-center" formControlName="limit">
+                <option [value]="10">10</option>
+                <option [value]="20">20</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+              </select>
+            </li>
+            <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+              <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+            </li>
+            <li class="ml-3 flex flex-cols">
+              <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                formControlName="page">
+            </li>
+            <li class="place-self-center text-white rounded px-2 py-1">
+              <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </form>
+  </div>
+  <!-- Tab Nav and Button -->
+</div>
+
+<!-- Edit Modal -->
+<div data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="editexampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-modal="true" role="dialog">
+  <form [formGroup]="mform" (submit)="updateMemberData(uuidMember)">
+    <div data-te-modal-dialog-ref
+      class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+      <div
+        class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600">
+        <div
+          class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+          <!--Modal title-->
+          <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+            id="exampleModalScrollableLabel">
+            Edit Member
+          </h5>
+          <!--Close button-->
+          <button type="button" (click)="resetForm()"
+            class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+            data-te-modal-dismiss aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="h-6 w-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!--Modal body-->
+        <div class="relative p-4">
+          <div class="mb-4 flex flex-col">
+            <label for="name" class="font-base text-gray-500 mb-1">Personal Number <span
+                class="text-red-500">*</span></label>
+            <input type="text" formControlName="personalNumber"
+              (change)="findDataSOE(mform.get('personalNumber')?.value)"
+              [ngClass]="{'border-rose-500': mform.get('personalNumber')?.touched && mform.get('personalNumber')?.invalid }"
+              class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="mform.get('personalNumber')?.touched && mform.get('personalNumber')?.invalid">
+              * Personal Number is required.
+            </p>
+          </div>
+          <div class="mb-4 flex flex-col">
+            <label for="name" class="font-base text-gray-500 mb-1">Personal Name <span
+                class="text-red-500">*</span></label>
+            <input type="text" formControlName="personalName"
+              [ngClass]="{'border-rose-500': mform.get('personalName')?.touched && mform.get('personalName')?.invalid }"
+              class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="mform.get('personalName')?.touched && mform.get('personalName')?.invalid">
+              * Personal Name is required.
+            </p>
+          </div>
+          <div class="mb-4 flex flex-col">
+            <label for="name" class="font-base text-gray-500 mb-1">Personal Email <span
+                class="text-red-500">*</span></label>
+            <input type="text" formControlName="personalEmail"
+              [ngClass]="{'border-rose-500': mform.get('personalEmail')?.touched && mform.get('personalEmail')?.invalid }"
+              class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="mform.get('personalEmail')?.touched && mform.get('personalEmail')?.invalid">
+              * Personal Email is required.
+            </p>
+          </div>
+          <div class="mb-4 flex flex-col">
+            <label for="name" class="font-base text-gray-500 mb-1">Personal Unit <span
+                class="text-red-500">*</span></label>
+            <input type="text" formControlName="personalUnit"
+              [ngClass]="{'border-rose-500': mform.get('personalUnit')?.touched && mform.get('personalUnit')?.invalid }"
+              class="w-full px-2 py-1 rounded border border-gray-300" id="exampleInput90" />
+            <p class="text-xs text-rose-500 italic mt-1"
+              *ngIf="mform.get('personalUnit')?.touched && mform.get('personalUnit')?.invalid">
+              * Personal Unit is required.
+            </p>
+          </div>
+          <div class="mb-4">
+            <label for="title" class="font-base text-gray-500 mb-2">Role <span class="text-red-500">*</span></label>
+            <div class="mt-1">
+              <div
+                [ngClass]="{'border border-rose-500 rounded': mform.get('role')?.touched && mform.get('role')?.invalid }">
+                <ng-select id="role" name="role" formControlName="role" placeholder="Select status">
+                  <ng-option *ngFor="let data of dataRole" [value]="data.id"
+                    [disabled]="data.name == 'Leader' ? true : false">
+                    {{data.name}}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div>
+            <p *ngIf="mform.get('role')?.touched && mform.get('role')?.invalid"
+              class="text-red-500 text-xs italic mt-1">
+              * Role is required.
+            </p>
+          </div>
+        </div>
+
+        <!--Modal footer-->
+        <div
+          class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+          <button type="button" (click)="resetForm()"
+            class="mx-1 rounded bg-secondary text-white px-3 py-1 w-20 hover:bg-secondary-600" data-te-modal-dismiss
+            data-te-ripple-init data-te-ripple-color="light">
+            Close
+          </button>
+          <button type="submit" class="mx-1 rounded bg-success hover:bg-success-600 text-white px-3 py-1 w-20"
+            data-te-ripple-init data-te-modal-dismiss data-te-ripple-color="light">
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<img class="absolute left-0 top-2/3 -z-20" src="../../../../assets/image/home-page/gradient/227.png" alt="" />
+
+<img class="absolute right-0 top-3/4 -z-10" src="../../../../assets/image/home-page/gradient/228.png" alt="" />
+
+<img class="absolute right-0 top-1/2 -z-20" src="../../../../assets/image/home-page/gradient/229.png" alt="" />

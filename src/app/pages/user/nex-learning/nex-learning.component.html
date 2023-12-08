@@ -1,0 +1,61 @@
+<div *ngIf="load" class="flex flex-row px-36 py-3">
+  <app-loading></app-loading>
+</div>
+
+<!-- Search & Trend Section -->
+<div *ngIf="!load" class="bg-gradient-one">
+  <!-- Cover -->
+  <div class="flex flex-row py-3 bg-learning px-36">
+    <img src="../../../../assets/image/learning/921.png" class="object-cover w-[350px] mr-5 h-[427px]" alt="earth-logo">
+    <div class="h-96 grid grid-cols-1 gap-4 content-center flex-row-animation">
+      <div class="flex flex-row">
+        <img class="w-[300px] h-[150px]" src="../../../../assets/image/learning/NEX logo 3.png" alt="earth-logo">
+        <h1 class="text-8xl fw-bold mt-14">Learning</h1>
+      </div>
+      <p class="mt-4 text-xl">The whole world opened up to me when I learned to read. The whole world opened up to me
+        when I learned to read.</p>
+    </div>
+  </div>
+  <!-- Cover -->
+</div>
+
+
+<div class="mt-10 bg-gradient-two px-36">
+  <div class="flex flex-row justify-start mb-5">
+    <img class="w-14 h-14 bg-title-article" src="../../../../assets/image/learning/Frame 1000001051.png" alt="bg">
+    <h1 class="fw-bold text-7xl mr-3 title-article">Article</h1>
+    <img class="w-14 h-fit mt-14" src="../../../../assets/image/learning/Group 630.png" alt="dot">
+  </div>
+
+  <div class="md:px-20 px-5 bg-[#014164] rounded-xl p-8">
+    <owl-carousel-o [options]="customOptionsOne">
+      <ng-template carouselSlide *ngFor="let data of articlesRecent">
+        <!-- Card -->
+        <div class="slide flex flex-col justify-center bg-white shadow-lg p-5 rounded-xl text-center w-full">
+          <h1 class="text-2xl">{{ data.uploadBy }}</h1>
+          <p class="mt-3 text-sm">Almond is a novel written by Shon Won Pyung. This novel tells about a child with alexithymia
+            or
+            the inability
+            to express
+            emotions. This Almond novel tells the life of a child who cannot feel emotions, a child who has no fear and
+            is
+            calm
+            compared to his peers.</p>
+          <img class="w-96 place-self-center mt-5" src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(19).webp"
+            alt="image">
+        </div>
+        <!-- Card -->
+      </ng-template>
+    </owl-carousel-o>
+    <div *ngIf="!articlesRecent">
+      <h1 class="text-center text-gray-400">Sorry, data is empty</h1>
+    </div>
+  </div>
+</div>
+
+<div class="mt-20 bg-gradient-two px-36">
+  <div class="flex flex-row justify-start mb-5">
+    <img class="w-14 h-14 bg-title-article" src="../../../../assets/image/learning/Frame 1000001051.png" alt="bg">
+    <h1 class="fw-bold text-7xl mr-3 title-article">Best Practice</h1>
+  </div>
+</div>

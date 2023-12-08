@@ -1,0 +1,256 @@
+<!-- Search & Trend Section -->
+<div class="flex justify-center py-20 bg-center bg-library">
+  <div class="grid grid-rows-2 gap-4 max-lg:px-3">
+    <div class="lg:w-[32rem] place-self-center">
+      <h1 class="font-bold text-center text-white lg:text-4xl max-lg:text-2xl">
+        Explore New Experience of Collaboration
+      </h1>
+    </div>
+    <div
+      class="relative mb-4 flex lg:w-[800px] flex-wrap items-stretch bg-white rounded-full mt-4"
+    >
+      <button
+        class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+        type="button"
+        id="button-addon1"
+      >
+        <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+      </button>
+      <input
+        type="text"
+        class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+        placeholder="Search"
+        aria-label="Example text with button addon"
+        aria-describedby="button-addon1"
+      />
+    </div>
+    <h1 class="text-white">TRENDING SEARCH</h1>
+    <div>
+      <ul
+        class="flex flex-wrap pl-0 list-none md:flex-row"
+        role="tablist"
+        data-te-nav-ref
+      >
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Travelling
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Interior Design
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Music
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button
+            type="button"
+            class="px-4 py-1 text-white bg-transparent border rounded-full border-1 hover:bg-white hover:text-black"
+          >
+            Dancing
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="w-11/12 mx-auto mt-8">
+  <div>
+    <p class="mb-4 text-5xl font-semibold text-blue-800 max-lg:text-center">
+      NEX FORUM
+    </p>
+  </div>
+  <div class="flex lg:justify-start max-lg:justify-center">
+    <a class="mr-3 text-gray-400" routerLink="/">Home</a>
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <a routerLink="/user/nex-talks" class="mr-3 text-gray-400">Nex Talk</a>
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <a routerLink="/user/nex-talks/forum" class="mr-3 text-gray-400">Forum</a>
+    <fa-icon [icon]="faChevronRight" class="mr-3 text-gray-400"></fa-icon>
+    <p class="mr-3 text-black activeLink">Post</p>
+  </div>
+</div>
+
+<div class="px-20 py-5 mt-8 bg-gray-50">
+  <div class="grid gap-5 mt-5 lg:grid-cols-4 xs:grid-cols-1">
+    <div class="col-span-4">
+      <!-- Post page -->
+      <p class="mb-4 text-3xl font-semibold text-blue-800 max-lg:text-center">
+        Post a Thread
+      </p>
+      <div [hidden]="progress == 0">
+        <div class="w-full mt-8 bg-neutral-200 dark:bg-neutral-600">
+          <div
+            class="bg-primary p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+            [style.width.%]="progress"
+          >
+            {{ progress }}%
+          </div>
+        </div>
+        <h1 class="mt-2 mb-2 text-xs italic text-danger">
+          Please wait and do not refresh or leave page!
+        </h1>
+      </div>
+      <ng-container *ngIf="isLoading">
+        <div class="flex items-center justify-center font-semibold h-60">
+          <app-loading></app-loading>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!isLoading">
+        <form
+          [formGroup]="postForumForm"
+          (ngSubmit)="onSubmit()"
+          [hidden]="progress > 0"
+        >
+          <div class="block w-full p-6 bg-white rounded-lg shadow-lg">
+            <div class="mb-4">
+              <label for="title" class="font-semibold"
+                >Title <span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                id="title"
+                formControlName="title"
+                class="m-0 w-full block min-w-0 flex-auto rounded-sm border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out focus:z-[3] focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none"
+                placeholder="What do you want to ask or share?"
+              />
+              <div *ngIf="!title?.valid && (title?.dirty || title?.touched)">
+                <small class="text-red-800" [hidden]="!title?.errors?.required">
+                  Title is required
+                </small>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="category" class="font-semibold"
+                >Category <span class="text-danger-600">*</span></label
+              >
+              <ng-select
+                id="talk_category"
+                name="talk_category"
+                formControlName="talk_category"
+                placeholder="Select Forum Category"
+              >
+                <ng-option
+                  *ngFor="let talkCategory of talkCategoryData"
+                  value="{{ talkCategory.id }}"
+                >
+                  {{ talkCategory.name }}
+                </ng-option>
+              </ng-select>
+              <div
+                *ngIf="
+                  !talk_category?.valid &&
+                  (talk_category?.dirty || talk_category?.touched)
+                "
+              >
+                <small
+                  class="text-red-800"
+                  [hidden]="!talk_category?.errors?.required"
+                >
+                  Category is required
+                </small>
+              </div>
+            </div>
+            <div class="mb-4">
+              <p class="mt-5 font-semibold">Image</p>
+              <div>
+                <div
+                  class="py-32 mx-auto text-center border border-gray-300 rounded-md cursor-pointer"
+                  (dragover)="onForumImageDragOver($event)"
+                  (dragleave)="onForumImageDragLeave($event)"
+                  (drop)="onForumImageDrop($event)"
+                  (click)="triggerForumImageFileInputClick()"
+                  *ngIf="selectedForumImageFile === null"
+                >
+                  <p><b>Upload a file</b> or drag and drop</p>
+                  <p>Image File up to 1MB</p>
+                  <div class="hidden p-2 border-2">
+                    <input
+                      #forumImageFileInput
+                      id="media"
+                      accept=".png, .jpg, .jpeg"
+                      type="file"
+                      (change)="onForumImageUploaded($event)"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="selectedForumImageFile !== null">
+                <div
+                  class="flex items-center rounded-xl lg:w-96 lg:h-60 max-lg:w-56 max-lg:h-60"
+                >
+                  <img
+                    *ngIf="previewForumImage"
+                    class="w-full h-full rounded-xl"
+                    [src]="previewForumImage"
+                    alt="Preview"
+                  />
+
+                  <div class="" (click)="onRemoveForumImage()">
+                    <fa-icon
+                      [icon]="faTrash"
+                      class="p-4 ml-2 rounded-full bg-[#FFEBEE] text-danger"
+                    ></fa-icon>
+                  </div>
+                </div>
+                <div *ngIf="!isForumImageValid">
+                  <small class="text-red-800">
+                    The size of the cover thumbnail cannot exceed 1 MB
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="description" class="font-semibold"
+                >Description <span class="text-danger">*</span></label
+              >
+              <textarea
+                name="description"
+                id="description"
+                formControlName="description"
+                [ngxSummernote]="config"
+              ></textarea>
+              <div
+                *ngIf="
+                  !description?.valid &&
+                  (description?.dirty || description?.touched)
+                "
+              >
+                <small
+                  class="text-red-800"
+                  [hidden]="!description?.errors?.required"
+                >
+                  Description is required
+                </small>
+              </div>
+            </div>
+            <button
+              type="submit"
+              class="mb-2 block w-full disabled:bg-gray-500 rounded bg-primary px-6 pt-2.5 pb-2 text-base mt-5 font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+              [disabled]="
+                postForumForm.status === 'INVALID' || !isForumImageValid
+              "
+            >
+              Post
+            </button>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  </div>
+</div>

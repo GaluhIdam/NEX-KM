@@ -1,0 +1,61 @@
+/* src/app/app.component.css */
+
+:host ::ng-deep .ck-editor__editable_inline {
+  min-height: 500px;
+}
+:host ::ng-deep .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+  border-color: transparent;
+  border-radius: 20px;
+}
+
+:host
+  ::ng-deep
+  .ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+  border-color: transparent;
+  border-radius: 20px;
+}
+
+:host ::ng-deep .ck.ck-toolbar__items {
+  margin-right: 0px;
+  display: inline;
+  font-size: 90%;
+  color: #3b71ca;
+}
+
+:host
+  ::ng-deep
+  .ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+  box-shadow: none;
+}
+:host ::ng-deep .ck-content .todo-list {
+  margin-left: 20px;
+}
+
+:host ::ng-deep .ck-content .image-inline.image-style-align-left {
+  margin: 10px;
+}
+
+:host
+  ::ng-deep
+  .ck-editor__editable.ck-content
+  .todo-list
+  .todo-list__label
+  > input,
+.ck-editor__editable.ck-content
+  .todo-list
+  .todo-list__label
+  > span[contenteditable="false"]
+  > input {
+  margin-left: 10px;
+}
+
+:host ::ng-deep .ck.ck-toolbar {
+  border: none;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.ng-select.custom ::ng-deep .ng-select-container {
+  min-height: 0px;
+  border-radius: 0.5rem;
+  border-color: #d1d5db;
+}

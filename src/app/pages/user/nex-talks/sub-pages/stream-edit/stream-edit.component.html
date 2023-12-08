@@ -1,0 +1,251 @@
+<div class="min-[600px]:px-36 min-[600px]:py-12 max-[600px]:px-8">
+  <h1
+    class="min-[600px]:text-3xl text-new-primary font-semibold max-[600px]:text-2xl"
+  >
+    {{ progress === 0 ? "Edit Stream" : "Editing Stream" }}
+  </h1>
+  <p class="text-gray-400">
+    Unleash your creativity and share your ideas by uploading your Stream here.
+  </p>
+  <div [hidden]="progress == 0">
+    <div class="w-full mt-8 bg-neutral-200 dark:bg-neutral-600">
+      <div
+        class="bg-primary p-0.5 text-center text-xs font-medium leading-none text-primary-100"
+        [style.width.%]="progress"
+      >
+        {{ progress }}%
+      </div>
+    </div>
+    <h1 class="mt-2 mb-2 text-xs italic text-danger">
+      Please wait and do not refresh or leave page!
+    </h1>
+  </div>
+  <ng-container *ngIf="isLoading || isVideoLoading || isImageLoading">
+    <div class="flex items-center justify-center font-semibold h-60">
+      <app-loading></app-loading>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isLoading && !isVideoLoading && !isImageLoading">
+    <ng-container *ngIf="isError">
+      <app-service-error></app-service-error>
+    </ng-container>
+    <ng-container *ngIf="!isError">
+      <ng-container *ngIf="streamDetailData; else emptyStreamDetailData">
+        <form
+          [formGroup]="editStreamForm"
+          (ngSubmit)="onSubmit()"
+          [hidden]="progress > 0"
+        >
+          <div>
+            <p class="mt-5 mb-3 font-semibold">
+              Stream File <span class="text-danger">*</span>
+            </p>
+            <div>
+              <div
+                class="py-32 mx-auto text-center border border-gray-300 rounded-md"
+                (dragover)="onStreamVideoDragOver($event)"
+                (dragleave)="onStreamVideoDragLeave($event)"
+                (drop)="onStreamVideoDrop($event)"
+                (click)="triggerStreamVideoFileInputClick()"
+                *ngIf="selectedStreamVideoFile === null"
+              >
+                <p><b>Upload a file</b> or drag and drop</p>
+                <p>MP4 upto 50MB</p>
+                <div class="hidden p-2 border-2">
+                  <input
+                    #streamVideoFileInput
+                    id="file"
+                    accept=".mp4"
+                    type="file"
+                    (change)="onStreamVideoUploaded($event)"
+                  />
+                </div>
+              </div>
+              <div *ngIf="!file?.valid && (file?.dirty || file?.touched)">
+                <small class="text-red-800" [hidden]="!file?.errors?.required">
+                  Stream File is required
+                </small>
+              </div>
+            </div>
+            <div *ngIf="selectedStreamVideoFile !== null">
+              <div class="flex items-center justify-between mt-8">
+                <div class="flex items-center content-center">
+                  <div>
+                    <fa-icon
+                      [icon]="faFile"
+                      class="p-4 mr-2 rounded-full bg-[#D4D4D4] text-gray-500"
+                    ></fa-icon>
+                  </div>
+                  <div>
+                    <p>{{ selectedStreamVideoFile.name }}</p>
+                    <p>
+                      {{ formatFileSize(selectedStreamVideoFile.size) }}
+                    </p>
+                  </div>
+                </div>
+                <div class="" (click)="onRemoveStreamVideo()">
+                  <fa-icon
+                    [icon]="faTrash"
+                    class="p-4 ml-2 rounded-full bg-[#FFEBEE] text-danger"
+                  ></fa-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-8">
+            <label for="title" class="font-semibold"
+              >Title <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="title"
+              class="w-full px-3 py-2 mt-2 border border-gray-300 rounded-md"
+              placeholder="Input your title here..."
+            />
+            <div *ngIf="!title?.valid && (title?.dirty || title?.touched)">
+              <small class="text-red-800" [hidden]="!title?.errors?.required">
+                Title is required
+              </small>
+            </div>
+          </div>
+          <div class="mt-8">
+            <label for="talk_category" class="font-semibold"
+              >Category <span class="text-danger">*</span></label
+            >
+            <ng-select
+              id="talk_category"
+              name="talk_category"
+              formControlName="talk_category"
+              placeholder="Select Talk Category"
+            >
+              <ng-option
+                *ngFor="let talkCategory of talkCategoryData"
+                value="{{ talkCategory.id }}"
+              >
+                {{ talkCategory.name }}
+              </ng-option>
+            </ng-select>
+            <div
+              *ngIf="
+                !talk_category?.valid &&
+                (talk_category?.dirty || talk_category?.touched)
+              "
+            >
+              <small
+                class="text-red-800"
+                [hidden]="!talk_category?.errors?.required"
+              >
+                Category is required
+              </small>
+            </div>
+          </div>
+          <div class="mt-8">
+            <p class="mt-5 mb-3 font-semibold">
+              Cover Thumbnail <span class="text-danger">*</span>
+            </p>
+            <div>
+              <div
+                class="py-32 mx-auto text-center border border-gray-300 rounded-md"
+                (dragover)="onStreamThumbnailDragOver($event)"
+                (dragleave)="onStreamThumbnailDragLeave($event)"
+                (drop)="onStreamThumbnailDrop($event)"
+                (click)="triggerStreamThumbnailFileInputClick()"
+                *ngIf="selectedStreamThumbnailFile === null"
+              >
+                <p><b>Upload a file</b> or drag and drop</p>
+                <p>Image File up to 2MB</p>
+                <div class="hidden p-2 border-2">
+                  <input
+                    #streamThumbnailFileInput
+                    id="thumbnail"
+                    accept=".png, .jpg, .jpeg"
+                    type="file"
+                    (change)="onStreamThumbnailUploaded($event)"
+                  />
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  !thumbnail?.valid && (thumbnail?.dirty || thumbnail?.touched)
+                "
+              >
+                <small
+                  class="text-red-800"
+                  [hidden]="!thumbnail?.errors?.required"
+                >
+                  Stream Thumbnail is required
+                </small>
+              </div>
+            </div>
+            <div *ngIf="selectedStreamThumbnailFile !== null">
+              <div
+                class="flex items-center rounded-xl min-[600px]:w-96 min-[600px]:h-60 max-[600px]:w-56 max-[600px]:h-60"
+              >
+                <img
+                  *ngIf="previewStreamThumbnailImage"
+                  class="object-cover object-center w-full h-full"
+                  [src]="previewStreamThumbnailImage"
+                  alt="Preview"
+                />
+
+                <div class="" (click)="onRemoveStreamThumbnail()">
+                  <fa-icon
+                    [icon]="faTrash"
+                    class="p-4 ml-2 rounded-full bg-[#FFEBEE] text-danger"
+                  ></fa-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="mt-5 mb-3 font-semibold">
+              Description <span class="text-danger">*</span>
+            </p>
+            <textarea
+              formControlName="description"
+              rows="10"
+              class="w-full px-3 py-3 border border-gray-300 rounded-md"
+              placeholder="Input Your Description Here"
+            ></textarea>
+            <div
+              *ngIf="
+                !description?.valid &&
+                (description?.dirty || description?.touched)
+              "
+            >
+              <small
+                class="text-red-800"
+                [hidden]="!description?.errors?.required"
+              >
+                Description is required
+              </small>
+            </div>
+          </div>
+
+          <div class="flex justify-end w-full mt-5 mb-8">
+            <div
+              class="px-3 py-2 mx-2 font-semibold bg-white rounded-lg shadow text-1xl text-new-primary"
+              (click)="onPreviousPage()"
+            >
+              Cancel
+            </div>
+            <button
+              class="px-3 py-2 mx-2 font-semibold text-white rounded-lg shadow bg-new-primary text-1xl disabled:bg-gray-500"
+              type="submit"
+              [disabled]="editStreamForm.status === 'INVALID'"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div>
+
+<!-- Empty Stream Detail State -->
+<ng-template #emptyStreamDetailData>
+  <div class="flex items-center justify-center font-semibold h-96">
+    <h2>No Stream Information available.</h2>
+  </div>
+</ng-template>

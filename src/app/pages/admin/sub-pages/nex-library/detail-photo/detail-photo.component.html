@@ -1,0 +1,405 @@
+<div class="grid grid-cols-2 gap-1">
+  <div class="flex justify-start">
+    <div>
+      <h1 class="text-gray-500">NEX LIBRARY</h1>
+      <h1 class="text-4xl font-semibold text-gray-700">
+        {{ titlePage.title }}
+      </h1>
+      <div class="flex justify-start mt-5">
+        <a routerLink="/admin/photo-gallery" class="text-gray-400">{{
+          titlePage.title
+        }}</a>
+        <fa-icon class="mx-3 text-gray-400" [icon]="faArrowRight"></fa-icon>
+        <h1>Detail</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="isLoading">
+  <div class="flex items-center justify-center min-h-screen">
+    <app-loading></app-loading>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!isLoading"
+  ><ng-container *ngIf="isError">
+    <app-service-error></app-service-error>
+  </ng-container>
+
+  <ng-container *ngIf="!isError">
+    <div class="p-5 mt-5 bg-white shadow">
+      <div class="flex justify-end">
+        <button
+          data-te-toggle="modal"
+          data-te-target="#editor"
+          data-te-ripple-init
+          data-te-ripple-color="light"
+          class="px-3 py-2 text-white rounded-lg bg-success hover:bg-white hover:text-success hover:border hover:border-1 hover:border-success"
+        >
+          <fa-icon [icon]="faPlus"></fa-icon> Add Photo
+        </button>
+      </div>
+      <ng-container *ngIf="albumGalleryData.length > 0">
+        <div class="flex flex-col justify-between min-h-screen">
+          <div class="grid min-[600px]:grid-cols-3 gap-0 mt-3 mb-5">
+            <div
+              class="mx-2 my-2 bg-white rounded-lg shadow"
+              *ngFor="let gallery of albumGalleryData"
+            >
+              <img
+                class="object-cover object-center w-full h-56 rounded-t-lg"
+                [src]="gallery.path"
+                alt="bg-album"
+              />
+              <div class="grid grid-cols-2 gap-1 px-4 py-2 mt-2">
+                <div class="flex justify-start">
+                  <p class="mt-1 font-semibold">{{ gallery.name }}</p>
+                </div>
+                <div class="flex justify-end">
+                  <button
+                    data-te-toggle="modal"
+                    data-te-target="#delete"
+                    data-te-ripple-init
+                    data-te-ripple-color="light"
+                    (click)="selectedAlbumGallery(gallery)"
+                    class="px-3 py-1 border rounded-lg text-danger border-1 border-danger"
+                  >
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Table Pagination -->
+          <div
+            class="flex items-center justify-start mt-5"
+            *ngIf="paginator && !isLoading"
+          >
+            <h1 class="mr-5">Total : {{ paginator.totalData }}</h1>
+            <div class="flex items-center justify-start mx-10">
+              <span class="text-sm">Show</span>
+              <select
+                *ngIf="paginator"
+                [(ngModel)]="paginator.pageSize"
+                (ngModelChange)="changePageSize()"
+                class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+              >
+                <option
+                  *ngFor="let size of paginator?.pageOption"
+                  [ngValue]="size"
+                >
+                  {{ size }} data
+                </option>
+              </select>
+            </div>
+            <div class="flex items-center justify-center mx-3">
+              <button
+                type="button"
+                (click)="changePageNumber(false)"
+                [disabled]="paginator.pageNumber == 1"
+                [class]="
+                  paginator.pageNumber == 1 ? 'bg-gray-200' : 'bg-gray-50'
+                "
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300"
+              >
+                Previous
+              </button>
+              <!-- <button
+                class="ml-2 text-gray-400"
+                (click)="goToPageNumberByPageClick(i + 1)"
+                *ngFor="let page of pages; let i = index"
+              >
+                {{ i + 1 }}
+              </button> -->
+              <button
+                type="button"
+                (click)="changePageNumber(true)"
+                [disabled]="paginator.pageNumber == paginator.totalPage"
+                [class]="
+                  paginator.pageNumber == paginator.totalPage
+                    ? 'bg-gray-200'
+                    : 'bg-gray-50'
+                "
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300 ml-2"
+              >
+                Next
+              </button>
+            </div>
+            <h1 class="w-fit">Go to Page</h1>
+            <select
+              *ngIf="paginator"
+              [(ngModel)]="paginator.pageNumber"
+              (ngModelChange)="goToPageNumberByPageSelect($event)"
+              class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+            >
+              <option
+                *ngFor="let page of pages; let i = index"
+                [ngValue]="i + 1"
+              >
+                {{ i + 1 }}
+              </option>
+            </select>
+          </div>
+          <!-- Table Pagination -->
+        </div>
+      </ng-container>
+      <ng-container *ngIf="albumGalleryData.length === 0">
+        <div
+          class="flex items-center justify-center w-full h-screen py-5 font-bold text-center text-gray-500"
+        >
+          No data available
+        </div>
+      </ng-container>
+    </div>
+  </ng-container></ng-container
+>
+
+<!-- Editor -->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="editor"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px] min-[992px]:max-w-[800px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          Add Photo
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <form [formGroup]="createAlbumGalleryForm" (ngSubmit)="onSubmit()">
+        <div
+          class="relative flex-auto p-6 place-items-center"
+          data-te-modal-body-ref
+        >
+          <div class="mt-2">
+            <label for="title" class="font-medium"
+              >Title <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              formControlName="name"
+              class="w-full px-3 py-2 mt-2 border border-gray-300 rounded-md"
+              placeholder="Input your title here..."
+            />
+            <div *ngIf="!title?.valid && (title?.dirty || title?.touched)">
+              <small
+                class="text-red-800"
+                [hidden]="!title?.errors?.['required']"
+              >
+                Title is required
+              </small>
+            </div>
+          </div>
+          <div class="mt-8">
+            <div>
+              <div
+                class="py-32 mx-auto text-center border-2 rounded-sm"
+                (dragover)="onAlbumGalleryImageDragOver($event)"
+                (dragleave)="onAlbumGalleryImageDragLeave($event)"
+                (drop)="onAlbumGalleryImageDrop($event)"
+                (click)="triggerAlbumGalleryImageFileInputClick()"
+                *ngIf="selectedAlbumGalleryImageFile === null"
+              >
+                <p><b>Upload a file</b> or drag and drop</p>
+                <p>Image File up to 1 MB</p>
+                <div class="hidden p-2 border-2">
+                  <input
+                    #albumGalleryImageFileInput
+                    id="image"
+                    accept=".png, .jpg, .jpeg"
+                    type="file"
+                    (change)="onAlbumGalleryImageUploaded($event)"
+                  />
+                </div>
+              </div>
+              <div *ngIf="!images?.valid && (images?.dirty || images?.touched)">
+                <small
+                  class="text-red-800"
+                  [hidden]="!images?.errors?.['required']"
+                >
+                  Image is required
+                </small>
+              </div>
+            </div>
+            <div *ngIf="selectedAlbumGalleryImageFile !== null">
+              <div
+                class="flex items-center rounded-xl min-[600px]:w-96 min-[600px]:h-80 max-[600px]:w-56 max-[600px]:h-60"
+              >
+                <img
+                  *ngIf="previewAlbumGalleryImage"
+                  class="object-cover object-center w-full h-full rounded-lg"
+                  [src]="previewAlbumGalleryImage"
+                  alt="Preview"
+                />
+
+                <div class="" (click)="onRemoveAlbumGalleryImage()">
+                  <fa-icon
+                    [icon]="faTrash"
+                    class="p-4 ml-2 rounded-full bg-[#FFEBEE] text-danger"
+                  ></fa-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+        >
+          <button
+            type="button"
+            class="inline-block px-5 py-2 text-white rounded-lg bg-danger"
+            data-te-modal-dismiss
+            data-te-ripple-init
+            data-te-ripple-color="light"
+          >
+            <fa-icon [icon]="faXmark"></fa-icon>
+            Discard
+          </button>
+          <button
+            type="submit"
+            class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success disabled:bg-gray-500"
+            data-te-ripple-init
+            data-te-ripple-color="light"
+            data-te-modal-dismiss
+            [disabled]="createAlbumGalleryForm.status === 'INVALID'"
+          >
+            <fa-icon [icon]="faCircleCheck"></fa-icon>
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete-->
+<div
+  data-te-modal-init
+  class="fixed top-0 left-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  id="delete"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    data-te-modal-dialog-ref
+    class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+  >
+    <div
+      class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none"
+    >
+      <div
+        class="flex items-center justify-between flex-shrink-0 p-4 border-b-2 border-opacity-100 rounded-t-md border-neutral-100"
+      >
+        <h5
+          class="text-xl font-medium leading-normal text-neutral-800"
+          id="exampleModalLabel"
+        >
+          Confirm Delete
+        </h5>
+        <button
+          type="button"
+          class="box-content border-none rounded-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="relative flex-auto p-4 text-center place-items-center"
+        data-te-modal-body-ref
+      >
+        <div class="flex justify-center">
+          <h1
+            class="p-2 text-4xl text-center border rounded-lg border-1 border-danger w-fit text-danger"
+          >
+            <fa-icon [icon]="faBan"></fa-icon>
+          </h1>
+        </div>
+        <p class="mt-5 text-center">
+          Are you sure you want to delete this item? Once deleted, it will no
+          longer be available to the selected photo gallery.
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap items-center justify-end flex-shrink-0 p-4 border-t-2 border-opacity-100 rounded-b-md border-neutral-100"
+      >
+        <button
+          type="button"
+          class="inline-block px-5 py-2 text-white rounded-lg bg-danger"
+          data-te-modal-dismiss
+          data-te-ripple-init
+          data-te-ripple-color="light"
+        >
+          <fa-icon [icon]="faXmark"></fa-icon>
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="inline-block px-5 py-2 ml-2 text-white rounded-lg bg-success"
+          data-te-modal-dismiss
+          data-te-ripple-init
+          data-te-ripple-color="light"
+          (click)="onDeleteSelectedAlbumGallery(selectedAlbumGalleryData)"
+        >
+          <fa-icon [icon]="faCircleCheck"></fa-icon>
+          Sure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- trigger modal pop up -->
+<button data-te-toggle="modal"></button>
+<!-- trigger modal pop up -->

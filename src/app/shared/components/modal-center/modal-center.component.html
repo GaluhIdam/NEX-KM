@@ -1,0 +1,190 @@
+<!-- Checklist -->
+<div data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  [id]="'exampleModalCenterApprove'+uuid" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-modal="true"
+  role="dialog">
+  <div data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+    <div
+      class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current drop-shadow-lg outline-none dark:bg-neutral-600">
+      <div
+        class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+        <!--Modal title-->
+        <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+          id="exampleModalScrollableLabel">
+          {{ modalTitleApprove }}
+        </h5>
+        <!--Close button-->
+        <button type="button" (click)="closeModal()"
+          class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!--Modal body-->
+      <div class="p-4 text-center">
+        <div *ngIf="!messageReject">
+          <fa-icon [icon]="faCircleCheck" class="text-5xl text-success my-5 rounded-lg"></fa-icon>
+          <p class="mt-3 text-lg whitespace-normal">{{ modalContentApprove }}</p>
+        </div>
+        <div *ngIf="messageReject">
+          <div class="relative mb-3">
+            <form [formGroup]="form">
+              <label for="desc"><span class="text-danger">*</span> Messsage :</label>
+              <textarea formControlName="descStatus"
+                class="mt-2 peer block min-h-[auto] w-full rounded border-2 border-gray-100 bg-transparent px-3 py-2"
+                rows="3" placeholder="Your message"></textarea>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!--Modal footer-->
+      <div
+        class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+        <button type="button" *ngIf="cancelBtn && messageReject == true" (click)="closeModal()"
+          class="inline-block mr-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-300 drop-shadow-lg px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal"
+          data-te-ripple-init data-te-ripple-color="light">
+          Cancel
+        </button>
+        <button type="button" *ngIf="cancelBtn && messageReject == false"
+          class="inline-block mr-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-300 drop-shadow-lg px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal"
+          data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+          Cancel
+        </button>
+        <button type="button" *ngIf="lgsgReject === true"
+          [ngClass]="{'hover:bg-danger-600': form.get('descStatus')?.valid}" (click)="clickReject()"
+          data-te-modal-dismiss
+          class="inline-block mr-2 rounded bg-danger text-white drop-shadow-lg px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal"
+          data-te-ripple-init data-te-ripple-color="light">
+          {{ rejectButton.text }}
+        </button>
+        <button type="button" *ngIf="rejectButton.show && messageReject && lgsgReject === false" [disabled]="form.get('descStatus')?.invalid"
+          [ngClass]="{'hover:bg-danger-600': form.get('descStatus')?.valid}" (click)="clickReject()"
+          data-te-modal-dismiss
+          class="inline-block mr-2 rounded bg-danger text-white drop-shadow-lg px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal"
+          data-te-ripple-init data-te-ripple-color="light">
+          {{ rejectButton.text }}
+        </button>
+        <button type="button" *ngIf="rejectButton.show && !messageReject && lgsgReject === false" (click)="switch()"
+          class="inline-block mr-2 rounded bg-danger text-white hover:bg-danger-600 drop-shadow-lg px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal"
+          data-te-ripple-init data-te-ripple-color="light">
+          {{ rejectButton.text }}
+        </button>
+        <button type="button" *ngIf="saveButton.show && !messageReject" (click)="clickSave()"
+          class="inline-block rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+          {{ saveButton.text }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Editor Choice -->
+<div data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  [id]="'exampleModalCenterEditor'+uuid" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-modal="true"
+  role="dialog">
+  <div data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+    <div
+      class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current drop-shadow-lg outline-none dark:bg-neutral-600">
+      <div
+        class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+        <!--Modal title-->
+        <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+          id="exampleModalScrollableLabel">
+          {{ modalTitleEditor }}
+        </h5>
+        <!--Close button-->
+        <button type="button"
+          class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!--Modal body-->
+      <div class="p-4 text-center">
+        <fa-icon [icon]="faStar" class="text-5xl text-orange my-5 rounded-lg"></fa-icon>
+        <p class="mt-3 text-lg whitespace-normal">{{ modalContentEditor }}</p>
+      </div>
+
+      <!--Modal footer-->
+      <div
+        class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+        <button type="button" *ngIf="cancelBtn"
+          class="inline-block mr-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-300 drop-shadow-lg px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal"
+          data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+          Cancel
+        </button>
+        <button type="button" *ngIf="saveButton.show" (click)="clickEditor()"
+          class="inline-block rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+          Sure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Trash -->
+<div data-te-modal-init
+  class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+  [id]="'exampleModalCenterBan'+uuid" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-modal="true"
+  role="dialog">
+  <div data-te-modal-dialog-ref
+    class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+    <div
+      class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current drop-shadow-lg outline-none dark:bg-neutral-600">
+      <div
+        class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+        <!--Modal title-->
+        <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+          id="exampleModalScrollableLabel">
+          {{ modalTitleBan }}
+        </h5>
+        <!--Close button-->
+        <button type="button"
+          class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+          data-te-modal-dismiss aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="h-6 w-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!--Modal body-->
+      <div class="p-4 text-center">
+        <fa-icon [icon]="faTrash" class="text-5xl text-danger my-5 rounded-lg"></fa-icon>
+        <p class="mt-3 text-lg whitespace-normal">{{ modalContentBan }}</p>
+      </div>
+
+      <!--Modal footer-->
+      <div
+        class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+        <button type="button" *ngIf="cancelBtn"
+          class="inline-block mr-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-300 drop-shadow-lg px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal"
+          data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+          Cancel
+        </button>
+        <button type="button" *ngIf="saveButton.show" (click)="clickBan()"
+          class="inline-block rounded bg-success px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
+          Sure
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

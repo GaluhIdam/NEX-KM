@@ -1,0 +1,344 @@
+<ng-container *ngIf="isLoading">
+  <div class="flex items-center justify-center font-semibold h-60">
+    <app-loading></app-loading>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!isLoading">
+  <ng-container *ngIf="isError">
+    <app-service-error></app-service-error>
+  </ng-container>
+  <ng-container *ngIf="!isError">
+    <ng-container *ngIf="eBookDetailData; else emptyEBookDetailData">
+      <app-read-book-modal
+        [bookTitle]="eBookDetailData.title"
+        [bookSource]="eBookDetailData.pathEbook"
+        [(isModalOpen)]="isReadBookModalOpen"
+      ></app-read-book-modal>
+
+      <div class="relative px-12">
+        <div class="flex justify-center lg:flex-row max-lg:flex-col">
+          <div
+            class="flex flex-col lg:w-2/5 max-lg:w-full lg:mr-12 max-lg:justify-center"
+          >
+            <div class="flex justify-center w-full">
+              <img
+                [src]="eBookDetailData.pathCover"
+                alt="image"
+                style="height: 425px; width: 278px"
+                class="flex justify-center mb-4 rounded-lg shadow-lg"
+              />
+            </div>
+            <h1 class="py-2 text-2xl font-semibold text-center h-fit">
+              {{ eBookDetailData.title }}
+            </h1>
+            <p class="py-2 text-lg text-center">{{ eBookDetailData.author }}</p>
+            <div class="flex justify-center my-3">
+              <div *ngFor="let rate of [1, 2, 3, 4, 5]">
+                <div>
+                  <fa-icon
+                    *ngIf="rate <= totalReviewRate"
+                    [icon]="faStar"
+                    class="text-warning lg:text-3xl max-lg:text-2xl lg:mr-3 max-lg:mr-2"
+                  ></fa-icon>
+                  <fa-icon
+                    *ngIf="rate > totalReviewRate"
+                    [icon]="faStar"
+                    class="text-gray-400 lg:text-3xl max-lg:text-2xl lg:mr-3 max-lg:mr-2"
+                  ></fa-icon>
+                </div>
+              </div>
+            </div>
+            <p class="mt-2 mb-8 text-center">
+              {{ eBookDetailData.viewCount }}
+              {{ eBookDetailData.viewCount > 1 ? "Views" : "View" }}
+            </p>
+          </div>
+          <div class="w-full max-lg:text-center">
+            <div class="mb-8">
+              <h1 class="text-3xl font-semibold">About the Author</h1>
+              <p class="text-justify">
+                {{ eBookDetailData.aboutAuthor }}
+              </p>
+            </div>
+            <div class="my-8">
+              <h1 class="text-3xl font-semibold">Overview</h1>
+              <p class="text-justify">
+                {{ eBookDetailData.overview }}
+              </p>
+            </div>
+            <div class="my-8">
+              <h1 class="text-3xl font-semibold">Sinopsis</h1>
+              <p class="text-justify">
+                {{ eBookDetailData.synopsis }}
+              </p>
+            </div>
+            <div class="grid grid-cols-2 gap-1 my-8">
+              <button
+                (click)="openReadBookModal(eBookDetailData.uuid)"
+                class="px-4 py-3 mr-2 font-semibold text-white rounded-lg lg:text-1xl max-lg:text-sm bg-soft-green hover:bg-success"
+                [ngClass]="{
+                  'col-span-2':
+                    eBookDetailData.personalNumber === personalNumber
+                }"
+              >
+                <fa-icon [icon]="faEye" class="mr-2"></fa-icon> Read This Book
+              </button>
+              <ng-container
+                *ngIf="eBookDetailData.personalNumber !== personalNumber"
+              >
+                <button
+                  *ngIf="isMyEbookCollection == false"
+                  (click)="addBookColllection()"
+                  class="px-4 py-3 ml-2 font-semibold text-white rounded-lg lg:text-1xl max-lg:text-sm bg-regal-blue hover:bg-primary"
+                >
+                  <fa-icon [icon]="faFolderPlus" class="mr-2"></fa-icon> Add To
+                  My Collection
+                </button>
+                <button
+                  *ngIf="isMyEbookCollection == true"
+                  (click)="removeBookColllection()"
+                  class="px-4 py-3 ml-2 font-semibold text-white bg-red-500 rounded-lg lg:text-1xl max-lg:text-sm hover:bg-danger"
+                >
+                  <fa-icon [icon]="faFolderPlus" class="mr-2"></fa-icon> Remove
+                  From My Collection
+                </button>
+              </ng-container>
+            </div>
+            <div class="mt-12">
+              <h1 class="text-3xl font-semibold">Book Review</h1>
+              <div class="mt-12">
+                <ng-container *ngIf="isCommentLoading">
+                  <div
+                    class="flex items-center justify-center h-20 mb-20 font-semibold"
+                  >
+                    <app-loading></app-loading>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!isCommentLoading">
+                  <ng-container
+                    *ngIf="
+                      eBookReviewData.length > 0;
+                      else emptyReviewEBookDetailData
+                    "
+                  >
+                    <div
+                      class="p-5 mb-3 bg-gray-100 rounded-lg"
+                      *ngFor="let row of eBookReviewData; let i = index"
+                    >
+                      <div class="flex">
+                        <img
+                          [src]="userComments[i].userPhoto"
+                          alt="avatar"
+                          class="w-12 h-12 mr-3 rounded-full"
+                        />
+                        <div class="grid grid-rows-2 w-fit">
+                          <h1 class="text-lg whitespace-nowrap text-regal-blue">
+                            {{ userComments[i].userName }}
+                          </h1>
+                          <p class="text-sm whitespace-nowrap">
+                            {{ userComments[i].personalUnit }}
+                          </p>
+                        </div>
+                        <div class="w-full">
+                          <p class="text-right text-gray-400">
+                            {{ formattedDate(row.createdAt) }}
+                          </p>
+                          <div class="flex justify-end">
+                            <div *ngFor="let rate of [1, 2, 3, 4, 5]">
+                              <div>
+                                <fa-icon
+                                  *ngIf="rate <= row.rate"
+                                  [icon]="faStar"
+                                  class="text-warning lg:text-xl max-lg:text-2xl lg:ml-3 max-lg:ml-2"
+                                ></fa-icon>
+                                <fa-icon
+                                  *ngIf="rate > row.rate"
+                                  [icon]="faStar"
+                                  class="text-gray-400 lg:text-xl max-lg:text-2xl lg:ml-3 max-lg:ml-2"
+                                ></fa-icon>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="mt-2">
+                        {{ row.message }}
+                      </p>
+                    </div>
+                    <!-- Table Pagination -->
+                    <div
+                      class="flex items-center justify-start my-5"
+                      *ngIf="paginator && !isCommentLoading"
+                    >
+                      <h1 class="mr-5">Total : {{ paginator.totalData }}</h1>
+                      <div class="flex items-center justify-start mx-10">
+                        <span class="text-sm">Show</span>
+                        <select
+                          *ngIf="paginator"
+                          [(ngModel)]="paginator.pageSize"
+                          (ngModelChange)="changePageSize()"
+                          class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+                        >
+                          <option
+                            *ngFor="let size of paginator?.pageOption"
+                            [ngValue]="size"
+                          >
+                            {{ size }} data
+                          </option>
+                        </select>
+                      </div>
+                      <div class="flex items-center justify-center mx-3">
+                        <button
+                          type="button"
+                          (click)="changePageNumber(false)"
+                          [disabled]="paginator.pageNumber == 1"
+                          [class]="
+                            paginator.pageNumber == 1
+                              ? 'bg-gray-200'
+                              : 'bg-gray-50'
+                          "
+                          class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300"
+                        >
+                          Previous
+                        </button>
+                        <!-- <button
+   class="ml-2 text-gray-400"
+   (click)="goToPageNumberByPageClick(i + 1)"
+   *ngFor="let page of pages; let i = index"
+ >
+   {{ i + 1 }}
+ </button> -->
+                        <button
+                          type="button"
+                          (click)="changePageNumber(true)"
+                          [disabled]="
+                            paginator.pageNumber == paginator.totalPage
+                          "
+                          [class]="
+                            paginator.pageNumber == paginator.totalPage
+                              ? 'bg-gray-200'
+                              : 'bg-gray-50'
+                          "
+                          class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg active:bg-gray-200 active:border-blue-300 ml-2"
+                        >
+                          Next
+                        </button>
+                      </div>
+                      <h1 class="w-fit">Go to Page</h1>
+                      <select
+                        *ngIf="paginator"
+                        [(ngModel)]="paginator.pageNumber"
+                        (ngModelChange)="goToPageNumberByPageSelect($event)"
+                        class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-300 focus:border-blue-300 block py-1.5 pl-2 pr-7 mx-2 hover:cursor-pointer"
+                      >
+                        <option
+                          *ngFor="let page of pages; let i = index"
+                          [ngValue]="i + 1"
+                        >
+                          {{ i + 1 }}
+                        </option>
+                      </select>
+                    </div>
+                    <!-- Table Pagination -->
+
+                    <hr class="mb-3" />
+                  </ng-container>
+                </ng-container>
+
+                <div
+                  class="w-full"
+                  [hidden]="eBookDetailData.personalNumber === personalNumber"
+                >
+                  <hr
+                    class="mb-3"
+                    *ngIf="
+                      !eBookDetailData.ebooksEbookReviews ||
+                      eBookDetailData.ebooksEbookReviews.length === 0
+                    "
+                  />
+                  <h1 class="font-semibold text-1xl">Add your comment</h1>
+                  <!-- form -->
+                  <form [formGroup]="addCommentForm" (ngSubmit)="onSubmit()">
+                    <div class="bg-gray-100">
+                      <textarea
+                        rows="8"
+                        formControlName="message"
+                        placeholder="Enter your comment here.."
+                        class="w-full p-4 bg-gray-100 rounded-lg"
+                      ></textarea>
+                      <div
+                        class="ml-4"
+                        *ngIf="
+                          !message?.valid &&
+                          (message?.dirty || message?.touched)
+                        "
+                      >
+                        <small
+                          class="text-red-800"
+                          [hidden]="!message?.errors?.['required']"
+                        >
+                          Message is required
+                        </small>
+                      </div>
+                      <div class="flex justify-end pb-3 my-3">
+                        <div *ngFor="let rate of rates; let i = index">
+                          <div (click)="onClickRate(i, rate)">
+                            <fa-icon
+                              [icon]="faStar"
+                              [class.text-warning]="rate === true"
+                              class="text-gray-400 lg:text-3xl max-lg:text-2xl lg:mr-3 max-lg:mr-2"
+                            ></fa-icon>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      class="px-4 py-2 mt-3 text-white rounded-lg bg-regal-blue hover:bg-primary disabled:bg-gray-500"
+                      type="submit"
+                      [disabled]="addCommentForm.invalid"
+                    >
+                      Post Comment
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <img
+          class="absolute top-0 left-0 -z-20"
+          src="../../../../assets/image/home-page/gradient/227.png"
+          alt=""
+        />
+
+        <img
+          class="absolute right-0 lg:top-1/4 max-lg:top-2/4 -z-10"
+          src="../../../../assets/image/home-page/gradient/228.png"
+          alt=""
+        />
+
+        <img
+          class="absolute right-0 lg:top-0 max-lg:top-1/3 -z-20"
+          src="../../../../assets/image/home-page/gradient/229.png"
+          alt=""
+        />
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<!-- Empty EBook Detail State -->
+<ng-template #emptyEBookDetailData>
+  <div class="flex items-center justify-center font-semibold h-96">
+    <h2>No Book Information available.</h2>
+  </div>
+</ng-template>
+
+<!-- Empty Review EBook Detail State -->
+<ng-template #emptyReviewEBookDetailData>
+  <div class="flex items-center justify-center h-20 mb-20 font-semibold">
+    <h2>No Review for This Book.</h2>
+  </div>
+</ng-template>

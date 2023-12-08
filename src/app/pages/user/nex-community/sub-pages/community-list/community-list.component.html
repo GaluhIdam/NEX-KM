@@ -1,0 +1,122 @@
+<!-- Search & Trend Section -->
+<div class="bg-library bg-center flex justify-center py-20">
+  <div class="grid grid-rows-2 gap-4 max-[600px]:px-3">
+    <div class="min-[600px]:w-[32rem] place-self-center">
+      <h1 class="text-white font-bold text-center min-[600px]:text-4xl max-[600px]:text-2xl">
+        Explore New Experience of Collaboration
+      </h1>
+    </div>
+    <form [formGroup]="mform">
+      <div class="relative mb-4 flex min-[600px]:w-[800px] flex-wrap items-stretch bg-white rounded-full mt-4">
+        <button
+          class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+          type="button" id="button-addon1">
+          <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+        </button>
+        <input type="text" formControlName="search"
+          class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+          placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+      </div>
+    </form>
+    <!-- <h1 class="text-white">TRENDING SEARCH</h1>
+    <div>
+      <ul class="flex list-none flex-wrap pl-0 md:flex-row" role="tablist" data-te-nav-ref>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+            Travelling
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+            Interior Design
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+            Music
+          </button>
+        </li>
+        <li class="mx-2 mb-2">
+          <button type="button"
+            class="bg-transparent text-white rounded-full border border-1 px-4 py-1 hover:bg-white hover:text-black">
+            Dancing
+          </button>
+        </li>
+      </ul>
+    </div> -->
+  </div>
+</div>
+
+<p class="text-xl text-center justify-center font-semibold mb-0 uppercase my-20">
+  GMF Community
+</p>
+
+<!-- List of GMF Community -->
+<div class="grid lg:grid-cols-5 grid-cols-2 gap-y-1 mt-5 px-10">
+  <!-- Loop Here -->
+  <div class="mt-8 px-2 w-fit place-self-center h-full" *ngFor="let row of communityData">
+    <a class="hover:text-regal-blue" [routerLink]="'../'+row.uuid">
+      <div class="w-auto h-full rounded-lg">
+        <img [src]="row.thumbnailPhotoPath"
+          class="object-cover lg:w-64 lg:h-96 w-auto rounded place-self-center rounded-t-lg" alt="Community Image" />
+        <div class="flex mt-3 h-full px-2 pb-2">
+          <div class="flex items-start">
+            <img [src]="'https://talentlead.gmf-aeroasia.co.id/images/avatar/'+row.leaderPersonalNumber+'.jpg'"
+              class="object-cover rounded-full lg:w-12 lg:h-12 w-6 h-6 mr-2" alt="avatar" loading="lazy" />
+          </div>
+          <div class="items-center h-full">
+            <p class="hover:text-regal-blue font-semibold lg:text-base text-xs uppercase">{{
+              trimString(row.name,
+              20) }}</p>
+            <p class="font-medium lg:text-sm text-[10px]">{{ row._count.communitiesCommunityMembers }} Members
+            </p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+<div>
+  <h1 *ngIf="!communityData" class="text-center text-gray-400">Sorry, data is empty</h1>
+</div>
+<div class="flex justify-start mt-5 px-10">
+  <!-- Pagination -->
+  <form [formGroup]="mform">
+    <nav aria-label="Page navigation example">
+      <ul class="list-style-none flex mt-10 place-self-center">
+        <li class="mr-3 place-self-center">
+          <p>Total : {{ totalData }}</p>
+        </li>
+        <li class="mr-3 place-self-center">
+          <select class="border boder-regal-blue rounded py-1 px-2 place-self-center" formControlName="limit">
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </li>
+        <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+          <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+            class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+        </li>
+        <li class="ml-3 flex flex-cols">
+          <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+            formControlName="page">
+        </li>
+        <li class="place-self-center text-white rounded px-2 py-1">
+          <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+            class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+        </li>
+      </ul>
+    </nav>
+  </form>
+</div>
+
+<img class="absolute left-0 top-2/3 -z-20" src="../../../../assets/image/home-page/gradient/227.png" alt="" />
+
+<img class="absolute right-0 top-3/4 -z-10" src="../../../../assets/image/home-page/gradient/228.png" alt="" />
+
+<img class="absolute right-0 top-1/2 -z-20" src="../../../../assets/image/home-page/gradient/229.png" alt="" />

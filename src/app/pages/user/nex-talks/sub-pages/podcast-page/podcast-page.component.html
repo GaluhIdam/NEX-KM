@@ -1,0 +1,92 @@
+<router-outlet></router-outlet>
+
+<!-- Audio -->
+<div
+  class="fixed bottom-0 w-full p-4 text-white bg-gray-300 border-t-4 border-black"
+>
+  <div class="grid grid-cols-12">
+    <div class="mx-auto">
+      <ng-container *ngIf="selectedPodcastToPlay">
+        <img
+          class="rounded-xl w-14 h-14"
+          [src]="selectedPodcastToPlay.pathImage"
+          [alt]="selectedPodcastToPlay.title"
+        />
+      </ng-container>
+    </div>
+    <div class="col-span-10">
+      <div
+        plyr
+        [plyrTitle]="selectedPodcastToPlay ? selectedPodcastToPlay.title : ''"
+        plyrType="audio"
+        [plyrPlaysInline]="true"
+        [plyrCrossOrigin]="true"
+        [plyrSources]="[
+        {
+          src: selectedPodcastToPlay ? selectedPodcastToPlay.pathFile : '',
+          type: 'audio/mp3',
+        },
+        ]"
+        [plyrOptions]="{
+          autoplay: selectedPodcastToPlay ? true : false,
+        }"
+        (plyrInit)="initPlay($event)"
+        (plyrPlay)="played($event)"
+        (plyrPause)="paused($event)"
+        (plyrEnded)="stopped($event)"
+      ></div>
+    </div>
+    <div class="mx-auto mt-3">
+      <span
+        class="text-2xl cursor-pointer"
+        id="dropdownMenuButton1u"
+        data-te-dropdown-toggle-ref
+        aria-expanded="false"
+      >
+        <fa-icon [icon]="faEllipsis" class="text-gray-600"></fa-icon>
+      </span>
+
+      <ul
+        class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+        aria-labelledby="dropdownMenuButton1u"
+        data-te-dropdown-menu-ref
+      >
+        <li>
+          <a
+            class="block w-full px-4 py-2 text-sm font-normal bg-transparent cursor-pointer whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+            data-te-dropdown-item-ref
+            data-te-toggle="modal"
+            [attr.data-te-target]="'#shareModal' + selectedPodcastToPlay?.uuid"
+            data-te-ripple-init
+            data-te-ripple-color="light"
+            >Share</a
+          >
+        </li>
+        <li>
+          <a
+            class="block w-full px-4 py-2 text-sm font-normal bg-transparent cursor-pointer whitespace-nowrap text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+            data-te-dropdown-item-ref
+            data-te-toggle="modal"
+            [attr.data-te-target]="'#reportModal' + selectedPodcastToPlay?.uuid"
+            data-te-ripple-init
+            data-te-ripple-color="light"
+            >Report</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="selectedPodcastToPlay">
+  <app-share-modal
+    [uuid]="selectedPodcastToPlay.uuid"
+    [content]="'podcast'"
+    [urlToShare]="
+      'http://172.16.41.107:3011/user/nex-talks/podcast/list/detail/' +
+      selectedPodcastToPlay.uuid
+    "
+  ></app-share-modal>
+
+  <app-report-modal [uuid]="selectedPodcastToPlay.uuid"></app-report-modal>
+</ng-container>

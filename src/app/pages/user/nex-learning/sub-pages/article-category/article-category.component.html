@@ -1,0 +1,120 @@
+<div class="mt-8">
+  <div class="grid-cols-2 gap-4 flex flex-cols">
+    <!-- Categories Section -->
+    <div class="px-9 py-9 min-[600px]:w-80 shadow-lg mx-5 max-[600px]:hidden">
+      <h1 class="uppercase font-semibold text-primary tracking-wider">Categories</h1>
+      <div class="flex justify-start mt-5">
+        <ul class="w-96">
+          <li class="w-full py-2" *ngFor="let data of categoryArticle">
+            <button (click)="mform.get('category')?.setValue(data.id)"
+              [ngClass]="{'text-soft-green font-semibold':category == data.title}"
+              class="text-gray-400 hover:text-soft-green">
+              {{ data.title }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Categories Section -->
+    <form [formGroup]="mform" class="w-full">
+      <div class="grid grid-cols-1 gap-4 flex px-3 max-[600px]:hidden">
+        <div class="flex md:justify-start justify-center">
+          <a class="text-gray-400 mr-3" routerLink="/">Home</a>
+          <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+          <a routerLink="/user/nex-learning" class="text-gray-400 mr-3">Nex Learning</a>
+          <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+          <a routerLink="/user/nex-learning/article" class="text-gray-400 mr-3">Article</a>
+          <fa-icon [icon]="faChevronRight" class="text-gray-400 mr-3"></fa-icon>
+          <p class="font-bold r-3 activeLink md:text-base">Category</p>
+        </div>
+      </div>
+      <div class="flex flex-cols justify-between md:py-5 pb-5">
+        <div class="flex justify-start px-3 w-full">
+          <h1 class="font-semibold md:mt-5 md:text-2xl text-base">Category : {{ category }}</h1>
+        </div>
+        <div class="mx-5 md:hidden flex justify-end">
+          <select formControlName="category" data-te-select-init data-te-select-auto-select="false"
+            data-te-select-filter="true"
+            class="m-0 w-full block mt-1 min-w-0 flex-auto rounded-lg px-3 py-2 border-solid border-2 border-gray-200">
+            <option hidden disabled selected></option>
+            <option *ngFor="let data of categoryArticle" [value]="data.id">{{ data.title }}</option>
+          </select>
+        </div>
+        <div class="flex justify-end min-[600px]:px-10 max-[600px]:px-5 w-full">
+          <div class="relative mr-3 w-full mb-4 flex flex-wrap items-stretch bg-gray-100 rounded-full mt-4">
+            <button
+              class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition text-sm duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+              type="button" id="button-addon1">
+              <fa-icon [icon]="faSearch" class="text-black"></fa-icon>
+            </button>
+            <input type="text" formControlName="search"
+              class="h-11 relative m-0 block w-[1px] min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-sm font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+              placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+          </div>
+          <div class="mt-3 bg-gray-100 rounded-full px-4 py-3 w-44 h-fit">
+            <select class="w-full bg-transparent rounded-full" formControlName="sortBy">
+              <option disabled selected [value]="null">Sort By</option>
+              <option [value]="'trending'">Trending</option>
+              <option [value]="'desc'">Newst</option>
+              <option [value]="'asc'">Oldest</option>
+            </select>
+          </div>
+        </div>
+        <!-- </div> -->
+      </div>
+      <div class="px-3">
+        <div *ngIf="!load">
+          <div class="w-full h-full mb-5 rounded-lg content-center" *ngFor="let row of articles">
+            <div class="flex justify-start cursor-pointer" (click)="viewArticle(row.uuid!)">
+              <div class="w-fit min-[600px]:mr-8 max-[600px]:mr-4">
+                <img [src]="row.path" [alt]="row.title" class="object-cover w-96 rounded-lg h-full">
+              </div>
+              <div class="w-full py-3 content-center">
+                <h1 class="mb-1 text-gray-500 md:text-base text-xs">{{ formatDate(row.updatedAt) }}</h1>
+                <h1 class="md:text-2xl text-xl font-semibold h-fit mb-1 hover:text-primary text-sm break-all">
+                  {{ trimString(row.title!, 55) }}</h1>
+                <div>
+                  <h1 class="text-gray-500 text-xs md:text-base font-semibold">{{ row.unit }}</h1>
+                  <h1 class="text-gray-500 text-xs md:text-base">{{ row.uploadBy }}</h1>
+                  <h1 class="text-primary border border-primary w-fit px-2 rounded-lg text-xs md:text-base"><fa-icon
+                      [icon]="faComment"></fa-icon> {{
+                    row._count.articleComment }} comments</h1>
+                </div>
+              </div>
+            </div>
+            <hr class="mt-5">
+          </div>
+        </div>
+        <p class="text-gray-400 text-center" *ngIf="!articles">Sorry, data is empty</p>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+          <ul class="list-style-none flex px-5 md:px-0 mt-10 place-self-center">
+            <li class="mr-3 place-self-center">
+              <p>Total : {{ totalData }}</p>
+            </li>
+            <li class="mr-3 place-self-center">
+              <select class="border boder-primary rounded py-1 px-2 place-self-center" formControlName="limit">
+                <option [value]="10">10</option>
+                <option [value]="20">20</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+              </select>
+            </li>
+            <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+              <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                class="place-self-center hover:text-black text-primary cursor-pointer"></fa-icon>
+            </li>
+            <li class="ml-3 flex flex-cols">
+              <input type="number" [value]="page" class="border boder-primary rounded py-1 px-2 w-16"
+                formControlName="page">
+            </li>
+            <li class="place-self-center text-white rounded px-2 py-1">
+              <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                class="place-self-center hover:text-black text-primary cursor-pointer"></fa-icon>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </form>
+  </div>
+</div>

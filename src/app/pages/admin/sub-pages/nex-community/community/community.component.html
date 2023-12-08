@@ -1,0 +1,166 @@
+<div *ngIf="load">
+  <app-loading></app-loading>
+</div>
+<div *ngIf="!load">
+  <div class="grid grid-cols-2 gap-1">
+    <div class="flex justify-start">
+      <div>
+        <h1 class="text-gray-500">NEX COMMUNITY</h1>
+        <h1 class="text-4xl font-semibold text-gray-700">{{ title.title }}</h1>
+        <div class="flex justify-start">
+          <h1 class="text-gray-400">List of GMF Communities</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white shadow rounded-lg mt-5">
+    <form [formGroup]="mform">
+      <div class="grid grid-cols-2 gap-1">
+        <div class="flex justify-start h-fit w-fit p-5">
+          <div class="relative flex w-full flex-wrap items-stretch bg-white rounded-lg border border-1">
+            <button
+              class="relative z-[2] rounded-l px-4 py-2 text-xs font-medium uppercase leading-tight text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5"
+              type="button" id="button-addon1">
+              <fa-icon [icon]="faSearch" class="text-gray-500"></fa-icon>
+            </button>
+            <input type="text" formControlName="search"
+              class="h-11 relative m-0 block min-w-0 flex-auto rounded-r bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition ease-in-out"
+              placeholder="Search" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+          </div>
+        </div>
+        <div class="flex justify-end place-items-center p-5">
+          <button
+            class="px-2 border border-1 hover:bg-success hover:text-white border-success py-2 mx-2 rounded-lg text-success h-fit">
+            <fa-icon [icon]="faPrint"></fa-icon> Export To Excel</button>
+          <a routerLink="../community-create"
+            class="px-3 border border-1 hover:bg-white hover:text-success hover:border-success bg-success border-white py-2 mx-2 rounded-lg text-white h-fit">
+            <fa-icon [icon]="faPlus"></fa-icon> Add Community</a>
+        </div>
+      </div>
+      <div class="flex flex-col overflow-x-auto">
+        <div class="p-5">
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-sm font-light">
+              <thead class="border-b font-medium border-gray-500 bg-gray-100 text-gray-600 w-full">
+                <tr class="w-full">
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">No</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Name</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Background Image</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Thumbnail Image</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Location</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Founded</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">About</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Leader</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Leader Profile</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Instagram</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Members Count</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Status</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Ban</th>
+                  <th scope="col" class="px-6 py-4 whitespace-nowrap text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody class="w-full">
+                <tr *ngIf="!communityData">
+                  <td class="min-w-full text-center py-3 text-gray-500" colspan="14"><fa-icon
+                      [icon]="faSadTear"></fa-icon> Sorry, data
+                    is empty.</td>
+                </tr>
+                <tr class="border-b dark:border-neutral-500 w-full" *ngFor="let row of communityData; index as i">
+                  <td class="whitespace-nowrap px-6 py-4 font-medium">{{ i+1 }}</td>
+                  <td class="whitespace-nowrap px-6 py-4">{{ row.name }}</td>
+                  <td class="whitespace-nowrap px-6 py-4 text-center"><img class="object-cover h-16"
+                      [src]="row.thumbnailPhotoPath" alt="Background"></td>
+                  <td class="whitespace-nowrap px-6 py-4 text-center"><img class="object-cover"
+                      [src]="row.headlinedPhotoPath" alt="thumbnail"></td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    {{ row.location }}
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">{{ formatDateNotDays(row.createdAt) }}</td>
+                  <td class="whitespace-nowrap px-6 py-4">{{ trimString(row.about, 50) }}</td>
+                  <td class="whitespace-nowrap px-6 py-4">{{ row.leader }}</td>
+                  <td class="whitespace-nowrap px-6 py-4">{{ trimString(row.leaderProfile, 50) }}</td>
+                  <td class="whitespace-nowrap px-6 py-4"><a class="text-primary"
+                      [href]="'https://instagram.com/'+row.instagram">@{{ row.instagram }}</a>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 text-center">{{ row._count.communitiesCommunityMembers }}</td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <p class="bg-regal-blue text-white px-3 py-2 rounded-full text-center"
+                      *ngIf="row.statusPublish === true">
+                      Published</p>
+                    <p class="bg-danger text-white px-3 py-2 rounded-full text-center"
+                      *ngIf="row.statusPublish === false">Private
+                    </p>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <p class="bg-danger text-white px-3 py-2 rounded-full text-center"
+                      *ngIf="row.bannedStatus === true">
+                      Banned</p>
+                    <p class="bg-success text-white px-3 py-2 rounded-full text-center"
+                      *ngIf="row.bannedStatus === false">Permited
+                    </p>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    <div>
+                      <a [routerLink]="'../community/'+row.uuid" type="button"
+                        class="px-2 py-1 rounded-lg mr-1 border border-primary"><fa-icon [icon]="faEye"
+                          class="text-primary"></fa-icon></a>
+                      <!-- Approve button -->
+                      <app-button-modal-center data-te-toggle="modal" [Approve]="true"
+                        [uuid]="row.uuid"></app-button-modal-center>
+                      <!-- Approve button -->
+                      <!-- Ban button -->
+                      <app-button-modal-center data-te-toggle="modal" [Ban]="true"
+                        [uuid]="row.uuid"></app-button-modal-center>
+                      <!-- Ban button -->
+                      <!-- Modal -->
+                      <app-modal-center [uuid]="row.uuid" (formData)="onFormData($event)" [Approve]="true"
+                        [modalTitleApprove]="'Confirm to Publish'" [Editor]="false" [Ban]="true" [lgsgReject]="true"
+                        (saveClick)="approveReject(row.uuid, true)" (rejectClick)="approveReject(row.uuid, false)"
+                        (banClick)="banCommunityStatus(row.uuid, row.bannedStatus)"
+                        [saveButton]="{ show: true, text: 'Publish' }" [rejectButton]="{ show: true, text: 'Private' }"
+                        [cancelBtn]="true"
+                        [modalContentApprove]="'Please confirm whether you want to publish or private this request.'"
+                        [modalContentBan]="row.bannedStatus ? 'Are you sure you want to active this item? Once active, it will be visible to our community and all links to the community will work.' : 'Are you sure you want to deactivate this item? Once deactivated, it will no longer be visible to our community and all links to the community will no longer work.'"></app-modal-center>
+                      <!-- Modal -->
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="flex justify-start mt-5">
+            <!-- Pagination -->
+            <nav aria-label="Page navigation example">
+              <ul class="list-style-none flex mt-10 place-self-center">
+                <li class="mr-3 place-self-center">
+                  <p>Total : {{ totalData }}</p>
+                </li>
+                <li class="mr-3 place-self-center">
+                  <select class="border boder-regal-blue rounded py-1 px-2 place-self-center" formControlName="limit">
+                    <option [value]="10">10</option>
+                    <option [value]="20">20</option>
+                    <option [value]="50">50</option>
+                    <option [value]="100">100</option>
+                  </select>
+                </li>
+                <li class="place-self-center text-white rounded px-2 py-1 place-self-center">
+                  <fa-icon [icon]="faCircleChevronLeft" (click)="prevPage()"
+                    class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                </li>
+                <li class="ml-3 flex flex-cols">
+                  <input type="number" [value]="page" class="border boder-regal-blue rounded py-1 px-2 w-16"
+                    formControlName="page">
+                </li>
+                <li class="place-self-center text-white rounded px-2 py-1">
+                  <fa-icon [icon]="faCircleChevronRight" (click)="nextPage()"
+                    class="place-self-center hover:text-black text-regal-blue cursor-pointer"></fa-icon>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>

@@ -1,0 +1,81 @@
+<ng-container *ngIf="isLoading || isDurationLoading">
+  <div class="flex items-center justify-center min-h-screen">
+    <app-loading></app-loading>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!isLoading && !isDurationLoading">
+  <!-- Body -->
+  <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+      <div class="overflow-hidden">
+        <table class="min-w-full text-sm font-light text-center">
+          <thead class="font-medium">
+            <tr>
+              <th scope="col" class="px-6 py-4"></th>
+              <th scope="col" class="px-6 py-4">Title</th>
+              <th scope="col" class="px-6 py-4">Episode</th>
+              <th scope="col" class="px-6 py-4">Artist</th>
+              <th scope="col" class="px-6 py-4">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Loop Here -->
+            <tr
+              *ngFor="let row of podcastLastPlayData; let i = index"
+              class="hover:bg-slate-200"
+            >
+              <td class="px-6 py-4">
+                <div class="flex justify-center w-full">
+                  <div
+                    class="flex flex-row items-center justify-center w-32 gap-4"
+                  >
+                    <!-- <button
+                      type="button"
+                      (click)="onSelectPodcastToPlay(row, i)"
+                      class="rounded-full bg-primary w-8 h-8 text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-8 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+                    >
+                      <ng-container *ngIf="row.isPause">
+                        <fa-icon
+                          [icon]="faPause"
+                          class="text-xs text-white"
+                        ></fa-icon>
+                      </ng-container>
+                      <ng-container *ngIf="!row.isPause">
+                        <fa-icon
+                          [icon]="faPlay"
+                          class="text-xs text-white"
+                        ></fa-icon>
+                      </ng-container>
+                    </button> -->
+                    <img
+                      class="rounded-xl w-14 h-14"
+                      [src]="row.pathImage"
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">{{ row.seriePodcast.title }}</td>
+              <td class="px-6 py-4">
+                {{ row.title }}
+              </td>
+              <td class="px-6 py-4">{{ row.seriePodcast.creator.name }}</td>
+              <td class="px-6 py-4">
+                {{ row.duration }}
+              </td>
+            </tr>
+            <tr *ngIf="podcastLastPlayData.length === 0">
+              <td
+                colspan="5"
+                class="items-center h-40 py-5 font-bold text-center text-gray-500"
+              >
+                No data available
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</ng-container>
